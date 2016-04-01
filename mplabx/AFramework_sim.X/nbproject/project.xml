@@ -7,8 +7,8 @@
             <creation-uuid>ffabb831-2d41-4368-9c51-e96ef9f32dd7</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions/>
-            <cpp-extensions/>
-            <header-extensions/>
+            <cpp-extensions>cpp</cpp-extensions>
+            <header-extensions>h</header-extensions>
             <asminc-extensions/>
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
