@@ -7,7 +7,6 @@
       <itemPath>../../include/ACommons.h</itemPath>
       <itemPath>../../include/ASystemConfig.h</itemPath>
       <itemPath>../../include/ACore.h</itemPath>
-      <itemPath>../../include/AContainers.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

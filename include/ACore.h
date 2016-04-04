@@ -41,4 +41,5 @@ namespace AFramework{
 	}
 }
 
+
 #endif	//	ACORE_H
