@@ -27,65 +27,72 @@ class AFramework::System::Segment{
 		
 	private:
 		
-		uint32_t		m_flag	: 1;
-		uint32_t				: 0;
+		uint32_t		m_flag	: 0x01;
+		uint32_t		m_algn	: 0x1F;
 		Segment		*	m_prev;
 		Segment		*	m_next;
 		size_t			m_size;
 };
 
 void AFramework::System::Segment::setSize(const size_t & size){
-	
+	/*	Nulla da commentare														*/
 	m_size = size;
 }
 
 void AFramework::System::Segment::setFree(){
-	
+	/*	Politica decisa: se m_flag è 0 allora il segmento è libero				*/
 	m_flag = 0;
 }
 
 void AFramework::System::Segment::setBusy(){
-	
+	/*	Politica decisa: se m_flag è 1 allora il segmento è occupato			*/
 	m_flag = 1;
 }
 
 void AFramework::System::Segment::linkPrev(Segment * prev){
-	
+	/*	Nulla da commentare														*/
 	m_prev = prev;
 }
 
 void AFramework::System::Segment::linkNext(Segment * next){
-	
+	/*	Nulla da commentare														*/
 	m_next = next;
 }
 
 void * AFramework::System::Segment::data(){
-	
+	/*	Per evitare di inserire nella classe un altro campo (il puntatore void	*/
+	/*	data) ho preferito dare direttamente l'indirizzo calcolandolo in fun-	*/
+	/*	zione dell'offset di memoria. Sommando 1 all'indirizzo di m_size che è	*/
+	/*	di tipo size_t (4 bytes) mi sposto di 4 bytes in memoria, successiva-	*/
+	/*	mente restituisco l'indirizzo come puntatore void di modo che posso		*/
+	/*	spostarmi di 1 byte alla volta.											*/
 	return (reinterpret_cast<void *>(&m_size + 1));
 }
 
 AFramework::System::Segment * AFramework::System::Segment::prev() const{
-	
+	/*	Nulla da commentare														*/
 	return m_prev;
 }
 
 AFramework::System::Segment * AFramework::System::Segment::next() const{
-	
+	/*	Nulla da commentare														*/
 	return m_next;
 }
 
 AFramework::System::Segment * AFramework::System::Segment::vNext(){
-	
+	/*	Calcolo l'indirizzo virtuale a cui dovrebbe trovarsi ipoteticamente il	*/
+	/*	prossimo blocco: partendo da data() che fornisce la memoria utile allo	*/
+	/*	utilizzatore aggiungo un offset di size() bytes.						*/
 	return (reinterpret_cast<Segment *>(reinterpret_cast<uint32_t>(data()) + size()));
 }
 
 bool AFramework::System::Segment::isBusy() const{
-	
+	/*	Nulla da commentare														*/
 	return (m_flag == 1);
 }
 
 size_t AFramework::System::Segment::size() const{
-	
+	/*	Nulla da commentare														*/
 	return m_size;
 }
 
