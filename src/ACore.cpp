@@ -8,6 +8,7 @@ AFramework::System::Segment	*	AFramework::System::m_heap_head(NULL);
 size_t							AFramework::System::m_heap_size(0);
 size_t							AFramework::System::m_xc32_offs(8);
 bool							AFramework::System::m_init_flag(false);
+AFramework::AError				AFramework::System::m_last_fail(AFramework::AError::NoError);
 
 class AFramework::System::Segment{
 	
@@ -101,11 +102,15 @@ size_t AFramework::System::Segment::size() const{
  */
 
 bool AFramework::System::init(size_t heapSize){
-		
+	
+	/*	Resetto la variabile d'errore											*/
+	setError();
 	/*	Controllo che la funzione non sia già stata chiamata					*/
 	if(m_init_flag){
+		/*	imposto la variabile d'errore										*/
+		setError(AError::SystemDoubleStart);
 		/*	in questo caso restituisco false									*/
-		return false;;
+		return false;
 	}
 	/*	Sottraggo alla dimensione dell'heap passata l'offset del compilatore	*/
 	heapSize -= m_xc32_offs;
@@ -113,7 +118,8 @@ bool AFramework::System::init(size_t heapSize){
 	m_heap_head = static_cast<Segment *>(::malloc(heapSize));
 	/*	Se la testa è NULL allora l'allocazione è fallita						*/
 	if(!m_heap_head){
-		#warning "bool AFramework::System::init(size_t heapSize) politica sui codici di errore da decidere"
+		/*	imposto l'errore													*/
+		setError(AError::HeapFailure);
 		/*	Ed in questo caso restituisco false									*/
 		return false;
 	}
@@ -148,10 +154,19 @@ bool AFramework::System::free(void * address){
 	
 	Segment	*	nav = NULL;
 	bool		flg = false;
+	/*	Resetto la variabile d'errore											*/
+	setError();
 	/*	Controllo che il framework sia stato inizializzato correttamente		*/
 	if(!m_init_flag){
 		/*	se non è così non esiste ancora l'heap e quindi non c'è nulla da	*/
-		/*	liberare per cui restituisco false									*/
+		/*	liberare per cui restituisco false dopo aver impostato l'errore		*/
+		setError(AError::SystemNotReady);
+		return false;
+	}
+	/*	Controllo che l'indirizzo non sia NULL									*/
+	if(!address){
+		/*	in questo caso setto l'errore e ritorno false						*/
+		setError(AError::BadPointer);
 		return false;
 	}
 	/*	se invece tutto è stato inizializzato correttamente, disabilito lo		*/
@@ -219,17 +234,27 @@ bool AFramework::System::free(void * address){
 	/*	riabilito lo scheduler													*/
 	enableScheduler();
 	/*	e restituisco il valore del flag, infatti se non ho trovato corrispon-	*/
-	/*	denze questo sarà false, altrimenti true								*/
+	/*	denze questo sarà false, altrimenti true ed in ogni caso setto l'errore	*/
+	setError(flg ? AError::NoError : AError::BadPointer);
 	return flg;
+}
+
+AFramework::AError AFramework::System::lastError() {
+	/*	nulla da commentare														*/
+	return m_last_fail;
 }
 
 size_t AFramework::System::availableMemory(){
 	
 	Segment *	nav = NULL;
 	size_t		tmp = 0;
+	/*	Resetto la variabile d'errore											*/
+	setError();
 	/*	Controllo che il framework sia stato inizializzato						*/
 	if(!m_init_flag){
-		/*	se così non è allora non esistendo l'heap restituisco 0				*/
+		/*	se così non è allora non esistendo l'heap restituisco 0	dopo aver	*/
+		/*	impostato l'errore													*/
+		setError(AError::SystemNotReady);
 		return 0;
 	}
 	/*	Se invece è stato inizializzato disabilito lo scheduler					*/
@@ -253,6 +278,8 @@ size_t AFramework::System::availableMemory(){
 }
 
 size_t AFramework::System::heapSize(){
+	/*	Resetto la variabile d'errore											*/
+	setError();
 	/*	Nulla da commentare...													*/
 	return m_heap_size;
 }
@@ -263,9 +290,13 @@ void * AFramework::System::malloc(const size_t & size){
 	Segment *	seg = NULL;
 	size_t		max = 0;
 	bool		flg = false;
+	/*	Resetto la variabile d'errore											*/
+	setError();	
 	/*	Controllo che l'heap sia stato inizializzato correttamente				*/
 	if(!m_init_flag){
-		/*se così non è restituisco NULL (non ho dove allocare!)				*/
+		/*	se così non è restituisco NULL (non ho dove allocare!) dopo aver	*/
+		/*	impostato la variabile d'errore										*/
+		setError(AError::SystemNotReady);
 		return NULL;
 	}
 	/*	Se invece è tutto ok disabilito lo scheduler							*/
@@ -336,6 +367,8 @@ void * AFramework::System::malloc(const size_t & size){
 	}
 	/*	se invece il blocco richiesto non esiste riabilito lo scheduler			*/
 	enableScheduler();
+	/*	imposto la variabile d'errore											*/
+	setError(AError::MemoryIsFull);
 	/*	e restituisco NULL														*/
 	return NULL;
 }
@@ -356,9 +389,13 @@ void AFramework::System::enableScheduler(){
 bool AFramework::System::enoughSpaceFor(const size_t& size){
 	
 	Segment	*	nav = NULL;
+	/*	resetto la variabile d'errore											*/
+	setError();
 	/*	controllo che il framework sia stato inizializzato correttamente		*/
 	if(!m_init_flag){
-		/*	se così non è non ho nulla da controllare e restituisco false		*/
+		/*	se così non è non ho nulla da controllare e restituisco false dopo	*/
+		/*	aver impostato l'errore												*/
+		setError(AError::SystemNotReady);
 		return false;
 	}
 	/*	se invece tutto è ok disabilito lo scheduler							*/
@@ -383,4 +420,9 @@ bool AFramework::System::enoughSpaceFor(const size_t& size){
 	enableScheduler();
 	/*	e restituisco false														*/
 	return false;
+}
+
+void AFramework::System::setError(const AError& error){
+	/*	Nulla da commentare														*/
+	m_last_fail = error;
 }
