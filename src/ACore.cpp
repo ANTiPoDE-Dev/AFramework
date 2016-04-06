@@ -144,7 +144,7 @@ bool AFramework::System::init(size_t heapSize){
 	return true;
 }
 
-bool AFramework::System::removeObject(void * address){
+bool AFramework::System::free(void * address){
 	
 	Segment	*	nav = NULL;
 	bool		flg = false;
@@ -340,9 +340,9 @@ void * AFramework::System::malloc(const size_t & size){
 	return NULL;
 }
 
-bool AFramework::System::free(void* address){
-	/*	solo un modo alternativo di chiamare la funzione removeObject(void *)	*/
-	return removeObject(address);
+bool AFramework::System::removeObject(void* address){
+	/*	solo un modo alternativo di chiamare la funzione free(void *)	*/
+	return free(address);
 }
 
 void AFramework::System::disableScheduler(){

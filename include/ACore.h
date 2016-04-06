@@ -10,8 +10,8 @@ namespace AFramework{
 		
 		public:
 								static	bool		init			(		size_t			heapSize		);
-			template <class T>	static	bool		canCreate		(const	uint32_t		objNumber = 1	);
-			template <class T>	static	T		*	createObject	(const	uint32_t		objNumber = 1	);
+			template <class T>	static	bool		canCreate		(const	uint32_t	&	objNumber = 1	);
+			template <class T>	static	T		*	createObject	(const	uint32_t	&	objNumber = 1	);
 								static	bool		removeObject	(		void		*	address			);
 								static	size_t		availableMemory	(										);
 								static	size_t		heapSize		(										);
@@ -30,12 +30,12 @@ namespace AFramework{
 								static	bool		m_init_flag;
 	};
 	
-	template <class T> T * System::createObject(const uint32_t objNumber){
+	template <class T> T * System::createObject(const uint32_t & objNumber){
 		
 		return static_cast<T *>(malloc(objNumber * sizeof(T)));
 	}
 	
-	template <class T> bool System::canCreate(const __uint32_t objNumber){
+	template <class T> bool System::canCreate(const __uint32_t & objNumber){
 		
 		return enoughSpaceFor(objNumber * sizeof(T));
 	}
