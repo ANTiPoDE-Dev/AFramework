@@ -10,7 +10,7 @@ namespace AFramework{
 		
 		public:
 								static	bool		init			(		size_t			heapSize		);
-			template <class T>	static	bool		canAllocate		(const	uint32_t		objNumber = 1	);
+			template <class T>	static	bool		canCreate		(const	uint32_t		objNumber = 1	);
 			template <class T>	static	T		*	createObject	(const	uint32_t		objNumber = 1	);
 								static	bool		removeObject	(		void		*	address			);
 								static	size_t		availableMemory	(										);
@@ -35,7 +35,7 @@ namespace AFramework{
 		return static_cast<T *>(malloc(objNumber * sizeof(T)));
 	}
 	
-	template <class T> bool System::canAllocate(const __uint32_t objNumber){
+	template <class T> bool System::canCreate(const __uint32_t objNumber){
 		
 		return enoughSpaceFor(objNumber * sizeof(T));
 	}
