@@ -1,3 +1,31 @@
+/*******************************************************************************
+ *	@author:	Milazzo Giuseppe
+ *				Università KORE Enna
+ *	@e-mail:	milazzo.ga@gmail.com
+ *				info@antipode-dev.org
+ *******************************************************************************
+ *	Software Licence:
+ *******************************************************************************
+ * 
+ *	This file is part of AFramework.
+ * 
+ *	AFramework is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ * 
+ *	AFramework is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with AFramework.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ *	Copyright 2015, 2016 Milazzo Giuseppe 
+ * 
+*/
+
 #include <cstring>
 
 #include "ACore.h"
@@ -6,95 +34,36 @@
 
 AFramework::System::Segment	*	AFramework::System::m_heap_head(NULL);
 size_t							AFramework::System::m_heap_size(0);
+size_t							AFramework::System::m_heap_busy(0);
 size_t							AFramework::System::m_xc32_offs(8);
 bool							AFramework::System::m_init_flag(false);
-AFramework::AError				AFramework::System::m_last_fail(AFramework::AError::NoError);
 
 class AFramework::System::Segment{
 	
 	public:
 		
-		void			setSize		(const	size_t	& size	);
-		void			setFree		(						);
-		void			setBusy		(						);
-		void			linkPrev	(		Segment * prev	);
-		void			linkNext	(		Segment * next	);
-		void		*	data		(						);
-		Segment		*	prev		(						) const;
-		Segment		*	next		(						) const;
-		Segment		*	vNext		(						);
-		bool			isBusy		(						) const;
-		size_t			size		(						) const;
+		void		*	data		();
+		Segment		*	vNext		();
 		
-	private:
-		
-		uint32_t		m_flag	: 0x01;
-		uint32_t		m_algn	: 0x1F;
-		Segment		*	m_prev;
+		uint32_t		m_stat	: 0x01;
+		uint32_t		m_size	: 0x1F;
 		Segment		*	m_next;
-		size_t			m_size;
 };
-
-void AFramework::System::Segment::setSize(const size_t & size){
-	/*	Nulla da commentare														*/
-	m_size = size;
-}
-
-void AFramework::System::Segment::setFree(){
-	/*	Politica decisa: se m_flag è 0 allora il segmento è libero				*/
-	m_flag = 0;
-}
-
-void AFramework::System::Segment::setBusy(){
-	/*	Politica decisa: se m_flag è 1 allora il segmento è occupato			*/
-	m_flag = 1;
-}
-
-void AFramework::System::Segment::linkPrev(Segment * prev){
-	/*	Nulla da commentare														*/
-	m_prev = prev;
-}
-
-void AFramework::System::Segment::linkNext(Segment * next){
-	/*	Nulla da commentare														*/
-	m_next = next;
-}
 
 void * AFramework::System::Segment::data(){
 	/*	Per evitare di inserire nella classe un altro campo (il puntatore void	*/
 	/*	data) ho preferito dare direttamente l'indirizzo calcolandolo in fun-	*/
-	/*	zione dell'offset di memoria. Sommando 1 all'indirizzo di m_size che è	*/
-	/*	di tipo size_t (4 bytes) mi sposto di 4 bytes in memoria, successiva-	*/
-	/*	mente restituisco l'indirizzo come puntatore void di modo che posso		*/
-	/*	spostarmi di 1 byte alla volta.											*/
-	return (reinterpret_cast<void *>(&m_size + 1));
-}
-
-AFramework::System::Segment * AFramework::System::Segment::prev() const{
-	/*	Nulla da commentare														*/
-	return m_prev;
-}
-
-AFramework::System::Segment * AFramework::System::Segment::next() const{
-	/*	Nulla da commentare														*/
-	return m_next;
+	/*	zione dell'offset di memoria. Sommando 1 all'indirizzo di m_next che è	*/
+	/*	di tipo void * (4 bytes) mi sposto di 4 bytes in memoria, successiva-	*/
+	/*	mente restituisco l'indirizzo come void *.								*/
+	return (reinterpret_cast<void *>(&m_next + 1));
 }
 
 AFramework::System::Segment * AFramework::System::Segment::vNext(){
 	/*	Calcolo l'indirizzo virtuale a cui dovrebbe trovarsi ipoteticamente il	*/
 	/*	prossimo blocco: partendo da data() che fornisce la memoria utile allo	*/
 	/*	utilizzatore aggiungo un offset di size() bytes.						*/
-	return (reinterpret_cast<Segment *>(reinterpret_cast<uint32_t>(data()) + size()));
-}
-
-bool AFramework::System::Segment::isBusy() const{
-	/*	Nulla da commentare														*/
-	return (m_flag == 1);
-}
-
-size_t AFramework::System::Segment::size() const{
-	/*	Nulla da commentare														*/
-	return m_size;
+	return (reinterpret_cast<Segment *>(reinterpret_cast<uint32_t>(data()) + m_size));
 }
 
 /*
@@ -102,24 +71,18 @@ size_t AFramework::System::Segment::size() const{
  */
 
 bool AFramework::System::init(size_t heapSize){
-	
-	/*	Resetto la variabile d'errore											*/
-	setError();
+
 	/*	Controllo che la funzione non sia già stata chiamata					*/
 	if(m_init_flag){
-		/*	imposto la variabile d'errore										*/
-		setError(AError::SystemDoubleStart);
 		/*	in questo caso restituisco false									*/
 		return false;
 	}
-	/*	Sottraggo alla dimensione dell'heap passata l'offset del compilatore	*/
+	/*	Sottraggo alla dimensione dell'heap passata l'overhead del compilatore	*/
 	heapSize -= m_xc32_offs;
 	/*	Provo ad allocare tutto l'heap alla testa della lista					*/
-	m_heap_head = static_cast<Segment *>(::malloc(heapSize));
+	m_heap_head = static_cast<Segment *>(std::malloc(heapSize));
 	/*	Se la testa è NULL allora l'allocazione è fallita						*/
 	if(!m_heap_head){
-		/*	imposto l'errore													*/
-		setError(AError::HeapFailure);
 		/*	Ed in questo caso restituisco false									*/
 		return false;
 	}
@@ -128,13 +91,13 @@ bool AFramework::System::init(size_t heapSize){
 	/*	e azzero la memoria														*/
 	memset(m_heap_head, 0x00, heapSize);
 	/*	Imposto il blocco come libero											*/
-	m_heap_head->setFree();
+	m_heap_head->m_stat = 0;
 	/*	Imposto la dimensione del blocco										*/
-	m_heap_head->setSize(m_heap_size - sizeof(Segment));
-	/*	Imposto il puntatore al blocco precedente a NULL						*/
-	m_heap_head->linkPrev(NULL);
+	m_heap_head->m_size = m_heap_size - sizeof(Segment);
+	/*	Aggiorno lo spazio occupato												*/
+	m_heap_busy += sizeof(Segment);
 	/*	Imposto il puntatore al blocco successivo a NULL						*/
-	m_heap_head->linkNext(NULL);
+	m_heap_head->m_next = NULL;
 	
 	/*
 	 PARTE RELATIVA ALLA CODA DEI THREAD <ANCORA DA PROGETTARE>
@@ -149,25 +112,21 @@ bool AFramework::System::init(size_t heapSize){
 	/*	e restituisco true														*/
 	return true;
 }
-//349-5394838
-bool AFramework::System::free(void ** add){
+
+bool AFramework::System::free(void * ptr){
 	
 	Segment	*	nav = NULL;
+	Segment *	pre = NULL;
 	bool		flg = false;
-	
-	/*	Resetto la variabile d'errore											*/
-	setError();
 	/*	Controllo che il framework sia stato inizializzato correttamente		*/
 	if(!m_init_flag){
 		/*	se non è così non esiste ancora l'heap e quindi non c'è nulla da	*/
-		/*	liberare per cui restituisco false dopo aver impostato l'errore		*/
-		setError(AError::SystemNotReady);
+		/*	liberare per cui restituisco false									*/
 		return false;
 	}
 	/*	Controllo che l'indirizzo non sia NULL									*/
-	if(!(*add)){
-		/*	in questo caso setto l'errore e ritorno false						*/
-		setError(AError::BadPointer);
+	if(!ptr){
+		/*	in questo caso setto ritorno false									*/
 		return false;
 	}
 	/*	se invece tutto è stato inizializzato correttamente, disabilito lo		*/
@@ -179,18 +138,21 @@ bool AFramework::System::free(void ** add){
 	while(nav){
 		/*	se l'indirizzo passato corrisponde ad un indirizzo di memoria che	*/
 		/*	risiede nell'heap (scorro cercando una corrispondenza)				*/
-		if(nav->data() == *add){
+		if(nav->data() == ptr){
 			/*	setto il blocco come libero										*/
-			nav->setFree();
+			nav->m_stat = 0;
+			/*	agiorno lo spazio occupato										*/
+			m_heap_busy -= nav->m_size;
 			/*	cancello la memoria												*/
-			memset(nav->data(), 0x00, nav->size());
+			memset(nav->data(), 0x00, nav->m_size);
 			/*	imposto il flag per la deframmentazione a true					*/
 			flg = true;
 			/*	e smetto di scorrere la lista									*/
 			break;
 		}
-		/*	altrimenti continuo a scorrere										*/
-		nav = nav->next();
+		/*	altriment sposto il puntatore precedente e continuo a scorrere		*/
+		pre = nav;
+		nav = nav->m_next;
 	}
 	/*	se ho trovato corrispondenze devo deframmentare la memoria guardando	*/
 	/*	i blocchi precedente e successivo										*/
@@ -199,88 +161,45 @@ bool AFramework::System::free(void ** add){
 		/*	sinistra c'è qualcosa) ed inoltre non è occupato (funziona sempre	*/
 		/*	per lo short-evaluation, ovvero se fallisce la prima condizione		*/
 		/*	il secondo confronto non viene eseguito)							*/
-		if(nav->prev() && !(nav->prev()->isBusy())){
+		if(pre && pre->m_stat == 0){
 			/*	sposto il puntatore temporaneo al blocco precedente				*/
-			nav = nav->prev();
+			nav = pre;
 			/*	ricalcolo la dimensione del blocco								*/
-			nav->setSize(nav->size() + sizeof(Segment) + nav->next()->size());
-			/*	se il blocco a destra di quello liberato all'inizio non è NULL	*/
-			if(nav->next()->next()){
-				/*	assegno nav come precedente (elimino il riferimento al		*/
-				/*	blocco liberato)											*/
-				nav->next()->next()->linkPrev(nav);
-			}
+			nav->m_size += sizeof(Segment) + nav->m_next->m_size;
+			/*	aggiorno lo spazio occupato										*/
+			m_heap_busy -= sizeof(Segment);
 			/*	assegno al successivo di nav il successivo del blocco eliminato	*/
-			nav->linkNext(nav->next()->next());
+			nav->m_next = nav->m_next->m_next;
 			/*	e pulisco la memoria											*/
-			memset(nav->data(), 0x00, nav->size());
+			memset(nav->data(), 0x00, nav->m_size);
 		}
 		/*	sempre per il discorso relativo al primo if sopra adesso devo		*/
 		/*	controllare a destra, infatti se questo blocco è non NULL e libero	*/
 		/*	devo ricompattare, per cui											*/
-		if(nav->next() && !(nav->next()->isBusy())){
+		if(nav->m_next && nav->m_next->m_stat == 0){
 			/*	se è così, setto la dimensione di nav calcolando la nuova		*/
-			nav->setSize(nav->size() + sizeof(Segment) + nav->next()->size());
-			/*	se il prossimo successivo è un blocco valido					*/
-			if(nav->next()->next()){
-				/*	collego il precedente di questo a nav						*/
-				nav->next()->next()->linkPrev(nav);
-			}
+			nav->m_size += sizeof(Segment) + nav->m_next->m_size;
+			/*	aggiorno lo spazio occupato										*/
+			m_heap_busy -= sizeof(Segment);
 			/*	ed al successivo di nav assegno il prossimo successivo			*/
-			nav->linkNext(nav->next()->next());
+			nav->m_next = nav->m_next->m_next;
 			/*	pulisco la memoria azzerandola									*/
-			memset(nav->data(), 0x00, nav->size());
+			memset(nav->data(), 0x00, nav->m_size);
 		}
 	}
 	/*	riabilito lo scheduler													*/
 	enableScheduler();
 	/*	e restituisco il valore del flag, infatti se non ho trovato corrispon-	*/
-	/*	denze questo sarà false, altrimenti true ed in ogni caso setto l'errore	*/
-	setError(flg ? AError::NoError : AError::BadPointer);
+	/*	denze questo sarà false, altrimenti true								*/
 	return flg;
 }
 
-AFramework::AError AFramework::System::lastError() {
-	/*	nulla da commentare														*/
-	return m_last_fail;
-}
-
 size_t AFramework::System::availableMemory(){
-	
-	Segment *	nav = NULL;
-	size_t		tmp = 0;
-	/*	Resetto la variabile d'errore											*/
-	setError();
-	/*	Controllo che il framework sia stato inizializzato						*/
-	if(!m_init_flag){
-		/*	se così non è allora non esistendo l'heap restituisco 0	dopo aver	*/
-		/*	impostato l'errore													*/
-		setError(AError::SystemNotReady);
-		return 0;
-	}
-	/*	Se invece è stato inizializzato disabilito lo scheduler					*/
-	disableScheduler();
-	/*	assegno la testa della lista ad un puntatore temporaneo					*/
-	nav = m_heap_head;
-	/*	ed inizio a scorrere la lista											*/
-	while(nav){
-		/*	se il blocco su cui mi trovo è libero								*/
-		if(!(nav->isBusy())){
-			/*	aggiungo la dimensione al totale								*/
-			tmp += nav->size();
-		}
-		/*	e continuo a scorrere (a prescindere)								*/
-		nav = nav->next();
-	}
-	/*	riabilito lo scheduler													*/
-	enableScheduler();
-	/*	e restituisco il totale													*/
-	return tmp;
+	/*	Nulla da commentare														*/
+	return m_heap_size - m_heap_busy;
 }
 
 size_t AFramework::System::heapSize(){
-	/*	Resetto la variabile d'errore											*/
-	setError();
 	/*	Nulla da commentare...													*/
 	return m_heap_size;
 }
@@ -291,13 +210,9 @@ void * AFramework::System::malloc(const size_t & size){
 	Segment *	seg = NULL;
 	size_t		max = 0;
 	bool		flg = false;
-	/*	Resetto la variabile d'errore											*/
-	setError();	
 	/*	Controllo che l'heap sia stato inizializzato correttamente				*/
 	if(!m_init_flag){
-		/*	se così non è restituisco NULL (non ho dove allocare!) dopo aver	*/
-		/*	impostato la variabile d'errore										*/
-		setError(AError::SystemNotReady);
+		/*	se così non è restituisco NULL (non ho dove allocare!)				*/
 		return NULL;
 	}
 	/*	Se invece è tutto ok disabilito lo scheduler							*/
@@ -306,61 +221,60 @@ void * AFramework::System::malloc(const size_t & size){
 	nav = m_heap_head;
 	/*	ed inizio a scorrere la lista											*/
 	while(nav){
-		/*	cercando prima un blocco libero di dimensione esatta				*/
-		if(nav->size() == size && !(nav->isBusy())){
-			/*	se trovo questo blocco lo imposto come occupato					*/
-			nav->setBusy();
-			/*	riabilito lo scheduler											*/
-			enableScheduler();
-			/*	e restituisco il puntatore ai dati								*/
-			return nav->data();
+		/*	se il blocco a cui sto puntando è libero							*/
+		if(nav->m_stat == 0){
+			/*	controllo se ne esiste uno di dimensione esatta					*/
+			if(nav->m_size == size){
+				/*	se trovo questo blocco lo imposto come occupato				*/
+				nav->m_stat = 1;
+				/*	aggiorno lo spazio occupato									*/
+				m_heap_busy += size;
+				/*	riabilito lo scheduler										*/
+				enableScheduler();
+				/*	e restituisco il puntatore ai dati							*/
+				return nav->data();
+			/*	se invece il blocco ha dimensione maggiore di quella richiesta	*/
+			/*	ricerco il massimo tra i blocchi liberi	(facendo così evito di	*/
+			/*	scorrere due volte la lista)									*/
+			}else if(nav->m_size > size && nav->m_size > max){
+				/*	Se trovo questo blocco, imposto un flag a true				*/
+				flg = true;
+				/*	aggiorno la dimensione del blocco massimo					*/
+				max = nav->m_size;
+				/*	salvo in un puntatore temporaneo l'indirizzo di detto		*/
+				/*	blocco														*/
+				seg = nav;
+			}
 		}
 		/*	altrimenti continuo a scorrere fino a che non finisco la lista		*/
-		nav = nav->next();
-	}
-	/*	Nel caso in cui non dovesse esistere un blocco di dimensione esatta		*/
-	/*	riassegno in puntatore temporaneo alla testa							*/
-	nav = m_heap_head;
-	/*	e inizio nuovamente a scorrere											*/
-	while(nav){
-		/*	Cercando il più grande tra i blocchi liberi con dimensione maggiore	*/
-		/*	di quella richiesta (in questo modo riduco gli sprechi)				*/
-		if(nav->size() > size && !(nav->isBusy()) && nav->size() > max){
-			/*	Se trovo questo blocco, imposto un flag a true					*/
-			flg = true;
-			/*	aggiorno la dimensione del blocco massimo						*/
-			max = nav->size();
-			/*	salvo in un puntatore temporaneo l'indirizzo di detto blocco	*/
-			seg = nav;
-		}
-		/*	e continuo a scorrere la lista										*/
-		nav = nav->next();
+		nav = nav->m_next;
 	}
 	/*	A navigazione ultimata, se il blocco richiesto esiste il flag sarà true	*/
 	/*	il puntatore temporaneo seg conterrà l'indirizzo del massimo, per cui	*/
 	if(flg){
-		/*	solo per questione di coerenza di stile lavoro di nuovo con nav		*/
+		/*	(solo per questione di coerenza di stile lavoro di nuovo con nav)	*/
 		nav = seg;
-		/*	impostandone la dimensione a quella richiesta						*/
-		nav->setSize(size);
-		/*	impostandolo come occupato											*/
-		nav->setBusy();
+		/*	imposto la dimensione a quella richiesta							*/
+		nav->m_size = size;
+		/*	lo imposto come come occupato										*/
+		nav->m_stat = 1;
+		/*	aggiorno lo spazio occupato											*/
+		m_heap_busy += size;
 		/*	successivamente imposto il blocco successivo assegnando l'indirizzo	*/
 		/*	calcolato a seg														*/
 		seg = nav->vNext();
 		/*	imposto il blocco come libero										*/
-		seg->setFree();
-		/*	imposto il puntatore al blocco precedente con nav (il blocco		*/
-		/*	allocato precedentemente)											*/
-		seg->linkPrev(nav);
+		seg->m_stat = 0;
 		/*	imposto il puntatore al blocco successivo al successivo di nav		*/
 		/*	(questo indirizzo non è stato modificato)							*/
-		seg->linkNext(nav->next());
+		seg->m_next = nav->m_next;
 		/*	imposto la dimensione del nuovo blocco								*/
-		seg->setSize(max - size - sizeof(Segment));
+		seg->m_size = max - size - sizeof(Segment);
+		/*	aggiorno lo spazio occupato											*/
+		m_heap_busy += sizeof(Segment);
 		/*	imposto il successivo di nav (il blocco allocato) a seg	ricostru-	*/
 		/*	endo la lista														*/
-		nav->linkNext(seg);
+		nav->m_next = seg;
 		/*	riabilito lo scheduler												*/
 		enableScheduler();
 		/*	ed infine restituisco l'indirizzo dei dati							*/
@@ -368,16 +282,9 @@ void * AFramework::System::malloc(const size_t & size){
 	}
 	/*	se invece il blocco richiesto non esiste riabilito lo scheduler			*/
 	enableScheduler();
-	/*	imposto la variabile d'errore											*/
-	setError(AError::MemoryIsFull);
 	/*	e restituisco NULL														*/
 	return NULL;
 }
-
-//bool AFramework::System::removeObject(void** address){
-//	/*	solo un modo alternativo di chiamare la funzione free(void *)	*/
-//	return free(address);
-//}
 
 void AFramework::System::disableScheduler(){
 	#warning "void AFramework::System::disableScheduler() non ancora implementata"
@@ -390,13 +297,9 @@ void AFramework::System::enableScheduler(){
 bool AFramework::System::enoughSpaceFor(const size_t& size){
 	
 	Segment	*	nav = NULL;
-	/*	resetto la variabile d'errore											*/
-	setError();
 	/*	controllo che il framework sia stato inizializzato correttamente		*/
 	if(!m_init_flag){
-		/*	se così non è non ho nulla da controllare e restituisco false dopo	*/
-		/*	aver impostato l'errore												*/
-		setError(AError::SystemNotReady);
+		/*	se così non è non ho nulla da controllare e restituisco false		*/
 		return false;
 	}
 	/*	se invece tutto è ok disabilito lo scheduler							*/
@@ -407,23 +310,18 @@ bool AFramework::System::enoughSpaceFor(const size_t& size){
 	/*	abbastanza grande (faccio il confronto più lasco per velocizzare)		*/
 	while(nav){
 		/*	se esiste abbastanza spazio											*/
-		if(nav->size() >= size){
+		if(nav->m_size >= size){
 			/*	riabilito lo scheduler											*/
 			enableScheduler();
 			/*	e restituisco true												*/
 			return true;
 		}
 		/*	altrimenti continuo a scorrere										*/
-		nav = nav->next();
+		nav = nav->m_next;
 	}
 	/*	se invece il blocco di dimensione richiesta non esiste, riabilito lo	*/
 	/*	scheduler																*/
 	enableScheduler();
 	/*	e restituisco false														*/
 	return false;
-}
-
-void AFramework::System::setError(const AError& error){
-	/*	Nulla da commentare														*/
-	m_last_fail = error;
 }

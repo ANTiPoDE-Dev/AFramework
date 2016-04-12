@@ -6,7 +6,7 @@
 #include <cstdlib>
 
 using namespace AFramework;
-
+/*
 class Base{
   
 	public:
@@ -84,7 +84,7 @@ class Derived : public Base{
 	private:
 		int m_b;
 };
-
+*/
 int main(){
 	
 	TRISA	= 0x0793;	//0000 0111 1001 0011
@@ -103,13 +103,38 @@ int main(){
 	ODCC	= 0x0000;
 	
 	LATCbits.LATC0 = 1;
-
+	size_t busy = 0;
 	System::init(16392);
-		
+/*
 	Derived * d = new Derived();
 	
 	delete d;
-
+*/		
+	busy = System::availableMemory();
+	int * p1 = (int *) System::malloc(sizeof(int));
+	busy = System::availableMemory();
+	int * p2 = (int *) System::malloc(sizeof(int));
+	busy = System::availableMemory();
+	int * p3 = (int *) System::malloc(sizeof(int));
+	busy = System::availableMemory();
+	int * p4 = (int *) System::malloc(sizeof(int));
+	busy = System::availableMemory();
+	
+	*p1 = 111111;
+	*p2 = 222222;
+	*p3 = 333333;
+	*p4 = 444444;
+	
+	System::free(p1);
+	busy = System::availableMemory();
+	System::free(p3);
+	busy = System::availableMemory();
+	System::free(p2);
+	busy = System::availableMemory();
+	System::free(p4);
+	busy = System::availableMemory();
+	busy = System::availableMemory();
+	
 	while(1){
 		
 	}
