@@ -35,7 +35,7 @@
 #include <cstdint>
 
 namespace AFramework{
-	
+
 	class System{
 		
 		public:
@@ -43,7 +43,7 @@ namespace AFramework{
 			template <class T>	static	bool		canCreate		(const	uint32_t	&	objNumber = 1			);
 								static	size_t		availableMemory	(												);
 								static	size_t		heapSize		(												);
-								static	void	*	malloc			(const	size_t		&	size					);
+								static	void	*	malloc			(const	size_t			size					);
 								static	bool		free			(		void		*	address					);
 		private:
 

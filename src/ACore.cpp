@@ -29,14 +29,39 @@
 #include <cstring>
 
 #include "ACore.h"
+#include "ASystemConfig.h"
 
 #include <cstring>
+
+#ifdef __DEBUG__
+
+	void trace(const char * str){
+		
+	}
+
+#endif
 
 AFramework::System::Segment	*	AFramework::System::m_heap_head(NULL);
 size_t							AFramework::System::m_heap_size(0);
 size_t							AFramework::System::m_heap_busy(0);
 size_t							AFramework::System::m_xc32_offs(8);
 bool							AFramework::System::m_init_flag(false);
+
+void * operator new(size_t size){
+	return AFramework::System::malloc(size);
+}
+
+void * operator new[](size_t size){
+	return AFramework::System::malloc(size);
+}
+
+void operator delete(void* addr){
+	AFramework::System::free(addr);
+}
+
+void operator delete[](void* addr){
+	AFramework::System::free(addr);
+}
 
 class AFramework::System::Segment{
 	
@@ -71,7 +96,6 @@ AFramework::System::Segment * AFramework::System::Segment::vNext(){
  */
 
 bool AFramework::System::init(size_t heapSize){
-
 	/*	Controllo che la funzione non sia già stata chiamata					*/
 	if(m_init_flag){
 		/*	in questo caso restituisco false									*/
@@ -204,7 +228,7 @@ size_t AFramework::System::heapSize(){
 	return m_heap_size;
 }
 
-void * AFramework::System::malloc(const size_t & size){
+void * AFramework::System::malloc(const size_t size){
 	
 	Segment *	nav = NULL;
 	Segment *	seg = NULL;
