@@ -149,11 +149,12 @@ bool AFramework::System::init(size_t heapSize){
 	/*	e restituisco true														*/
 	return true;
 }
-
-bool AFramework::System::free(void * address){
+//349-5394838
+bool AFramework::System::free(void ** add){
 	
 	Segment	*	nav = NULL;
 	bool		flg = false;
+	
 	/*	Resetto la variabile d'errore											*/
 	setError();
 	/*	Controllo che il framework sia stato inizializzato correttamente		*/
@@ -164,7 +165,7 @@ bool AFramework::System::free(void * address){
 		return false;
 	}
 	/*	Controllo che l'indirizzo non sia NULL									*/
-	if(!address){
+	if(!(*add)){
 		/*	in questo caso setto l'errore e ritorno false						*/
 		setError(AError::BadPointer);
 		return false;
@@ -178,7 +179,7 @@ bool AFramework::System::free(void * address){
 	while(nav){
 		/*	se l'indirizzo passato corrisponde ad un indirizzo di memoria che	*/
 		/*	risiede nell'heap (scorro cercando una corrispondenza)				*/
-		if(nav->data() == address){
+		if(nav->data() == *add){
 			/*	setto il blocco come libero										*/
 			nav->setFree();
 			/*	cancello la memoria												*/
@@ -373,10 +374,10 @@ void * AFramework::System::malloc(const size_t & size){
 	return NULL;
 }
 
-bool AFramework::System::removeObject(void* address){
-	/*	solo un modo alternativo di chiamare la funzione free(void *)	*/
-	return free(address);
-}
+//bool AFramework::System::removeObject(void** address){
+//	/*	solo un modo alternativo di chiamare la funzione free(void *)	*/
+//	return free(address);
+//}
 
 void AFramework::System::disableScheduler(){
 	#warning "void AFramework::System::disableScheduler() non ancora implementata"

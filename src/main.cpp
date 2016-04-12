@@ -7,6 +7,84 @@
 
 using namespace AFramework;
 
+class Base{
+  
+	public:
+		Base(){
+			m_a = 0;
+		}
+		
+		Base(int a){
+			m_a = a;
+			if(m_alloc){
+				a++;
+			}
+		}
+		
+		~Base(){
+		
+		}
+		
+		void	setA(int a){
+			m_a = a;
+		}
+		
+		int		a() const{
+			return m_a;
+		}
+		
+		void	*	operator new(size_t size){
+			void * obj = System::malloc(size);
+			if(obj){
+				Base * m_this = reinterpret_cast<Base *>(obj);
+				m_this->m_alloc = true;
+			}
+			return obj;
+		}
+		
+		void	*	operator new[](size_t size){
+			return System::malloc(size);
+		}
+		
+		void		operator delete(void * ptr){
+			System::free(&ptr);
+		}
+		
+		void		operator delete[](void * ptr){
+			System::free(&ptr);
+		}
+		
+	private:
+		int		m_a;
+		bool	m_alloc;
+};
+
+class Derived : public Base{
+
+	public:
+		Derived() : Derived(0, 0){
+		
+		}
+		
+		Derived(int a, int b) : Base(a){
+			setB(b);
+		}
+		
+		~Derived(){
+		
+		}
+		
+		void setB(int b){
+			m_b = b;
+		}
+		
+		int b() const{
+			return m_b;
+		}
+	private:
+		int m_b;
+};
+
 int main(){
 	
 	TRISA	= 0x0793;	//0000 0111 1001 0011
@@ -26,13 +104,11 @@ int main(){
 	
 	LATCbits.LATC0 = 1;
 
-	bool x = System::init(16392);
+	System::init(16392);
+		
+	Derived * d = new Derived();
 	
-	int * a = System::createObject<int>();
-	int * b = System::createObject<int>();
-	
-	*a = 101010;
-	*b = 212121;
+	delete d;
 
 	while(1){
 		

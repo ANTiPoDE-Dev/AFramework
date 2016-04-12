@@ -22,12 +22,12 @@ namespace AFramework{
 		public:
 								static	bool		init			(		size_t			heapSize				);
 			template <class T>	static	bool		canCreate		(const	uint32_t	&	objNumber = 1			);
-			template <class T>	static	T		*	createObject	(const	uint32_t	&	objNumber = 1			);
-								static	bool		removeObject	(		void		*	address					);
+//			template <class T>	static	T		*	createObject	(const	uint32_t	&	objNumber = 1			);
+//								static	bool		removeObject	(		void		*	address					);
 								static	size_t		availableMemory	(												);
 								static	size_t		heapSize		(												);
 								static	void	*	malloc			(const	size_t		&	size					);
-								static	bool		free			(		void		*	address					);
+								static	bool		free			(		void		**	address					);
 								static	AError		lastError		(												);	//da includere in doc
 		private:
 								static	void		disableScheduler(												);
@@ -45,12 +45,12 @@ namespace AFramework{
 	};
 	
 
-	
+/*
 	template <class T> T * System::createObject(const uint32_t & objNumber){
 		
 		return static_cast<T *>(malloc(objNumber * sizeof(T)));
 	}
-	
+*/		
 	template <class T> bool System::canCreate(const __uint32_t & objNumber){
 		
 		return enoughSpaceFor(objNumber * sizeof(T));
