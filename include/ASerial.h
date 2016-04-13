@@ -26,40 +26,30 @@
  * 
 */
 
-#ifndef ACORE_H
-#define ACORE_H
+#ifndef ASERIAL_H
+#define ASERIAL_H
 
-#include <cstdlib>
-#include <cstdint>
+#include "ACore.h"
+#include "ADevice.h"
 
-namespace AFramework{
+extern "C"{
 
-	class System{
-		public:
-								static	bool		init			(		size_t			heapSize									);
-			template <class T>	static	bool		canCreate		(const	uint32_t	&	objNumber = 1,	const bool & autoLock = true);
-								static	size_t		availableMemory	(																	);
-								static	size_t		heapSize		(																	);
-								static	void	*	malloc			(const	size_t			size										);
-								static	bool		free			(		void		*	address										);
-		private:
-								static	void		disableScheduler(																	);
-								static	void		enableScheduler	(																	);
-								static	bool		enoughSpaceFor	(const	size_t		&	size		,	const bool & autoLock = true);
-								
-								class	Segment;
-			
-								static	Segment	*	m_heap_head;
-								static	size_t		m_heap_size;
-								static	size_t		m_heap_busy;
-								static	size_t		m_xc32_offs;
-								static	bool		m_init_flag;
-	};
-	
-	template <class T> bool System::canCreate(const __uint32_t & objNumber, const bool & autoLock){
-		
-		return enoughSpaceFor(objNumber * sizeof(T), autoLock);
-	}
 }
 
-#endif	//	ACORE_H
+namespace AFramework{
+	
+	class ASerial : public ADevice{
+	
+		public:
+			
+			enum Baudrate{
+				Baud9600,
+				Baud19200,
+				Baud38400,
+				Baud57600,
+				Baud115200
+			};
+	};
+}
+
+#endif	//	ASERIAL_H

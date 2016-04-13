@@ -8,6 +8,9 @@
       <itemPath>../../include/ASystemConfig.h</itemPath>
       <itemPath>../../include/ACore.h</itemPath>
       <itemPath>../../include/AContainers.h</itemPath>
+      <itemPath>../../include/ASerial.h</itemPath>
+      <itemPath>../../include/ADevice.h</itemPath>
+      <itemPath>../../include/APort.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -18,6 +21,7 @@
                    projectFiles="true">
       <itemPath>../../src/main.cpp</itemPath>
       <itemPath>../../src/ACore.cpp</itemPath>
+      <itemPath>../../src/ADevice.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
