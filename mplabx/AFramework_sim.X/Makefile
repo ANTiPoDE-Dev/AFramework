@@ -57,6 +57,7 @@ build: .build-post
 # Add your pre 'build' code here...
 
 .build-post: .build-impl
+	      call deploy.cmd
 # Add your post 'build' code here...
 
 
