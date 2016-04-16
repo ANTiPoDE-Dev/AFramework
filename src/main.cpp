@@ -1,7 +1,10 @@
 #define ANTIPODE32MR
 
 #include "ASystemConfig.h"
+#include "ASerial.h"
 #include "ACore.h"
+#include "APort.h"
+#include "AContainers.h"
 
 #include <cstdlib>
 
@@ -9,36 +12,26 @@ using namespace AFramework;
 
 int main(){
 	
-	TRISA	= 0x0793;	//0000 0111 1001 0011
-	ANSELA	= 0x0000;
-	LATA	= 0x0000;
-	ODCA	= 0x0000;
+
+	unsigned int a = 0xFFFF;
+	
+	portA.m_TRIS_SET	= a;
+	portA.m_ANSEL_CLR	= a;
+	portA.m_LAT_CLR		= a;
+	portA.m_ODC_CLR		= a;
 	
 	TRISB	= 0xEFAF;	//1110 1111 1010 1111
 	ANSELB	= 0x0000;
 	LATB	= 0x0000;
 	ODCB	= 0x0000;
 	
-	TRISC	= 0x01FE;	//0000 0001 1111 1110
+	TRISC	= 0x0000;	//0000 0001 1111 1110
 	ANSELC	= 0x0000;
 	LATC	= 0x0000;
 	ODCC	= 0x0000;
 	
-	LATCbits.LATC0 = 1;
-	size_t busy = 0;
+	
 	System::init(16392);
-/*
-	Derived * d = new Derived();
 	
-	delete d;
-*/		
-
-	int * p = new int;
-	
-	delete p;
-	
-	while(1){
-		
-	}
 	return 0;
 }

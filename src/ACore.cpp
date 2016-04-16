@@ -318,7 +318,7 @@ void AFramework::System::enableScheduler(){
 	#warning "void AFramework::System::enableScheduler() non ancora implementata"
 }
 
-bool AFramework::System::enoughSpaceFor(const size_t& size){
+bool AFramework::System::enoughSpaceFor(const size_t& size, const bool& autoLock){
 	
 	Segment	*	nav = NULL;
 	/*	controllo che il framework sia stato inizializzato correttamente		*/
@@ -335,8 +335,10 @@ bool AFramework::System::enoughSpaceFor(const size_t& size){
 	while(nav){
 		/*	se esiste abbastanza spazio											*/
 		if(nav->m_size >= size){
-			/*	riabilito lo scheduler											*/
-			enableScheduler();
+			/*	riabilito lo scheduler se autolock è false						*/
+			if(!autoLock){
+				enableScheduler();
+			}
 			/*	e restituisco true												*/
 			return true;
 		}

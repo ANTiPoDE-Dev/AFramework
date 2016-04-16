@@ -26,40 +26,21 @@
  * 
 */
 
-#ifndef ACORE_H
-#define ACORE_H
+#ifndef ADEVICE_H
+#define ADEVICE_H
 
-#include <cstdlib>
-#include <cstdint>
+#include "ACore.h"
 
 namespace AFramework{
-
-	class System{
-		public:
-								static	bool		init			(		size_t			heapSize									);
-			template <class T>	static	bool		canCreate		(const	uint32_t	&	objNumber = 1,	const bool & autoLock = true);
-								static	size_t		availableMemory	(																	);
-								static	size_t		heapSize		(																	);
-								static	void	*	malloc			(const	size_t			size										);
-								static	bool		free			(		void		*	address										);
-		private:
-								static	void		disableScheduler(																	);
-								static	void		enableScheduler	(																	);
-								static	bool		enoughSpaceFor	(const	size_t		&	size		,	const bool & autoLock = true);
-								
-								class	Segment;
-			
-								static	Segment	*	m_heap_head;
-								static	size_t		m_heap_size;
-								static	size_t		m_heap_busy;
-								static	size_t		m_xc32_offs;
-								static	bool		m_init_flag;
-	};
 	
-	template <class T> bool System::canCreate(const __uint32_t & objNumber, const bool & autoLock){
+	class ADevice{
+	
+		public:
 		
-		return enoughSpaceFor(objNumber * sizeof(T), autoLock);
-	}
+		protected:
+			static	void	ppsUnlock();
+			static	void	ppsRelock();
+	};
 }
 
-#endif	//	ACORE_H
+#endif	//	ADEVICE_H
