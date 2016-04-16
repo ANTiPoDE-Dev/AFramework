@@ -29,8 +29,6 @@
 #ifndef ACONTAINERS_H
 #define ACONTAINERS_H
 
-#include "ACore.h"
-
 namespace AFramework{
 
 	template <class T> class AAbstractList;
@@ -69,7 +67,7 @@ namespace AFramework{
 		private:
 										AAbstractList	(const AAbstractList<T> & list							);
 	};
-	
+
 	template <class T> class AList : public AAbstractList<T>{
 
 		public:
@@ -123,12 +121,12 @@ namespace AFramework{
 										};
 										ALinkedList	(const ALinkedList<T>	& list							);
 					void				seek		(const uint32_t			& index,	ANode<T>	**	cur	) const;
-										
+
 					ANode<T>		*	m_head;
 					ANode<T>		*	m_tail;
 			mutable	ANode<T>		*	m_temp;
 	};
-	
+
 	template <class T> AAbstractList<T>::AAbstractList() : m_size(0), m_flag(false){
 		/*	Nulla da commentare													*/
 	}
@@ -194,40 +192,37 @@ namespace AFramework{
 	}
 
 	template <class T> uint32_t AList<T>::removeAll(const T& item){
-		uint32_t		ocNumb = 0;
-		uint32_t		tIndex = 0;
-		T			*	newLst = NULL;
-
+		uint32_t		m_occ = 0;
+		uint32_t		m_ind = 0;
+		T			*	m_new = NULL;
 		/*	come prima cosa scorro la lista										*/
 		for(uint32_t i = 0; i < this->m_size; i++){
 			/*	se l'i-esimo elemento è uguale al parametro						*/
 			if(m_list[i] == item){
 				/*	incremento le occorrenze									*/
-				ocNumb++;
+				m_occ++;
 			}
 		}
 		/* se il numero di occorrenze non è nullo ed ho abbastanza memoria		*/
-		if(ocNumb && System::canCreate<T>(this->m_size - ocNumb)){
-			/*	alloco lo spazio per il nuovo vettore							*/
-			newLst = new T[this->m_size - ocNumb];
+		if(m_occ && (m_new = new T[this->m_size - m_occ])){
 			/*	scorro il vettore												*/
 			for(uint32_t i = 0; i < this->m_size; i++){
 				/*	se l'i-esimo elemento è diverso dal parametro				*/
 				if(m_list[i] != item){
 					/*	lo copio incrementando l'indice							*/
-					newLst[tIndex++] = m_list[i];
+					m_new[m_ind++] = m_list[i];
 				}
 			}
 			/*	libero la memoria occupata dal vecchio vettore					*/
 			delete [] m_list;
 			/*	riassegno il puntatore											*/
-			m_list = newLst;
+			m_list = m_new;
 			/*	aggiorno la dimensione											*/
-			this->m_size -= ocNumb;
+			this->m_size -= m_occ;
 			/*	e restituisco il numero di elementi eliminati					*/
-			return ocNumb;
+			return m_occ;
 		}
-		/*	se invece non ho occorrenze ho non ho abbastanza memoria in ogni	*/
+		/*	se invece non ho occorrenze o non ho abbastanza memoria in ogni		*/
 		/*	caso non ho eliminato nulla per cui ritorno 0						*/
 		return 0;
 	}
@@ -282,8 +277,6 @@ namespace AFramework{
 			this->m_flag = true;
 			/*	azzero l'indice temporaneo										*/
 			m_temp = 0;
-			/*	e restituisco false												*/
-			return true;
 		/*	altrimenti se sono nelle interazioni								*/
 		}else{
 			/*	incremento l'indice												*/
@@ -301,8 +294,8 @@ namespace AFramework{
 	}
 
 	template <class T> bool AList<T>::insert(const T& item, const uint32_t& index){
-		T			*	newLst = NULL;
-		uint32_t		tIndex = 0;
+		T			*	m_new = NULL;
+		uint32_t		m_ind = 0;
 		/*	se l'indice passato è più grande della dimensione della lista		*/
 		if(index > this->m_size){
 			/*	ritorno false													*/
@@ -310,24 +303,22 @@ namespace AFramework{
 		}
 		/*	Controllo che in memoria ci sia spazio sufficiente per allocare un	*/
 		/*	nuovo vettore														*/
-		if(System::canCreate<T>(this->m_size + 1)){
-			/*	alloco il nuovo vettore											*/
-			newLst = new T[this->m_size + 1];
+		if((m_new = new T[this->m_size + 1])){
 			/*	inizio l'inserimento											*/
 			for(uint32_t i = 0; i < this->m_size + 1; i++){
 				/*	se sono arrivato al punto giusto							*/
 				if(i == index){
 					/*	inserisco l'elemento									*/
-					newLst[i] = item;
+					m_new[i] = item;
 				}else{
 					/*	altrimenti inserisco l'elemento della vecchia lista		*/
-					newLst[i] = m_list[tIndex++];
+					m_new[i] = m_list[m_ind++];
 				}
 			}
 			/*	libero la memoria												*/
 			delete [] m_list;
 			/*	riassegno il puntatore											*/
-			m_list = newLst;
+			m_list = m_new;
 			/*	incremento la dimensione										*/
 			this->m_size++;
 			/*	e ritorno true													*/
@@ -338,8 +329,8 @@ namespace AFramework{
 	}
 
 	template <class T> bool AList<T>::remove(const uint32_t& index){
-		T			*	newLst = NULL;
-		uint32_t		tIndex = 0;
+		T			*	m_new = NULL;
+		uint32_t		m_ind = 0;
 		/*	se l'indice è maggiore o uguale alla dimensione della lista			*/
 		if(index >= this->m_size){
 			/*	ritorno false													*/
@@ -347,21 +338,19 @@ namespace AFramework{
 		}
 		/*	controllo che in memoria ci sia spazio sufficiente per effettuare	*/
 		/*	l'operazione														*/
-		if(System::canCreate<T>(this->m_size - 1)){
-			/*	alloco il nuovo vettore											*/
-			newLst = new T[this->m_size - 1];
+		if((m_new = new T[this->m_size - 1])){
 			/*	inizio l'inserimento											*/
 			for(uint32_t i = 0; i < this->m_size; i++){
 				/*	se l'indice corrente è diverso da quello che devo eliminare	*/
 				if(i != index){
 					/*	effettuo la copia										*/
-					newLst[tIndex++] = m_list[i];
+					m_new[m_ind++] = m_list[i];
 				}
 			}
 			/*	libero la memoria												*/
 			delete [] m_list;
 			/*	riassegno il puntatore											*/
-			m_list = newLst;
+			m_list = m_new;
 			/*	aggiorno la dimensione											*/
 			this->m_size--;
 			/*	e ritorno true													*/
@@ -372,34 +361,29 @@ namespace AFramework{
 	}
 
 	template <class T> AList<T> * AList<T>::clone() const{
-		AList<T> * newLst = NULL;
+		AList<T> * m_new = NULL;
 		/*	controllo di poter allocare una nuova lista							*/
-		if(System::canCreate<AList<T>>()){
-			newLst = new AList<T>();
-			/*	se la lista è vuota												*/
-			if(!this->m_size){
-				/*	ho finito per cui ritorno solo la lista allocata			*/
-				return newLst;
-			}
-			/*	se invece non è vuota controllo di avere memoria				*/
-			if(System::canCreate<T>(this->m_size - 1)){
-				/*	se la memoria c'è alloco il vettore							*/
-				newLst->m_list = new T[this->m_size - 1];
-				/*	effettuo la copia											*/
-				for(uint32_t i = 0; i < this->m_size; i++){
-					newLst->m_list[i] = m_list[i];
+		if(m_new = new AList<T>()){
+			/*	se la lista non è vuota											*/
+			if(this->m_size){
+				/*	controllo di avere memoria									*/
+				if(m_new->m_list = new T[this->m_size - 1]){
+					/*	effettuo la copia										*/
+					for(uint32_t i = 0; i < this->m_size; i++){
+						m_new->m_list[i] = m_list[i];
+					}
+					/*	setto la dimensione										*/
+					m_new->m_size = this->m_size;
+				}else{
+					/*	Altrimenti faccio rollback e cancello la nuova lista	*/
+					delete m_new;
+					/*	e metto a NULL											*/
+					m_new = NULL;
 				}
-				/*	setto la dimensione											*/
-				newLst->m_size = this->m_size;
-				/*	e ritorno la lista											*/
-				return newLst;
 			}
-			/*	Altrimenti faccio rollback e cancello la lista precedentemente	*/
-			/*	allocata														*/
-			delete newLst;
 		}
-		/*	se non posso fare nulla ritorno NULL								*/
-		return NULL;
+		/*	ritorno il puntatore alla lista										*/
+		return m_new;
 	}
 
 	template <class T> bool AList<T>::clear(){
@@ -410,6 +394,8 @@ namespace AFramework{
 		}
 		/*	altrimenti semplicemente, dealloco lo spazio occupato				*/
 		delete [] m_list;
+		/*	metto a NULL														*/
+		m_list = NULL;
 		/*	setto la dimensione a zero											*/
 		this->m_size = 0;
 		/*	e ritorno true														*/
@@ -418,7 +404,7 @@ namespace AFramework{
 
 	template <class T> T AList<T>::next() const{
 		/*	nulla da commentare													*/
-		return m_list[m_temp];
+		return at(m_temp);
 	}
 
 	template <class T> T AList<T>::at(const uint32_t& index) const{
@@ -427,35 +413,29 @@ namespace AFramework{
 			/*	per evitare errori strani, ritorno un oggetto al volo			*/
 			return T();
 		}
-		/* se l'indice passato è più grande della dimensione della lista,		*/
-		if(index >= this->m_size){
-			/*	per evitare errori strani, ritorno l'ultimo elemento			*/
-			return m_list[this->m_size - 1];
-		}
-		/*	altrimenti, se l'utilizzatore non è così idiota, restituisco		*/
-		/*	l'oggetto corretto													*/
-		return m_list[index];
+		/*	nulla da commentare													*/
+		return m_list[index >= this->m_size ? this->m_size - 1 : index];
 	}
 
 	template <class T> bool AList<T>::operator ==(const AList<T>& list) const{
 		/*	nulla da commentare													*/
 		return compare(list);
 	}
-	
+
 	template <class T> bool AList<T>::operator !=(const AList<T>& list) const{
 		/*	nulla da commentare													*/
 		return !compare(list);
 	}
-	
+
 	template <class T> ALinkedList<T>::ALinkedList() : AAbstractList<T>(), m_head(NULL), m_tail(NULL), m_temp(NULL){
 		/*	Nulla da commentare													*/
 	}
-	
+
 	template <class T> ALinkedList<T>::ALinkedList(const ALinkedList<T>& list){
 		/*	Non fa assolutamente nulla e non può essere chiamato (pena possi-	*/
 		/*	bile eccezione e quindi blocco della CPU)							*/
 	}
-	
+
 	template <class T> ALinkedList<T>::~ALinkedList(){
 		/*	Nulla da commentare													*/
 		clear();
@@ -608,7 +588,7 @@ namespace AFramework{
 			return false;
 		}
 		/*	vedo se riesco a creare un nodo										*/
-		if(m_new = new ANode<T>){
+		if((m_new = new ANode<T>)){
 			/*	imposto l'item del nuovo nodo lasciando i puntatori prev e next	*/
 			/*	per come mi vengono dati da new (sono già a NULL grazie alla	*/
 			/*	chiamata interna a memset)										*/
@@ -656,12 +636,12 @@ namespace AFramework{
 			/*	ritorno true													*/
 			return true;
 		}
+		/*	se non sono riuscito ad allocare ritorno false						*/
 		return false;
 	}
 
 	template <class T> bool ALinkedList<T>::remove(const uint32_t& index){
 		ANode<T>	*	m_cur = NULL;
-		ANode<T>	*	m_pre = NULL;
 		/*	controllo che l'indice passato sia un indice valido					*/
 		if(index >= this->m_size){
 			/*	se così non è ritorno false										*/
@@ -698,7 +678,7 @@ namespace AFramework{
 			/*	assegno il puntatore successivo									*/
 			m_cur->m_prev->m_next = m_cur->m_next;
 			/*	collego il successivo del precedente al successivo				*/
-			m_pre->m_next->m_prev = m_cur->m_prev;
+			m_cur->m_next->m_prev = m_cur->m_prev;
 		}
 		/*	cancello il nodo													*/
 		delete m_cur;
@@ -711,7 +691,7 @@ namespace AFramework{
 	template <class T> ALinkedList<T> * ALinkedList<T>::clone() const{
 		ANode<T>		* m_nav = NULL;
 		ALinkedList<T>	* m_lst = NULL;
-		
+
 		/*	provo a creare una nuova lista										*/
 		if(m_lst = new ALinkedList<T>()){
 			/*	assegno al puntatore di navigazione la testa della lista		*/
@@ -719,7 +699,7 @@ namespace AFramework{
 			/*	inizio a scorrere la lista										*/
 			while(m_nav){
 				/*	se riesco ad inserire i nodi								*/
-				if(m_lst->insert(m_nav->m_item, m_lst->m_size)){
+				if(m_lst->append(m_nav->m_item)){
 					/*	sposto il puntatore di navigazione						*/
 					m_nav = m_nav->m_next;
 				/*	altrimenti faccio rollback									*/
@@ -792,12 +772,12 @@ namespace AFramework{
 		/*	nulla da commentare													*/
 		return compare(list);
 	}
-	
+
 	template <class T> bool ALinkedList<T>::operator !=(const ALinkedList<T>& list) const{
 		/*	nulla da commentare													*/
 		return !compare(list);
-	}	
-	
+	}
+
 	template <class T> void ALinkedList<T>::seek(const uint32_t & index, ANode<T> **cur) const{
 		uint32_t	cnt = 0;
 		uint32_t	jmp = 0;
@@ -817,7 +797,7 @@ namespace AFramework{
 			cnt++;
 		}
 	}
-	
+
 	template <class T> AAbstractList<T> & operator<<(AAbstractList<T> & list, const T & item){
 		/*	accodo l'item														*/
 		list.append(item);

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/production/AFramework_sim.X.production.elf">                 
+  <executable name="dist/default/debug/AFramework_sim.X.debug.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>263312</length>                 
-      <used>123992</used>                     
-      <free>139320</free>                     
+      <used>124000</used>                     
+      <free>139312</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
       <length>65536</length>                 
-      <used>7204</used>                     
-      <free>58332</free>                     
+      <used>7716</used>                     
+      <free>57820</free>                     
     </memory>                              
   </executable>                            
 </project>                                 

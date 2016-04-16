@@ -7,12 +7,13 @@
 #include "AContainers.h"
 
 #include <cstdlib>
+#include <iostream>
 
 using namespace AFramework;
+using namespace std;
 
 int main(){
 	
-
 	unsigned int a = 0xFFFF;
 	
 	portA.m_TRIS_SET	= a;
@@ -32,6 +33,12 @@ int main(){
 	
 	
 	System::init(16392);
+	
+	
+	
+	while(1){
+	
+	}
 	
 	return 0;
 }
