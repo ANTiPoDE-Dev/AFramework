@@ -33,13 +33,5 @@ int main(){
 	
 	System::init(16392);
 	
-	AList<int> v;
-	
-	v.append(5);
-	v.append(7);
-	v.append(10);
-	
-	
-	
 	return 0;
 }
