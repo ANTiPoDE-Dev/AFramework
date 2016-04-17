@@ -7,7 +7,6 @@
 #include "AContainers.h"
 
 #include <cstdlib>
-#include <iostream>
 
 using namespace AFramework;
 using namespace std;
@@ -34,10 +33,10 @@ int main(){
 	
 	System::init(16392);
 	
-	
-	
+	size_t c = sizeof(AGpio);
+	size_t x = c;
 	while(1){
-	
+
 	}
 	
 	return 0;

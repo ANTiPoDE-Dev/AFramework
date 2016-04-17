@@ -37,10 +37,19 @@ namespace AFramework{
 		
 		public:
 			
-			enum Pin{};
+			enum Pin{
+				
+			};
 			
 			APort(){
+				
+			}
 			
+			bool inputMap(uint32_t & map){
+				m_TRIS_SET = map;
+			}
+			bool outputMap(uint32_t & map){
+				m_TRIS_CLR = map;
 			}
 			//	bool		write(const uint32_t & val);
 		//		uint32_t	read() const;
@@ -91,10 +100,56 @@ namespace AFramework{
 			uint32_t	m_CNSTAT_INV;
 	};
 
-	APort	portA __attribute((address(0xBF886000)));
-	APort	portB __attribute((address(0xBF886100)));
-	APort	portC __attribute((address(0xBF886200)));
-	
+	APort	portA __attribute__((address(0xBF886000)));
+	APort	portB __attribute__((address(0xBF886100)));
+	APort	portC __attribute__((address(0xBF886200)));
+											//FEDCBA98 76543210
+	const uint32_t A0	= 0b00000000000000000000000000000001;
+	const uint32_t A1	= 0b00000000000000000000000000000010;
+	const uint32_t A4	= 0b00000000000000000000000000010000;
+	const uint32_t A7	= 0b00000000000000000000000010000000;
+	const uint32_t A8	= 0b00000000000000000000000100000000;
+	const uint32_t A9	= 0b00000000000000000000001000000000;
+	const uint32_t A10	= 0b00000000000000000000010000000000;
+
+											//FEDCBA98 76543210	
+	const uint32_t B0	= 0b01000000000000000000000000000001;
+	const uint32_t B1	= 0b01000000000000000000000000000010;
+	const uint32_t B2	= 0b01000000000000000000000000000100;
+	const uint32_t B3	= 0b01000000000000000000000000001000;
+	const uint32_t B5	= 0b01000000000000000000000000100000;
+	const uint32_t B7	= 0b01000000000000000000000010000000;
+	const uint32_t B9	= 0b01000000000000000000001000000000;
+	const uint32_t B10	= 0b01000000000000000000010000000000;
+	const uint32_t B11	= 0b01000000000000000000100000000000;
+	const uint32_t B13	= 0b01000000000000000010000000000000;
+	const uint32_t B14	= 0b01000000000000000100000000000000;
+	const uint32_t B15	= 0b01000000000000001000000000000000;
+											//FEDCBA98 76543210		
+	const uint32_t C0	= 0b10000000000000000000000000000001;
+	const uint32_t C1	= 0b10000000000000000000000000000010;
+	const uint32_t C2	= 0b10000000000000000000000000000100;
+	const uint32_t C3	= 0b10000000000000000000000000001000;
+	const uint32_t C4	= 0b10000000000000000000000000010000;
+	const uint32_t C5	= 0b10000000000000000000000000100000;
+	const uint32_t C6	= 0b10000000000000000000000001000000;
+	const uint32_t C7	= 0b10000000000000000000000010000000;
+	const uint32_t C8	= 0b10000000000000000000000100000000;
+	const uint32_t C9	= 0b10000000000000000000001000000000;
 }
+
+class AGpio{
+	
+	public:
+	
+	private:
+		uint32_t m_port : 0x02;
+		uint32_t m_ppsO : 0x04;
+		uint32_t m_ppsI : 0x04;
+		uint32_t m_busy : 0x01;
+		uint32_t m_ppsD : 0x01;
+		uint32_t m_ppsP : 0x04;
+		uint32_t m_gpio : 0x10;
+};
 
 #endif	//	APORT_A
