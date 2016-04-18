@@ -87,10 +87,11 @@ namespace AFramework{
 					T					at			(const uint32_t			& index							) const;
 					bool				operator==	(const AList<T>			& list							) const;
 					bool				operator!=	(const AList<T>			& list							) const;
-		private:
-										AList		(const AList<T>			& list							);
+		protected:
 					T				*	m_list;
 			mutable	uint32_t			m_temp;
+		private:
+										AList		(const AList<T>			& list							);
 	};
 
 	template <class T> class ALinkedList : public AAbstractList<T>{

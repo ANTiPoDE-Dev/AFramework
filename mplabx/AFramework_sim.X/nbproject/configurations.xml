@@ -11,6 +11,7 @@
       <itemPath>../../include/ASerial.h</itemPath>
       <itemPath>../../include/ADevice.h</itemPath>
       <itemPath>../../include/APort.h</itemPath>
+      <itemPath>../../include/AString.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

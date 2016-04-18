@@ -32,9 +32,7 @@ int main(){
 	
 	
 	System::init(16392);
-	
-	size_t c = sizeof(AGpio);
-	size_t x = c;
+
 	while(1){
 
 	}
