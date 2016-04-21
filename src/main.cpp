@@ -34,7 +34,9 @@ int main(){
 	
 	System::init(16392);
 	
-	AString::str(14531);
+	double f = -123.45;
+	
+	AString::str(f);
 	
 	while(1){
 
