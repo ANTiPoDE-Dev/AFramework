@@ -40,7 +40,7 @@ namespace AFramework{
 			template <class T>	static	bool		canCreate		(const	uint32_t	&	objNumber = 1,	const bool & autoLock = true);
 								static	size_t		availableMemory	(																	);
 								static	size_t		heapSize		(																	);
-								static	void	*	malloc			(const	size_t			size										);
+								static	void	*	malloc			(		size_t			size										);
 								static	bool		free			(		void		*	address										);
 		private:
 								static	void		disableScheduler(																	);

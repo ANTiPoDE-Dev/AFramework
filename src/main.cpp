@@ -5,6 +5,7 @@
 #include "ACore.h"
 #include "APort.h"
 #include "AContainers.h"
+#include "AString.h"
 
 #include <cstdlib>
 
@@ -32,7 +33,9 @@ int main(){
 	
 	
 	System::init(16392);
-
+	
+	AString::str(14531);
+	
 	while(1){
 
 	}

@@ -29,6 +29,9 @@
 #ifndef ACONTAINERS_H
 #define ACONTAINERS_H
 
+#include <cstdint>
+#include <cstdlib>
+
 namespace AFramework{
 
 	template <class T> class AAbstractList;

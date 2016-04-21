@@ -29,20 +29,87 @@
 #ifndef ASTRING_H
 #define	ASTRING_H
 
+#include <cstdint>
+
 #include "AContainers.h"
 
 namespace AFramework{
 
-	class AString : public AList<char>{
+	class AString;
+	
+	typedef AList<AString> AStringList;
+	
+	class AString{
 		public:
-			explicit AString(const char * str);
-			explicit AString(const char & chr);
-			explicit AString(const int & val);
-			explicit AString(const float & val, const uint32_t & prec = 3);
-			explicit AString(const double & val, const uint32_t & prec = 3);
-			~AString();
-		private:
 			
+			static		AString		str			(const int		& val															);
+			static		AString		str			(const float	& val	, const uint32_t	& prec = 3							);
+			static		AString		str			(const double	& val	, const uint32_t	& prec = 3							);
+			static		char		digitToChar	(const int		& val															);
+									AString		(																				);
+									AString		(const AString	& str															);
+			explicit				AString		(const char		* str															);
+			explicit				AString		(const char		& chr															);
+			explicit				AString		(const int		& val															);
+			explicit				AString		(const float	& val	, const uint32_t	& prec = 3							);
+			explicit				AString		(const double	& val	, const uint32_t	& prec = 3							);
+									~AString	(																				);
+						bool		remove		(const AString	& str	, const bool		& cs = false						);
+						bool		remove		(const char		* str	, const bool		& cs = false						);
+						bool		remove		(const char		& chr															);
+						bool		contains	(const AString	& str	, const bool		& cs = false						) const;
+						bool		contains	(const char		* str	, const bool		& cs = false						) const;
+						bool		contains	(const char		& chr															) const;
+						bool		compare		(const AString	& str	, const bool		& cs = false						) const;
+						bool		compare		(const char		* chr	, const bool		& cs = false						) const;
+						bool		compare		(const char		& chr	, const bool		& cs = false						) const;
+						bool		replace		(const AString	& before, const AString		& after	, const bool & cs = false	);
+						bool		replace		(const char		* before, const char		* after	, const bool & cs = false	);
+						bool		replace		(const char		& before, const char		& after	, const bool & cs = false	);
+						bool		insert		(const AString	& str	, const uint32_t	& index								);
+						bool		insert		(const AString	& str	, const AString		& after	, const bool & cs = false	);
+						bool		insert		(const char		* str	, const uint32_t	& index								);
+						bool		insert		(const char		* str	, const char		* after	, const bool & cs = false	);
+						bool		insert		(const char		& chr	, const uint32_t	& index								);
+						bool		insert		(const char		& chr	, const char		* after	, const bool & cs = false	);
+						bool		toLower		(																				);
+						bool		toUpper		(																				);
+						bool		reverse		(																				);
+						uint32_t	size		(																				) const;
+						bool		isEmpty		(																				) const;
+						AString	*	clone		(																				) const;						
+						bool		clear		(																				);
+						char		at			(																				) const;
+						bool		startsWith	(const AString	& str	, const bool		& cs = false						);
+						bool		startsWith	(const char		* str	, const bool		& cs = false						);
+						bool		startsWith	(const char		& chr	, const bool		& cs = false						);
+						bool		endsWith	(const AString	& str	, const bool		& cs = false						);
+						bool		endsWith	(const char		* str	, const bool		& cs = false						);
+						bool		endsWith	(const char		& chr	, const bool		& cs = false						);
+						int			toInt		(																				) const;
+						float		toFloat		(const uint32_t	& prec = 3														) const;
+						double		toDouble	(const uint32_t & prec = 3														) const;
+						char		operator[]	(const uint32_t	& index															) const;
+						bool		operator==	(const AString	& str															) const;
+						bool		operator==	(const char		* str															) const;
+						bool		operator==	(const char		& str															) const;
+						bool		operator!=	(const AString	& str															) const;
+						bool		operator!=	(const char		* str															) const;
+						bool		operator!=	(const char		& str															) const;
+						bool		operator+=	(const AString	& str															);
+						bool		operator+=	(const char		* str															);
+						bool		operator+=	(const char		& chr															);
+						bool		operator-=	(const AString	& str															);
+						bool		operator-=	(const char		* str															);
+						bool		operator-=	(const char		& chr															);
+						AString	&	operator+	(const AString	& str															);
+						AString	&	operator+	(const char		* str															);
+						AString	&	operator+	(const char		& chr															);
+						AString	&	operator-	(const AString	& str															);
+						AString	&	operator-	(const char		* str															);
+						AString	&	operator-	(const char		& chr															);
+		private:
+			char	*	m_str;
 	};
 }
 

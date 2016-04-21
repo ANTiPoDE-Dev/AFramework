@@ -31,16 +31,6 @@
 #include "ACore.h"
 #include "ASystemConfig.h"
 
-#include <cstring>
-
-#ifdef __DEBUG__
-
-	void trace(const char * str){
-		
-	}
-
-#endif
-
 AFramework::System::Segment	*	AFramework::System::m_heap_head(NULL);
 size_t							AFramework::System::m_heap_size(0);
 size_t							AFramework::System::m_heap_busy(0);
@@ -138,7 +128,6 @@ bool AFramework::System::init(size_t heapSize){
 }
 
 bool AFramework::System::free(void * ptr){
-	
 	Segment	*	nav = NULL;
 	Segment *	pre = NULL;
 	bool		flg = false;
@@ -228,8 +217,7 @@ size_t AFramework::System::heapSize(){
 	return m_heap_size;
 }
 
-void * AFramework::System::malloc(const size_t size){
-	
+void * AFramework::System::malloc(size_t size){
 	Segment *	nav = NULL;
 	Segment *	seg = NULL;
 	size_t		max = 0;
@@ -238,6 +226,12 @@ void * AFramework::System::malloc(const size_t size){
 	if(!m_init_flag){
 		/*	se così non è restituisco NULL (non ho dove allocare!)				*/
 		return NULL;
+	}
+	/*	se la dimensione richiesta non raggiunge i 4 byte (indirizzamento a		*/
+	/*	32 bit)																	*/
+	if(size % 4){
+		/*	allineo il blocco al più vicino multiplo di 4 byte					*/
+		size += (4 - (size % 4));
 	}
 	/*	Se invece è tutto ok disabilito lo scheduler							*/
 	disableScheduler();	
@@ -319,7 +313,6 @@ void AFramework::System::enableScheduler(){
 }
 
 bool AFramework::System::enoughSpaceFor(const size_t& size, const bool& autoLock){
-	
 	Segment	*	nav = NULL;
 	/*	controllo che il framework sia stato inizializzato correttamente		*/
 	if(!m_init_flag){

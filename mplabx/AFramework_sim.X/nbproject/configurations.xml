@@ -23,6 +23,7 @@
       <itemPath>../../src/main.cpp</itemPath>
       <itemPath>../../src/ACore.cpp</itemPath>
       <itemPath>../../src/ADevice.cpp</itemPath>
+      <itemPath>../../src/AString.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
