@@ -6,14 +6,14 @@
  *******************************************************************************
  *	Software Licence:
  *******************************************************************************
- * 
+ *
  *	This file is part of AFramework.
- * 
+ *
  *	AFramework is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
  *	the Free Software Foundation, either version 3 of the License, or
  *	(at your option) any later version.
- * 
+ *
  *	AFramework is distributed in the hope that it will be useful,
  *	but WITHOUT ANY WARRANTY; without even the implied warranty of
  *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -21,53 +21,52 @@
  *
  *	You should have received a copy of the GNU General Public License
  *	along with AFramework.  If not, see <http://www.gnu.org/licenses/>.
- * 
- *	Copyright 2015, 2016 Milazzo Giuseppe 
- * 
+ *
+ *	Copyright 2015, 2016 Milazzo Giuseppe
+ *
 */
 
 #include "AString.h"
 
-/*	funzioni di utilità, non le metto neanche private... Se includo cmath		*/
-/*	occupo troppa memoria!														*/
-uint32_t		howManyDigits	(		int			val);
-uint32_t		strLength		(const	char	*	val);
-int				absolute		(const	int		&	val);
-float			absolute		(const	float	&	val);
-double			absolute		(const	double	&	val);
-char			digitToChar		(const	int		&	val);
-char		*	numericToASCII	(const	int		&	val);
-char		*	numericToASCII	(const	float	&	val, const uint32_t & prec);
-char		*	numericToASCII	(const	double	&	val, const uint32_t & prec);
-
-
-/* vettore per le potenze di 10													*/
-uint32_t	m_pow[] = {	0x00000000, 
-						0x0000000A, 
-						0x00000064, 
-						0x000003E8, 
-						0x00002710, 
-						0x000186A0, 
-						0x000F4240	};
+std::ostream & AFramework::operator<<(std::ostream & out, const AString & str){
+	out << str.m_str;
+	return out;
+}
 
 AFramework::AString AFramework::AString::str(const int& val){
 	AString		m_res;
 	/*	nulla da commentare														*/
-	m_res.m_str = numericToASCII(val);
+	m_res.m_str = nta(val, 0);
 	return m_res;
 }
 
 AFramework::AString AFramework::AString::str(const float& val, const uint32_t& prec){
 	AString		m_res;
 	/*	nulla da commentare														*/
-	m_res.m_str = numericToASCII(val, prec);
+	m_res.m_str = nta(val, prec);
 	return m_res;
 }
 
 AFramework::AString AFramework::AString::str(const double& val, const uint32_t& prec){
 	AString		m_res;
 	/*	nulla da commentare														*/
-	m_res.m_str = numericToASCII(val, prec);
+	m_res.m_str = nta(val, prec);
+	return m_res;
+}
+
+uint32_t AFramework::AString::strlen(const char * val){
+	uint32_t		m_res = 0;
+	/*	se la stringa non è vuota												*/
+	if(val){
+		/*	fino a che il carattere puntato è diverso da quello di terminazione	*/
+		while(*val != '\0'){
+			/*	incremento il contatore											*/
+			m_res++;
+			/*	sposto avanti il puntatore										*/
+			val++;
+		}
+	}
+	/*	ritorno il risultato													*/
 	return m_res;
 }
 
@@ -80,9 +79,9 @@ AFramework::AString::AString(const AString& str) : AString(str.m_str){
 }
 
 AFramework::AString::AString(const char * str) : AString(){
-	uint32_t m_dim = 1 + strLength(str);
+	uint32_t m_dim = 1 + strlen(str);
 	/*	se la stringa non è vuota e riesco ad allocare							*/
-	if(m_dim && (m_str = new char[m_dim])){
+	if((m_dim != 1)  && (m_str = new char[m_dim])){
 		/*	scorro tutta la stringa												*/
 		for(uint32_t i = 0; i < m_dim; i++){
 			/*	e copio ogni elemento											*/
@@ -93,22 +92,359 @@ AFramework::AString::AString(const char * str) : AString(){
 
 AFramework::AString::AString(const int & val) : AString(){
 	/*	Nulla da commentare														*/
-	m_str = numericToASCII(val);	
+	m_str = nta(val, 0);
 }
 
 AFramework::AString::AString(const float & val, const uint32_t & prec) : AString(){
 	/*	Nulla da commentare														*/
-	m_str = numericToASCII(val, prec);	
+	m_str = nta(val, prec);
 }
 
 AFramework::AString::AString(const double & val, const uint32_t & prec) : AString(){
 	/*	Nulla da commentare														*/
-	m_str = numericToASCII(val, prec);		
+	m_str = nta(val, prec);
 }
 
 AFramework::AString::~AString(){
 	/*	nulla da commentare														*/
-	delete [] m_str;
+	clear();
+}
+
+bool AFramework::AString::remove(const AString & str, const bool & cs){
+	/*	nulla da commentare														*/
+	return remove(str.m_str, cs);
+}
+
+bool AFramework::AString::remove(const char * str, const bool & cs){
+	uint32_t	m_dim = 1 + size() - strlen(str);
+	uint32_t	m_tmp = 0;
+	int32_t		m_ind = indexOf(str, 0, cs);
+	char	*	m_new = NULL;
+	/*	se trovo la stringa da eliminare e riesco ad allocare					*/
+	if((m_ind != -1) && (m_new = new char[m_dim])){
+		/* inizio la rimozione													*/
+		for(uint32_t i = 0; i < m_dim - 1; i++){
+			/*	se l'indice corrente corrisponde alla posizione che non deve	*/
+			/*	essere copiata													*/
+			if(i == m_ind){
+				/*	aggiungo l'offset della lunghezza della stringa				*/
+				m_tmp += strlen(str);
+			}
+			/*	copio i caratteri												*/
+			m_new[i] = m_str[m_tmp++];
+		}
+		/*	aggiungo la terminazione											*/
+		m_new[m_dim - 1] = 0x00;
+		/*	libero la memoria													*/
+		delete [] m_str;
+		/*	riassegno il puntatore												*/
+		m_str = m_new;
+		/*	ritorno true														*/
+		return true;
+	}
+	/*	altrimenti ritorno false												*/
+	return false;
+}
+
+bool AFramework::AString::remove(const char & chr, const bool & cs){
+	uint32_t	m_dim = size();
+	uint32_t	m_tmp = 0;
+	int32_t		m_ind = indexOf(chr, 0, cs);
+	char	*	m_new = NULL;
+	/*	se l'indice è valido e riesco ad allocare								*/
+	if((m_ind != -1) && (m_new = new char[m_dim])){
+		/*	inizio la copia della stringa										*/
+		for(uint32_t i = 0; i < m_dim - 1; i++){
+			/*	se l'indice corrente corrisponde alla posizione che non deve	*/
+			/*	essere copiata													*/
+			if(i == m_ind){
+				/*	aggiungo l'offeset di 1 carattere							*/
+				m_tmp++;
+			}
+			/*	copio i caratteri												*/
+			m_new[i] = m_str[m_tmp++];
+		}
+		/*	aggiungo la terminazione											*/
+		m_new[m_dim - 1] = 0x00;
+		/*	libero la memoria													*/
+		delete [] m_str;
+		/*	riassegno il puntatore												*/
+		m_str = m_new;
+		/*	ritorno true														*/
+		return true;
+	}
+	/*	altrimenti ritorno false												*/
+	return false;
+}
+
+bool AFramework::AString::contains(const AString & str, const bool & cs) const{
+	/*	nulla da commentare														*/
+	return (indexOf(str.m_str, 0, cs) != -1);
+}
+
+bool AFramework::AString::contains(const char * str, const bool & cs) const{
+	/*	nulla da commentare														*/
+	return (indexOf(str, 0, cs) != -1);
+}
+
+bool AFramework::AString::contains(const char & chr, const bool & cs) const{
+	/*	nulla da commentare														*/
+	return (indexOf(chr, 0, cs) != -1);
+}
+
+bool AFramework::AString::compare(const AString & str, const bool & cs) const{
+	/*	nulla da commentare														*/
+	return compare(str.m_str, cs);
+}
+
+bool AFramework::AString::compare(const char * str, const bool & cs) const{
+	/*	nulla da commentare														*/
+	if(size() != strlen(str)){
+		return false;
+	}
+	return (indexOf(str, 0, cs) == 0);
+}
+
+bool AFramework::AString::compare(const char & chr, const bool & cs) const{
+	/*	nulla da commentare														*/
+	if(size() != 1){
+		return false;
+	}
+	return ccm(chr, m_str[0], cs);
+}
+
+bool AFramework::AString::replace(const AString & before, const AString & after, const bool & cs){
+
+	return replace(before.m_str, after.m_str, cs);
+}
+
+bool AFramework::AString::replace(const char * before, const char * after, const bool & cs){
+	uint32_t		m_sd1 = 1 + size() - strlen(before);
+	uint32_t		m_sd2 = strlen(after);
+	uint32_t		m_is1 = 0;
+	uint32_t		m_is2 = 0;
+	int32_t			m_pos = indexOf(before, 0, cs);
+	char		*	m_new = NULL;
+	/*	se trovo la sottostringa e riesco ad allocare							*/
+	if((m_pos != -1) && (m_new = new char[m_sd1 + m_sd2])){
+        /*	copio le stringhe													*/
+        for(uint32_t i = 0; i < m_sd1 + m_sd2 - 1; i++){
+			if(i < m_pos || i > m_pos +  m_sd2){
+				m_new[i] = m_str[m_is1++];
+			}else{
+				m_new[i] = after[m_is2++];
+			}
+        }
+        /*	aggiungo la terminazione											*/
+        m_new[m_sd1 + m_sd2 - 1] = 0x00;
+        /*	libero la memoria													*/
+        delete [] m_str;
+        /*	riassegno il puntatore												*/
+        m_str = m_new;
+        /*	ritorno true														*/
+        return true;
+	}
+	/*	altrimenti false														*/
+	return false;
+}
+
+bool AFramework::AString::replace(const char & before, const char & after, const bool & cs){
+	int32_t			m_pos = indexOf(before, 0, cs);
+	char		*	m_new = NULL;
+	/*	se trovo il carattere													*/
+	if(m_pos != -1){
+		/*	lo sostituisco														*/
+		m_str[m_pos] = after;
+		/*	e ritorno true														*/
+		return true;
+	}
+	/*	altrimenti false														*/
+	return false;
+}
+
+int32_t	AFramework::AString::indexOf(const AString & str, const uint32_t & index, const bool & cs) const{
+	/*	nulla da commentare														*/
+	return indexOf(str.m_str, index, cs);
+}
+
+int32_t	AFramework::AString::indexOf(const char * str, const uint32_t & index, const bool & cs) const{
+	uint32_t	m_sd1 = size();
+	uint32_t	m_sd2 = strlen(str);
+	bool		m_flg = true;
+	/*	se la sottostringa da cercare è più lunga della stringa o l'indice		*/
+	/*	passato non permette di ricercarla										*/
+	if(!m_sd2 || m_sd2 > m_sd1 || (index + m_sd2 > m_sd1)){
+		/*	ritorno -1															*/
+		return -1;
+	}
+	/*	inizio a scorrere la stringa fino a quando posso fare l'ultimo confron-	*/
+	/*	to																		*/
+	for(int32_t i = index; i <= m_sd1 - m_sd2; i++){
+		/*	esamino una sottostringa in modo simmetrico							*/
+		for(int32_t j = 0; j <= m_sd2 / 2; j++){
+			/*	non appena trovo differenze										*/
+			if(	!ccm(str[j]				, m_str[i + j]				, cs)	||
+				!ccm(str[m_sd2 - 1 - j]	, m_str[m_sd2 - 1 + i - j]	, cs)	){
+				/*	metto il flag a false										*/
+				m_flg = false;
+				/*	e smetto di scorrere										*/
+				break;
+			}
+		}
+		/*	se il flag è false													*/
+		if(!m_flg){
+			/*	lo metto a true pensando che se questo non viene messo a false	*/
+			/*	allora ho trovato la sottostringa								*/
+			m_flg = true;
+		/*	altrimenti se il flag è true										*/
+		}else{
+			/*	restituisco l'indice											*/
+			return i;
+		}
+	}
+	/*	altrimenti restituisco -1												*/
+	return -1;
+}
+
+int32_t	AFramework::AString::indexOf(const char & chr, const uint32_t & index, const bool & cs) const{
+	uint32_t m_dim = size();
+	/*	inizio a scorrere la stringa dall'indice passato (se l'indice non è va-	*/
+	/*	lido il ciclo neanche parte)											*/
+	for(int32_t i = index; i < m_dim; i++){
+		/*	se trovo il carattere												*/
+		if(ccm(chr, m_str[i], cs)){
+			/*	ritorno l'indice corrispondete									*/
+			return i;
+		}
+	}
+	/*	altrimenti -1															*/
+	return -1;
+}
+
+bool AFramework::AString::insert(const AString & str, const uint32_t & index){
+	return insert(str.m_str, index);
+}
+
+bool AFramework::AString::insert(const AString & str, const AString & after, const bool & cs){
+	return insert(str.m_str, after.m_str, cs);
+}
+
+bool AFramework::AString::insert(const char * str, const uint32_t & index){
+	uint32_t		m_sd1 = size();
+	uint32_t		m_sd2 = strlen(str);
+	uint32_t		m_si1 = 0;
+	uint32_t		m_si2 = 0;
+	char		*	m_new = NULL;
+	/*	se l'indice passato è maggiore della dimensione attuale					*/
+	if(index > m_sd1){
+		/*	ritorno false														*/
+		return false;
+	}
+	/*	controllo di poter allocare la stringa									*/
+	if(m_new = new char[m_sd1 + m_sd2 + 1]){
+		/*	inizio la copia della stringhe										*/
+		for(uint32_t i = 0; i < m_sd1 + m_sd2; i++){
+			/*	se sono nelle posizioni dove deve essere inserita la nuova		*/
+			/*	stringa															*/
+			if(i >= index && i <= index + m_sd2 - 1){
+				/*	copio quella da inserire									*/
+				m_new[i] = str[m_si2++];
+			/*	altrimenti														*/
+			}else{
+				/*	ricopio la vecchia											*/
+				m_new[i] = m_str[m_si1++];
+			}
+		}
+		/*	aggiungo la terminazione											*/
+		m_new[m_sd1 + m_sd2] = 0x00;
+		/*	cancello la vecchia stringa											*/
+		delete [] m_str;
+		/*	riassegno la nuova													*/
+		m_str = m_new;
+		/*	ritorno true														*/
+		return true;
+	}
+	/*	in questo caso è fallita l'allocazione per cui ritorno false			*/
+	return false;
+}
+
+bool AFramework::AString::insert(const char * str, const char * after, const bool & cs){
+	int32_t	m_index = indexOf(after, 0, cs);
+	/*	se non ho trovato occorrenze della sottostringa							*/
+	if(m_index == -1){
+		/*	ritorno false														*/
+		return false;
+	}
+	/*	aggiungo la posizione corretta											*/
+	m_index += strlen(after);
+	return insert(str, m_index);
+}
+
+bool AFramework::AString::insert(const char & chr, const uint32_t & index){
+	uint32_t	m_dim = 2 + size();
+	uint32_t	m_ind = 0;
+	char	*	m_new = NULL;
+	/*	se l'indice è fuori range												*/
+	if(index > size()){
+		/*	ritorno false														*/
+		return false;
+	}
+	/*	se riesco ad allocare un nuovo vettore									*/
+	if(m_new = new char[m_dim]){
+		/*	inizio la copia														*/
+		for(uint32_t i = 0; i < m_dim - 1; i++){
+			/*	inserisco i vari caratteri a seconda che sia nel posto giusto o	*/
+			/*	no																*/
+			m_new[i] = (i == index ? chr : m_str[m_ind++]);
+		}
+		/*	inserirsco il carattere di terminazione								*/
+		m_new[m_dim - 1] = 0x00;
+		/*	libero la memoria													*/
+		delete [] m_str;
+		/*	riassegno il puntatore												*/
+		m_str = m_new;
+		/*	ritorno true														*/
+		return true;
+	}
+
+	return false;
+}
+
+bool AFramework::AString::insert(const char & chr, const char * after, const bool & cs){
+
+	return insert(chr, indexOf(after, 0, cs) + strlen(after));
+}
+
+bool AFramework::AString::append(const AString & str){
+	/*	nulla da commentare														*/
+	return append(str.m_str);
+}
+
+bool AFramework::AString::append(const char * str){
+	/*	nulla da commentare														*/
+	return insert(str, size());
+}
+
+bool AFramework::AString::append(const char & chr){
+	/*	nulla da commentare														*/
+	return insert(chr, size());
+}
+
+bool AFramework::AString::prepend(const AString & str){
+	/*	nulla da commentare														*/
+	return prepend(str.m_str);
+}
+
+bool AFramework::AString::prepend(const char	* str){
+	/*	nulla da commentare														*/
+	int i = 0;
+	return insert(str, i);
+}
+
+bool AFramework::AString::prepend(const char & chr){
+	/*	nulla da commentare														*/
+	int i = 0;
+	return insert(chr, i);
 }
 
 void AFramework::AString::toLower(){
@@ -122,6 +458,8 @@ void AFramework::AString::toLower(){
 				/*	sommo 32 ed ottengo il minuscolo							*/
 				*m_tmp += 0x20;
 			}
+			/*	incremento il puntatore											*/
+			m_tmp++;
 		}
 	}
 }
@@ -137,6 +475,8 @@ void AFramework::AString::toUpper(){
 				/*	sottraggo 32 ed ottengo il minuscolo						*/
 				*m_tmp -= 0x20;
 			}
+			/*	incremento il puntatore											*/
+			m_tmp++;
 		}
 	}
 }
@@ -147,9 +487,9 @@ void AFramework::AString::reverse() {
 	/*	scorro la stringa fino a metà (se la stringa è vuota non succede nulla)	*/
 	for(uint32_t i = 0; i < m_size / 2; i++){
 		/*	copio temporaneamente l'ultimo i-esimo elemento						*/
-		m_temp = m_str[m_size - i];
+		m_temp = m_str[m_size - 1 - i];
 		/*	sostituisco l'ultimo i-esimo con l'i-esimo							*/
-		m_str[m_size - i] = m_str[i];
+		m_str[m_size - 1 - i] = m_str[i];
 		/*	sostituisco l'i-esimo con la copia dell'ultimo i-esimo				*/
 		m_str[i] = m_temp;
 	}
@@ -157,12 +497,12 @@ void AFramework::AString::reverse() {
 
 uint32_t AFramework::AString::size() const{
 	/*	nulla da commentare														*/
-	return strLength(m_str);
+	return strlen(m_str);
 }
 
 bool AFramework::AString::isEmpty() const{
 	/*	nulla da commentare														*/
-	return (m_str == NULL);
+	return !size();
 }
 
 AFramework::AString * AFramework::AString::clone() const{
@@ -209,205 +549,196 @@ char AFramework::AString::at(const uint32_t& index) const{
 	return m_str[index];
 }
 
-
-
-
-
-
-
-
-
-
-
-
-uint32_t howManyDigits(int val){
-	uint32_t res = 0;
-	/*	fino a che il numero è diverso da zero									*/
-	while(val){
-		/*	divido per 10														*/
-		val /= 10;
-		/*	incremento il numero di cifre										*/
-		res++;
-	}
-	/*	ritorno il risultato													*/
-	return (res ? res : 1);
+bool AFramework::AString::startsWith(const AString & str, const bool & cs){
+	/*	nulla da commentare														*/
+	return startsWith(str.m_str, cs);
 }
 
-uint32_t strLength (const char * val){
-	uint32_t		m_res = 0;
+bool AFramework::AString::startsWith(const char * str, const bool & cs){
+	/*	nulla da commentare														*/
+	return (indexOf(str, 0, cs) == 0);
+}
+
+bool AFramework::AString::startsWith(const char & chr, const bool & cs){
+	/* nulla da commentare														*/
+	return (indexOf(chr, 0, cs) == 0);
+}
+
+bool AFramework::AString::endsWith(const AString & str, const bool & cs){
+	/*	nulla da commentare														*/
+	return endsWith(str.m_str, cs);
+}
+
+bool AFramework::AString::endsWith(const char * str, const bool & cs){
+	/* nulla da commentare														*/
+	uint32_t m_dim = size() - strlen(str);
+	return ((indexOf(str, m_dim, cs) == m_dim));
+}
+
+bool AFramework::AString::endsWith(const char & chr, const bool & cs){
 	/*	se la stringa è vuota													*/
-	if(!val){
-		/*	fino a che il carattere puntato è diverso da quello di terminazione	*/
-		while(*val != '\0'){
-			/*	incremento il contatore											*/
-			m_res++;
-			/*	sposto avanti il puntatore										*/
-			val++;
-		}		
+	if(isEmpty()){
+		/*	ovviamente ritorno false											*/
+		return false;
 	}
-	/*	ritorno il risultato													*/
+	/*	altrimenti confronto l'ultimo carattere									*/
+	return ccm(chr, m_str[size() - 1], cs);
+}
+
+//int toInt() const;
+//float toFloat(const uint32_t & prec) const;
+//double toDouble(const uint32_t & prec) const;
+
+char AFramework::AString::operator[](const uint32_t & index) const{
+	/*	nulla da commentare														*/
+	return at(index);
+}
+
+bool AFramework::AString::operator==(const AString & str) const{
+	/*	nulla da commentare														*/
+	return compare(str);
+}
+
+bool AFramework::AString::operator==(const char * str) const{
+	/*	nulla da commentare														*/
+	return compare(str);
+}
+
+bool AFramework::AString::operator==(const char & chr) const{
+	/*	nulla da commentare														*/
+	return compare(chr);
+}
+
+bool AFramework::AString::operator!=(const AString & str) const{
+	/*	nulla da commentare														*/
+	return !compare(str);
+}
+
+bool AFramework::AString::operator!=(const char * str) const{
+	/*	nulla da commentare														*/
+	return !compare(str);
+}
+
+bool AFramework::AString::operator!=(const char & chr) const{
+	/*	nulla da commentare														*/
+	return !compare(chr);
+}
+
+bool AFramework::AString::operator+=(const AString & str){
+	/*	nulla da commentare														*/
+	return append(str);
+}
+
+bool AFramework::AString::operator+=(const char * str){
+	/*	nulla da commentare														*/
+	return append(str);
+}
+
+bool AFramework::AString::operator+=(const char & chr){
+	/*	nulla da commentare														*/
+	return append(chr);
+}
+
+bool AFramework::AString::operator-=(const AString & str){
+	/*	nulla da commentare														*/
+	return remove(str);
+}
+
+bool AFramework::AString::operator-=(const char * str){
+	/*	nulla da commentare														*/
+	return remove(str);
+}
+
+bool AFramework::AString::operator-=(const char & chr){
+	/*	nulla da commentare														*/
+	return remove(chr);
+}
+
+AFramework::AString AFramework::AString::operator+(const AString & str){
+	/*	nulla da commentare														*/
+	return operator+(str.m_str);
+}
+
+AFramework::AString	AFramework::AString::operator+(const char * str){
+	AString m_res = *this;
+	/*	nulla da commentare														*/
+	m_res.append(str);
 	return m_res;
 }
 
-int absolute(const int &val){
+AFramework::AString	AFramework::AString::operator+(const char & chr){
+	AString m_res = *this;
 	/*	nulla da commentare														*/
-	return (val < 0 ? -1 * val : val);
-}
-
-float absolute(const float &val){
-	/*	nulla da commentare														*/
-	return (val < 0 ? -1 * val : val);
-}
-
-double absolute(const double &val){
-	/*	nulla da commentare														*/
-	return (val < 0 ? -1 * val : val);
-}
-
-int power(const int &val, int exp){
-	int res = 1;
-	/*	se l'esponente è maggiore di zero										*/
-	if(exp > 0){
-		/*	se l'esponente è maggiore di 6 lo riscalo (pena overflow)			*/
-		exp = (exp > 6 ? 6 : exp);
-		/*	assegno il risultato												*/
-		res = val;
-		/*	decremento l'esponente												*/
-		while(--exp){
-			/*	e moltiplico volta per volta									*/
-			res *= val;
-		}
-	}
-	return res;
-}
-
-char digitToChar(const int & val){
-	/*	se il numero passato è minore di zero o di più cifre					*/
-	if(val < 0x00 || val > 0x09){
-		/*	ritorno il carattere di terminazione								*/
-		return '\0';
-	}
-	/*	altrimenti sommo l'offset per la conversione e lo ritorno come char		*/
-	return static_cast<char>(val + 0x30);
-}
-
-char * numericToASCII(const	int & val){
-	char		*	m_res = NULL;
-	uint32_t		m_dig = howManyDigits(val);
-	uint32_t		m_oth = (	val < 0 ? 2		: 1		);
-	bool			m_flg = (	val < 0 ? true	: false	);
-	int				m_val =	absolute(val);
-	/*	alloco il vettore (m_dig = numero cifre; m_oth = terminazione ed even-	*/
-	/*	tuale segno meno														*/
-	if(m_res = new char[m_dig + m_oth]){
-		/*	se il numero è minore di zero										*/
-		if(m_flg){
-			/*	metto il segno meno davanti										*/
-			m_res[0] = '-';
-		}
-		/*	aggiungo il carattere di terminazione								*/
-		m_res[m_dig + m_oth - 1] = '\0';
-		/*	inizio la creazione della stringa									*/
-		for(uint32_t i = 0; i < m_dig; i++){
-			/*	assegno l'ultima cifra											*/
-			m_res[m_dig + m_oth - 2 - i] = digitToChar(m_val % 10);
-			/*	e divido per 10													*/
-			m_val /= 10;
-		/*	altrimenti															*/
-		}
-	}
-	/*	e ritorno la stringa */
+	m_res.append(chr);
 	return m_res;
 }
 
-char * numericToASCII(const	float & val, const uint32_t & prec){
-	char		*	m_res = NULL;
-	uint32_t		m_prc = (prec > 5 ? 6 : prec);
-	int				m_int = static_cast<int>(absolute(val));
-	int				m_dec = (absolute(val) - static_cast<float>(m_int)) * m_pow[m_prc];
-	uint32_t		m_dig = howManyDigits(m_int);
-	uint32_t		m_oth = (val < 0 ? 2	: 1		);
-	bool			m_flg = (val < 0 ? true : false	);
-	/*	se la precisione richiesta è diversa da 0								*/
-	if(prec){
-		/*	aggiungo 1 per il punto												*/
-		m_oth++;
-	}
-	/*	alloco il vettore (m_dig = numero cifre parte intera, m_oth = termina-	*/
-	/*	zione, punto ed eventuale segno meno, prec = parte decimale.			*/
-	if(m_res = new char[m_dig + m_oth + m_prc]){
-		/*	se il numero è minore di zero										*/
-		if(m_flg){
-			/*	metto il segno meno davanti										*/
-			m_res[0] = '-';
-		}
-		/*	aggiungo il carattere di terminazione								*/
-		m_res[m_dig + m_oth + m_prc - 1] = '\0';
-		/*	copio la parte decimale												*/
-		for(uint32_t i = 0; i < m_prc; i++){
-			/*	assegno la cifra meno significativa								*/
-			m_res[m_dig + m_oth + m_prc - 2 - i] = digitToChar(m_dec % 10);
-			/*	e divido per 10													*/
-			m_dec /= 10;
-		}
-		/*	se la precisione richiesta è diversa da zero						*/
-		if(m_prc){
-			/*	aggiungo il punto												*/
-			m_res[m_dig + m_oth - 2] = '.';
-		}
-		/*	copio la parte intera												*/
-		for(uint32_t i = 0; i < m_dig; i++){
-			/*	assegno la cifra meno significativa								*/
-			m_res[m_dig + m_oth - 3 - i] = digitToChar(m_int % 10);
-			/*	e divido per 10													*/
-			m_int /= 10;
-		}
-	}
-	return m_res;	
+AFramework::AString	AFramework::AString::operator-(const AString & str){
+	/*	nulla da commentare														*/
+	return operator-(str.m_str);
 }
 
-char * numericToASCII(const	double & val, const uint32_t & prec){
-	char		*	m_res = NULL;
-	uint32_t		m_prc = (prec > 5 ? 6 : prec);
-	int				m_int = static_cast<int>(absolute(val));
-	int				m_dec = (absolute(val) - static_cast<float>(m_int)) * m_pow[m_prc];
-	uint32_t		m_dig = howManyDigits(m_int);
-	uint32_t		m_oth = (val < 0 ? 2	: 1		);
-	bool			m_flg = (val < 0 ? true : false	);
-	/*	se la precisione richiesta è diversa da 0								*/
-	if(prec){
-		/*	aggiungo 1 per il punto												*/
-		m_oth++;
+AFramework::AString AFramework::AString::operator-(const char * str){
+	AString m_res = *this;
+	/*	nulla da commentare														*/
+	m_res.remove(str);
+	return m_res;
+}
+
+AFramework::AString AFramework::AString::operator-(const char & chr){
+	AString m_res = *this;
+	/*	nulla da commentare														*/
+	m_res.remove(chr);
+	return m_res;
+}
+AFramework::AString	& AFramework::AString::operator=(const AString & str){
+	/*	nulla da commentare														*/
+	return operator=(str.m_str);
+}
+
+AFramework::AString	& AFramework::AString::operator=(const char * str){
+	uint32_t		m_dim = 1 + strlen(str);
+	char 		* 	m_new = new char[m_dim];
+	/*	se sono riuscito ad allocare la memoria									*/
+	if(m_new){
+		/*	cancello la vecchia stringa											*/
+		clear();
+		/*	per tutta la lunghezza di str										*/
+		for(uint32_t i = 0; i < m_dim; i++){
+			/*	ricopio i caratteri												*/
+			m_new[i] = str[i];
+		}
+		/*	riassegno il puntatore												*/
+		m_str = m_new;
 	}
-	/*	alloco il vettore (m_dig = numero cifre parte intera, m_oth = termina-	*/
-	/*	zione, punto ed eventuale segno meno, prec = parte decimale.			*/
-	if(m_res = new char[m_dig + m_oth + m_prc]){
-		/*	se il numero è minore di zero										*/
-		if(m_flg){
-			/*	metto il segno meno davanti										*/
-			m_res[0] = '-';
-		}
-		/*	aggiungo il carattere di terminazione								*/
-		m_res[m_dig + m_oth + m_prc - 1] = '\0';
-		/*	copio la parte decimale												*/
-		for(uint32_t i = 0; i < m_prc; i++){
-			/*	assegno la cifra meno significativa								*/
-			m_res[m_dig + m_oth + m_prc - 2 - i] = digitToChar(m_dec % 10);
-			/*	e divido per 10													*/
-			m_dec /= 10;
-		}
-		/*	se la precisione richiesta è diversa da zero						*/
-		if(m_prc){
-			/*	aggiungo il punto												*/
-			m_res[m_dig + m_oth - 2] = '.';
-		}
-		/*	copio la parte intera												*/
-		for(uint32_t i = 0; i < m_dig; i++){
-			/*	assegno la cifra meno significativa								*/
-			m_res[m_dig + m_oth - 3 - i] = digitToChar(m_int % 10);
-			/*	e divido per 10													*/
-			m_int /= 10;
-		}
+	/*	ritorno l'oggetto corrente												*/
+	return *this;
+}
+
+AFramework::AString	& AFramework::AString::operator=(const char & chr){
+	char *	m_new = new char[2];
+	/*	se sono riuscito ad allocare la memoria									*/
+	if(m_new){
+		/*	cancello la vecchia stringa											*/
+		clear();
+		/*	copio il carattere													*/
+		m_new[0] = chr;
+		/*	inserisco la terminazione											*/
+		m_new[1] = 0x00;
+		/*	riassegno il puntatore												*/
+		m_str = m_new;
+	}
+	/*	ritorno l'oggetto corrente												*/
+	return *this;
+}
+
+bool AFramework::AString::ccm(const char & ch1, const char & ch2, const bool & cs){
+	bool	m_ch1 = (ch1 >= 0x41 && ch1 <= 0x5A) || (ch1 >= 0x61 && ch1 <= 0x7A);
+	bool	m_ch2 = (ch2 >= 0x41 && ch2 <= 0x5A) || (ch2 >= 0x61 && ch2 <= 0x7A);
+	bool	m_res = (ch1 == ch2);
+
+	if(!cs && m_ch1 && m_ch2){
+		m_res = (ch1 == ch2) || (ch1 == ch2 + 0x20) || (ch1 == ch2 - 0x20);
 	}
 	return m_res;
 }

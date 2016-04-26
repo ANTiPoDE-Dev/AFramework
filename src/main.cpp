@@ -20,7 +20,7 @@ int main(){
 	portA.m_ANSEL_CLR	= a;
 	portA.m_LAT_CLR		= a;
 	portA.m_ODC_CLR		= a;
-	
+
 	TRISB	= 0xEFAF;	//1110 1111 1010 1111
 	ANSELB	= 0x0000;
 	LATB	= 0x0000;
