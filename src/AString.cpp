@@ -585,9 +585,211 @@ bool AFramework::AString::endsWith(const char & chr, const bool & cs){
 	return ccm(chr, m_str[size() - 1], cs);
 }
 
-//int toInt() const;
-//float toFloat(const uint32_t & prec) const;
-//double toDouble(const uint32_t & prec) const;
+int AFramework::AString::toInt(bool & ok) const{
+	char 	* 	m_tmp = m_str;
+	int32_t		m_sig = 1;
+	int32_t		m_res = 0;
+	/*	metto il flag a false													*/
+	ok = false;
+	/*	se la stringa non è vuota												*/
+	if(m_tmp){
+		/*	se il primo carattere è un meno o un più							*/
+		if(*m_tmp == 0x2D || *m_tmp == 0x2B){
+			/*	imposto il segno												*/
+			m_sig = (*m_tmp == 0x2D ? -1 : 1);
+			/*	incremento il puntatore											*/
+			m_tmp++;
+		}
+		/*	fino a che non sono alla fine										*/
+		while(*m_tmp){
+			/*	non appena trovo un carattere che non sia numerico				*/
+			if(*m_tmp < 0x30 || *m_tmp > 0x39){
+				/*	ritorno zero con il flag ok a false							*/
+				ok = false;
+				return 0;
+			/*	se invece il carattere è numerico								*/
+			}else{
+				/*	metto il flag a true e accodo le cifre						*/
+				ok = true;
+				m_res = (m_res * 10) + static_cast<int>(*m_tmp - 0x30);
+			}
+			/*	sposto in avanti il puntatore									*/
+			m_tmp++;
+		}
+	}
+	/*	ritorno il valore														*/
+	return m_sig * m_res;
+}
+
+float AFramework::AString::toFloat(bool & ok) const{
+	char 	* 	m_tmp = m_str;
+	int32_t		m_sig = 1;
+	float		m_res = 0;
+	uint32_t	m_dot = 0;
+	uint32_t	m_stp = 0;
+	/*	metto il flag a false													*/
+	ok = false;
+	/*	se la stringa non è vuota												*/
+	if(m_tmp){
+		/*	se il primo carattere è un meno o un più							*/
+		if(*m_tmp == 0x2D || *m_tmp == 0x2B){
+			/*	imposto il segno												*/
+			m_sig = (*m_tmp == 0x2D ? -1 : 1);
+			/*	incremento il puntatore											*/
+			m_tmp++;
+		}
+		/*	fino a che non sono alla fine										*/
+		while(*m_tmp){
+			/*	incremento il numero di step									*/
+			m_stp++;
+			/*	se il carattere non è numerico									*/
+			if((*m_tmp < 0x30 || *m_tmp > 0x39)){
+				/*	se è un punto o una virgola e non ne ho trovati altri prima	*/
+				/*	e inoltre non è neanche il primo carattere					*/
+				if((*m_tmp == 0x2C || *m_tmp == 0x2E) && (m_stp != 1) && !m_dot){
+					/*	tengo traccia di dove ho trovato il punto				*/
+					m_dot = m_stp;
+				/*	altrimenti													*/
+				}else{
+					/*	ritorno zero con il flag ok a false						*/
+					ok = false;
+					return 0;
+				}
+
+			/*	se invece il carattere è numerico								*/
+			}else{
+				/*	metto il flag a true e accodo le cifre						*/
+				ok = true;
+				m_res = (m_res * 10) + static_cast<int>(*m_tmp - 0x30);
+			}
+			/*	sposto in avanti il puntatore									*/
+			m_tmp++;
+		}
+	}
+	/*	imposto per quante volte devo dividere per 10							*/
+	m_dot = (m_dot ? m_stp - m_dot : 0);
+	/*	effettuo la divisione													*/
+	while(m_dot){
+		m_dot--;
+		m_res /= 10;
+	}
+	/*	ritorno il valore														*/
+	return m_sig * m_res;
+}
+
+double AFramework::AString::toDouble(bool & ok) const{
+	char 	* 	m_tmp = m_str;
+	int32_t		m_sig = 1;
+	double		m_res = 0;
+	uint32_t	m_dot = 0;
+	uint32_t	m_stp = 0;
+	/*	metto il flag a false													*/
+	ok = false;
+	/*	se la stringa non è vuota												*/
+	if(m_tmp){
+		/*	se il primo carattere è un meno o un più							*/
+		if(*m_tmp == 0x2D || *m_tmp == 0x2B){
+			/*	imposto il segno												*/
+			m_sig = (*m_tmp == 0x2D ? -1 : 1);
+			/*	incremento il puntatore											*/
+			m_tmp++;
+		}
+		/*	fino a che non sono alla fine										*/
+		while(*m_tmp){
+			/*	incremento il numero di step									*/
+			m_stp++;
+			/*	se il carattere non è numerico									*/
+			if((*m_tmp < 0x30 || *m_tmp > 0x39)){
+				/*	se è un punto o una virgola e non ne ho trovati altri prima	*/
+				/*	e inoltre non è neanche il primo carattere					*/
+				if((*m_tmp == 0x2C || *m_tmp == 0x2E) && (m_stp != 1) && !m_dot){
+					/*	tengo traccia di dove ho trovato il punto				*/
+					m_dot = m_stp;
+				/*	altrimenti													*/
+				}else{
+					/*	ritorno zero con il flag ok a false						*/
+					ok = false;
+					return 0;
+				}
+
+			/*	se invece il carattere è numerico								*/
+			}else{
+				/*	metto il flag a true e accodo le cifre						*/
+				ok = true;
+				m_res = (m_res * 10) + static_cast<int>(*m_tmp - 0x30);
+			}
+			/*	sposto in avanti il puntatore									*/
+			m_tmp++;
+		}
+	}
+	/*	imposto per quante volte devo dividere per 10							*/
+	m_dot = (m_dot ? m_stp - m_dot : 0);
+	/*	effettuo la divisione													*/
+	while(m_dot){
+		m_dot--;
+		m_res /= 10;
+	}
+	/*	ritorno il valore														*/
+	return m_sig * m_res;
+}
+
+AFramework::AStringList * AFramework::AString::split(const char & sep, const bool &keepEmpty, const bool & cs) const{
+	AStringList	*	m_list = new AStringList();
+	uint32_t		m_size = size();
+	uint32_t		m_tdim = 0;
+	uint32_t		m_spac = 0;
+	AString		*	m_item = NULL;
+	bool			m_splitFound = false;
+	bool			m_alphaFound = false;
+	bool			m_spaceFound = false;
+
+	if(!keepEmpty){
+		for(uint32_t i = 0; i < m_size + 1; i++){
+			/*	se il carattere è visuale o la terminazione						*/
+			if((m_str[i] >= 0x20 && m_str[i] < 0x7E) || m_str[i] == 0x00){
+				/*	se è un separatore o il carattere di terminazione e non lo	*/
+				/*	ho trovato subito											*/
+                if((ccm(sep, m_str[i], cs) || m_str[i] == 0x00) && m_tdim){
+					/*	provo ad allocare										*/
+					if((m_item = new AString()) && (m_item->m_str = new char[1 + m_tdim])){
+							/*	inizio la copia									*/
+							for(uint32_t j = 0; j < m_tdim; j++){
+								m_item->m_str[j] = m_str[i - m_tdim + j];
+							}
+							/*	aggiungo la terminazione						*/
+							m_item->m_str[m_tdim] = 0x00;
+							/*	accodo la stringa								*/
+							if(!(m_list->append(m_item))){
+								delete m_list;
+								return NULL;
+							}
+							/*	azzero la dimensione							*/
+							m_tdim = 0;
+							m_spac = 0;
+					/*	altrimenti rollback e distruggo tutto					*/
+					}else{
+						if(m_item){
+							delete m_item;
+						}
+						delete m_list;
+						return NULL;
+					}
+				/*	se invece è uno spazio e non l'ho trovato subito			*/
+                }else if(m_str[i] == 0x20 && m_tdim){
+					m_spac++;
+				/*	se invece è un carattere									*/
+                }else{
+                	/*	aggiungo gli eventuali spazi che sono in mezzo più uno	*/
+                	/*	per il carattere corrente								*/
+					m_tdim += (m_spac + 1);
+					/*	e resetto il contatore degli spazi						*/
+					m_spac = 0;
+                }
+			}
+		}
+	}
+	return m_list;
+}
 
 char AFramework::AString::operator[](const uint32_t & index) const{
 	/*	nulla da commentare														*/
@@ -691,6 +893,7 @@ AFramework::AString AFramework::AString::operator-(const char & chr){
 	m_res.remove(chr);
 	return m_res;
 }
+
 AFramework::AString	& AFramework::AString::operator=(const AString & str){
 	/*	nulla da commentare														*/
 	return operator=(str.m_str);
