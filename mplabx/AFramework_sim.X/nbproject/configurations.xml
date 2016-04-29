@@ -8,8 +8,6 @@
       <itemPath>../../include/ASystemConfig.h</itemPath>
       <itemPath>../../include/ACore.h</itemPath>
       <itemPath>../../include/AContainers.h</itemPath>
-      <itemPath>../../include/ASerial.h</itemPath>
-      <itemPath>../../include/ADevice.h</itemPath>
       <itemPath>../../include/APort.h</itemPath>
       <itemPath>../../include/AString.h</itemPath>
     </logicalFolder>
@@ -22,7 +20,6 @@
                    projectFiles="true">
       <itemPath>../../src/main.cpp</itemPath>
       <itemPath>../../src/ACore.cpp</itemPath>
-      <itemPath>../../src/ADevice.cpp</itemPath>
       <itemPath>../../src/AString.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
