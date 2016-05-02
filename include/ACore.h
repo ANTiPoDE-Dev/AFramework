@@ -32,7 +32,7 @@
 #include <cstdint>
 
 namespace AFramework{
-
+    
     class System{
         public:
                                 static  bool        init            (       size_t          heapSize                                    );
