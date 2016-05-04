@@ -78,6 +78,12 @@ bool AFramework::System::init(size_t heapSize){
         /*  in questo caso restituisco false                                    */
         return false;
     }
+    /*  se heapSize non è abbastanza grande da permettere l'allocazione di al-  */
+    /*  meno un intero                                                          */
+    if(heapSize < m_xc32_offs + sizeof(Segment) + 4){
+        /*  ritorno false (pena underflow)                                      */
+        return false;
+    }
     /*  Sottraggo alla dimensione dell'heap passata l'overhead del compilatore  */
     heapSize -= m_xc32_offs;
     /*  Provo ad allocare tutto l'heap alla testa della lista                   */
@@ -99,7 +105,7 @@ bool AFramework::System::init(size_t heapSize){
     m_heap_busy += sizeof(Segment);
     /*  Imposto il puntatore al blocco successivo a NULL                        */
     m_heap_head->m_next = NULL;
-    
+
     /*
         PARTE RELATIVA ALLA CODA DEI THREAD <ANCORA DA PROGETTARE>
         ...
@@ -108,9 +114,14 @@ bool AFramework::System::init(size_t heapSize){
     /*  Imposto il flag di avvenuta inizializzazione                            */
     m_init_flag = true;
     /*  Abilito lo scheduler                                                    */
-    enableScheduler();
+    scwake();
     /*  e restituisco true                                                      */
     return true;
+}
+
+void AFramework::System::kill(){
+
+    std::free(m_heap_head);
 }
 
 bool AFramework::System::free(void * ptr){
@@ -130,7 +141,7 @@ bool AFramework::System::free(void * ptr){
     }
     /*  se invece tutto è stato inizializzato correttamente, disabilito lo      */
     /*  scheduler,                                                              */
-    disableScheduler();
+    scsusp();
     /*  assegno la testa della lista ad un puntatore temporaneo                 */
     nav = m_heap_head;
     /*  e scorro la lista                                                       */
@@ -187,13 +198,13 @@ bool AFramework::System::free(void * ptr){
         }
     }
     /*  riabilito lo scheduler                                                  */
-    enableScheduler();
+    scwake();
     /*  e restituisco il valore del flag, infatti se non ho trovato corrispon-  */
     /*  denze questo sarà false, altrimenti true                                */
     return flg;
 }
 
-size_t AFramework::System::availableMemory(){
+size_t AFramework::System::memstat(){
     /*  Nulla da commentare                                                     */
     return m_heap_size - m_heap_busy;
 }
@@ -221,7 +232,7 @@ void * AFramework::System::malloc(size_t size){
         size += (4 - (size % 4));
     }
     /*  Se invece è tutto ok disabilito lo scheduler                            */
-    disableScheduler();
+    scsusp();
     /*  e assgno un puntatore temporaneo alla testa                             */
     nav = m_heap_head;
     /*  ed inizio a scorrere la lista                                           */
@@ -235,7 +246,7 @@ void * AFramework::System::malloc(size_t size){
                 /*  aggiorno lo spazio occupato                                 */
                 m_heap_busy += size;
                 /*  riabilito lo scheduler                                      */
-                enableScheduler();
+                scwake();
                 /*  e restituisco il puntatore ai dati                          */
                 return nav->data();
             /*  se invece il blocco ha dimensione maggiore di quella richiesta  */
@@ -281,43 +292,50 @@ void * AFramework::System::malloc(size_t size){
         /*  endo la lista                                                       */
         nav->m_next = seg;
         /*  riabilito lo scheduler                                              */
-        enableScheduler();
+        scwake();
         /*  ed infine restituisco l'indirizzo dei dati                          */
         return nav->data();
     }
     /*  se invece il blocco richiesto non esiste riabilito lo scheduler         */
-    enableScheduler();
+    scwake();
     /*  e restituisco NULL                                                      */
     return NULL;
 }
 
-void AFramework::System::disableScheduler(){
-    #warning "void AFramework::System::disableScheduler() non ancora implementata"
+void AFramework::System::scsusp(){
+    #warning "void AFramework::System::scsusp() non ancora implementata"
 }
 
-void AFramework::System::enableScheduler(){
-    #warning "void AFramework::System::enableScheduler() non ancora implementata"
+void AFramework::System::scwake(){
+    #warning "void AFramework::System::scwake() non ancora implementata"
 }
 
-bool AFramework::System::enoughSpaceFor(const size_t& size, const bool& autoLock){
+bool AFramework::System::chkspc(size_t size, const bool& autoLock){
     Segment * nav = NULL;
-    /*  controllo che il framework sia stato inizializzato correttamente        */
-    if(!m_init_flag){
+    /*  controllo che il framework sia stato inizializzato correttamente e che  */
+    /*  dimensione richiesta non sia zero                                       */
+    if(!m_init_flag || !size){
         /*  se così non è non ho nulla da controllare e restituisco false       */
         return false;
     }
     /*  se invece tutto è ok disabilito lo scheduler                            */
-    disableScheduler();
+    scsusp();
+    /*  se la dimensione richiesta non raggiunge i 4 byte (indirizzamento a     */
+    /*  32 bit)                                                                 */
+    if(size % 4){
+        /*  allineo il blocco al più vicino multiplo di 4 byte                  */
+        size += (4 - (size % 4));
+    }
     /*  assegno la testa della lista ad un puntatore temporanero                */
     nav = m_heap_head;
     /*  ed inizio a navigare la lista alla ricerca di un blocco di dimensione   */
     /*  abbastanza grande (faccio il confronto più lasco per velocizzare)       */
     while(nav){
         /*  se esiste abbastanza spazio                                         */
-        if(nav->m_size >= size){
+        if(nav->m_size >= size && !nav->m_stat){
             /*  riabilito lo scheduler se autolock è false                      */
             if(!autoLock){
-                enableScheduler();
+                scwake();
             }
             /*  e restituisco true                                              */
             return true;
@@ -327,7 +345,7 @@ bool AFramework::System::enoughSpaceFor(const size_t& size, const bool& autoLock
     }
     /*  se invece il blocco di dimensione richiesta non esiste, riabilito lo    */
     /*  scheduler                                                               */
-    enableScheduler();
+    scwake();
     /*  e restituisco false                                                     */
     return false;
 }

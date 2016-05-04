@@ -31,30 +31,44 @@
 #include <cstdlib>
 #include <cstdint>
 
+#include "ACommons.h"
+
 namespace AFramework{
-    
+
     class System{
         public:
-                                static  bool        init            (       size_t          heapSize                                    );
-            template <class T>  static  bool        canCreate       (const  uint32_t    &   objNumber = 1, const bool & autoLock = true );
-                                static  size_t      availableMemory (                                                                   );
-                                static  size_t      heapSize        (                                                                   );
-                                static  void     *  malloc          (       size_t          size                                        );
-                                static  bool        free            (       void        *   address                                     );
-    private:
-                                static  void        disableScheduler(                                                                   );
-                                static  void        enableScheduler (                                                                   );
-                                static  bool        enoughSpaceFor  (const  size_t      &   size        , const bool & autoLock = true  );
-                                class   Segment;
-                                static  Segment *   m_heap_head;
-                                static  size_t      m_heap_size;
-                                static  size_t      m_heap_busy;
-                                static  size_t      m_xc32_offs;
-                                static  bool        m_init_flag;
+            template <class T>  static bool safeAlloc(T ** ptr, const uint32 & num = 1);
+
+            static bool init(size_t heapSize);
+            static void kill();
+            static size_t memstat();
+            static size_t heapSize();
+            static void * malloc(size_t size);
+            static bool free(void * address);
+        private:
+            static void scsusp();
+            static void scwake();
+            static bool chkspc(size_t size, const bool & autoLock = true);
+
+            class Segment;
+
+            static Segment *   m_heap_head;
+            static size_t      m_heap_size;
+            static size_t      m_heap_busy;
+            static size_t      m_xc32_offs;
+            static bool        m_init_flag;
     };
-    
-    template <class T> bool System::canCreate(const uint32_t & objNumber, const bool & autoLock){
-        return enoughSpaceFor(objNumber * sizeof(T), autoLock);
+
+    template <class T> bool System::safeAlloc(T ** ptr, const uint32 & num){
+        /*  controllo che ci sia sufficiente spazio in memoria                      */
+        if(chkspc(num * sizeof(T), true)){
+            /*  se lo trovo, per cui sono sicuro che non darà NULL, alloco          */
+            *ptr = (num == 1 ? new T() : new T[num]);
+            /*  ritorno true                                                        */
+            return true;
+        }
+        /*  altrimenti ritorno false                                                */
+        return false;
     }
 }
 

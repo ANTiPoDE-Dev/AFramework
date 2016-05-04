@@ -25,86 +25,70 @@
 *   Copyright 2015, 2016 Milazzo Giuseppe
 *
 */
+
 #include "AString.h"
-#include "ACore.h"
 
-AFramework::AString AFramework::AString::number(const int& val){
-    AString m_res;
-    /*  nulla da commentare                                                     */
-    m_res.m_str = nta(val, 0);
-    return m_res;
-}
-
-AFramework::AString AFramework::AString::number(const float& val, const uint32_t& prec){
-    AString m_res;
-    /*  nulla da commentare                                                     */
-    m_res.m_str = nta(val, prec);
-    return m_res;
-}
-
-AFramework::AString AFramework::AString::number(const double& val, const uint32_t& prec){
-    AString m_res;
-    /*  nulla da commentare                                                     */
-    m_res.m_str = nta(val, prec);
-    return m_res;
-}
-
-uint32_t AFramework::AString::strlen(const char * val){
-    uint32_t m_res = 0;
+AFramework::uint32 AFramework::AString::strlen(const char * val){
+    uint32 res = 0;
     /*  se la stringa non è vuota                                               */
     if(val){
         /*  fino a che il carattere puntato è diverso da quello di terminazione */
-        while(*val != 0x00){
+        while(*val++){
             /*  incremento il contatore                                         */
-            m_res++;
-            /*  sposto avanti il puntatore                                      */
-            val++;
+            res++;
         }
     }
     /*  ritorno il risultato                                                    */
-    return m_res;
+    return res;
 }
 
-AFramework::AString::AString() : m_str(NULL) {
+AFramework::AString::AString() : AError(), m_str(NULL), m_dim(0) {
     /*  Nulla da commentare                                                     */
 }
 
 AFramework::AString::AString(const AString& str) : AString(str.m_str){
-    /*  nulla da commentare                                                     */
+    /*  Nulla da commentare                                                     */
 }
 
 AFramework::AString::AString(const char * str) : AString(){
-    uint32_t m_dim = 0;
-    /*  calcolo la dimnesione della stringa                                     */
-    m_dim = 1 + strlen(str);
-    /*  se la stringa non è vuota                                               */
-    if(m_dim != 1){
-        /*  provo ad allocare                                                   */
-        m_str = new char[m_dim];
-        /*  se l'allocazione è andata a buon fine                               */
-        if(m_str){
-            /*  scorro tutta la stringa                                         */
-            for(uint32_t i = 0; i < m_dim; i++){
-                /*  e copio ogni elemento                                       */
+    uint32 dim = 1 + strlen(str);
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  se il puntatore non è null                                              */
+    if(str){
+        /*  provo ad allocare il vettore                                        */
+        if(System::safeAlloc(&m_str, dim)){
+            /*  copio i caratteri                                               */
+            for(uint32 i = 0; i < dim; i++){
                 m_str[i] = str[i];
             }
+            /*  e setto la dimensione (decremento per coerenza, praticamente    */
+            /*  strlen conta tutto tranne l'ultimo carattere per cui "pippo\0"  */
+            /*  anche se come lunghezza fisica è 6 da come risultato 5 perchè   */
+            /*  non conta \0)                                                   */
+            m_dim = --dim;
+        }else{
+            errset(NoMemory);
         }
     }
 }
 
-AFramework::AString::AString(const int & val) : AString(){
-    /*  Nulla da commentare                                                     */
-    m_str = nta(val, 0);
+AFramework::AString::AString(const sint32 & val) : AString(numToASCII(val, 0)){
+    /*  setto l'errore a NoError se la stringa non è null, altrimenti vuol dire */
+    /*  che l'allocazione interna a numToASCII è fallita percui metto NoMemory  */
+    errset(m_str ? NoError : NoMemory);
 }
 
-AFramework::AString::AString(const float & val, const uint32_t & prec) : AString(){
-    /*  Nulla da commentare                                                     */
-    m_str = nta(val, prec);
+AFramework::AString::AString(const float & val, const uint8 & prec) : AString(numToASCII(val, prec)){
+    /*  setto l'errore a NoError se la stringa non è null, altrimenti vuol dire */
+    /*  che l'allocazione interna a numToASCII è fallita percui metto NoMemory  */
+    errset(m_str ? NoError : NoMemory);
 }
 
-AFramework::AString::AString(const double & val, const uint32_t & prec) : AString(){
-    /*  Nulla da commentare                                                     */
-    m_str = nta(val, prec);
+AFramework::AString::AString(const double & val, const uint8 & prec) : AString(numToASCII(val, prec)){
+    /*  setto l'errore a NoError se la stringa non è null, altrimenti vuol dire */
+    /*  che l'allocazione interna a numToASCII è fallita percui metto NoMemory  */
+    errset(m_str ? NoError : NoMemory);
 }
 
 AFramework::AString::~AString(){
@@ -113,101 +97,83 @@ AFramework::AString::~AString(){
 }
 
 bool AFramework::AString::remove(const AString & str, const bool & cs){
-    /*  nulla da commentare                                                     */
-    return remove(str.m_str, cs);
-}
-bool AFramework::AString::remove(const char * str, const bool & cs){
-    uint32_t    m_dim = 0;
-    uint32_t    m_tmp = 0;
-    int32_t     m_ind = 0;
-    char    *   m_new = NULL;
-    /*  calcolo la dimensione del nuovo vettore                                 */
-    m_dim = 1 + size() - strlen(str);
-    /*  cerco l'indice della sotto-stringa                                      */
-    m_ind = indexOf(str, 0, cs);
-    /*  se non ho trovato la stringa da eliminare                               */
-    if(m_ind == -1){
-        /* ritorno false */
+    uint32 newDim = 0;
+    uint32 tmpInd = 0;
+    sint32 strInd = 0;
+    char * newStr = NULL;
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  calcolo la dimensione della nuova stringa                               */
+    newDim = 1 + m_dim - str.m_dim;
+    /*  cerco l'indice della sottostringa                                       */
+    strInd = indexOf(str, 0, cs);
+    /*  se non ho trovato la sottostringa da rimuovere                          */
+    if(strInd < 0){
+        /*  ritorno false                                                       */
         return false;
     }
     /*  provo ad allocare il nuovo vettore                                      */
-    m_new = new char[m_dim];
-    /*  se l'allocazione è fallita                                              */
-    if(!m_new){
-        /*  ritorno false                                                       */
-        return false;
-    }
-    /*  se sono arrivato qui senza intoppi è tutto ok, per cui inizio la rimo-  */
-    /*  zione                                                                   */
-    for(uint32_t i = 0; i < m_dim - 1; i++){
-        /*  se l'indice corrente corrisponde alla posizione che non deve        */
-        /*  essere copiata                                                      */
-        if(i == m_ind){
-            /*  aggiungo l'offset della lunghezza della stringa                 */
-            m_tmp += strlen(str);
+    if(System::safeAlloc(&newStr, newDim)){
+        /*  se ci sono riuscito inizio la copia                                 */
+        for(uint32 i = 0; i < newDim - 1; i++){
+            /*  quando il contatore è uguale all'indice della sottostringa      */
+            if(i == strInd){
+                /*  aggiungo l'offset per saltarla                              */
+                tmpInd += str.m_dim;
+            }
+            /*  copio i caratteri                                               */
+            newStr[i] = m_str[tmpInd++];
         }
-        /*  copio i caratteri                                                   */
-        m_new[i] = m_str[m_tmp++];
+        /*  inserisco la terminazione                                           */
+        newStr[newDim - 1] = 0x00;
+        /*  scambio i puntatori (al solido decrementando la dimensione di uno)  */
+        ptrswp(newStr, --newDim);
+        /*  ritorno true                                                        */
+        return true;
     }
-    /*  aggiungo la terminazione                                                */
-    m_new[m_dim - 1] = 0x00;
-    /*  libero la memoria                                                       */
-    delete [] m_str;
-    /*  riassegno il puntatore                                                  */
-    m_str = m_new;
-    /*  ritorno true                                                            */
-    return true;    
+    /*  se l'allocazione fallisce setto l'errore a NoMemory e ritorno false     */
+    errset(NoMemory);
+    return false;
 }
 
 bool AFramework::AString::remove(const char & chr, const bool & cs){
-    uint32_t    m_dim = 0;
-    uint32_t    m_tmp = 0;
-    int32_t     m_ind = 0;
-    char    *   m_new = NULL;
-    /*  calcolo la dimensione della nuova stringa                               */
-    m_dim = size();
+    uint32 tmpInd = 0;
+    sint32 chrInd = 0;
+    char * newStr = NULL;
+    /*  resetto la variabile d'errore                                           */
+    errset();
     /*  cerco l'indice del carattere                                            */
-    m_ind = indexOf(chr, 0, cs);
-    /*  se non ho trovato il carattere                                          */
-    if(m_ind == -1){
+    chrInd = indexOf(chr, 0, cs);
+    /*  se non ho trovato il carattere da rimuovere                             */
+    if(chrInd < 0){
         /*  ritorno false                                                       */
         return false;
     }
-    /*  provo ad allocare                                                       */
-    m_new = new char[m_dim];
-    /*  se l'allocazione fallisce                                               */
-    if(!m_new){
-        /*  ritorno false                                                       */
-        return false;
-    }
-    /*  se sono arrivato qui è andato tutto ok, per cui inizio la copia della   */
-    /*  stringa                                                                 */
-    for(uint32_t i = 0; i < m_dim - 1; i++){
-        /*  se l'indice corrente corrisponde alla posizione che non deve        */
-        /*  essere copiata                                                      */
-        if(i == m_ind){
-            /*  aggiungo l'offeset di 1 carattere                               */
-            m_tmp++;
+    /*  provo ad allocare il nuovo vettore                                      */
+    if(System::safeAlloc(&newStr, m_dim)){
+        /*  se ci sono riuscito inizio la copia                                 */
+        for(uint32 i = 0; i < m_dim - 1; i++){
+            /*  quando il contatore è uguale all'indice del carattere           */
+            if(i == chrInd){
+                /*  incremento l'indice temporaneo di uno così salto la copia   */
+                tmpInd++;
+            }
+            /*  copio i caratteri                                               */
+            newStr[i] = m_str[tmpInd++];
         }
-        /*  copio i caratteri                                                   */
-        m_new[i] = m_str[m_tmp++];
+        /*  aggiungo la terminazione                                            */
+        newStr[m_dim - 1] = 0x00;
+        /*  scambio i puntatori (al solito decrementando la dimensione di uno)  */
+        ptrswp(newStr, --m_dim);
+        /*  ritorno true                                                        */
+        return true;
     }
-    /*  aggiungo la terminazione                                                */
-    m_new[m_dim - 1] = 0x00;
-    /*  libero la memoria                                                       */
-    delete [] m_str;
-    /*  riassegno il puntatore                                                  */
-    m_str = m_new;
-    /*  ritorno true                                                            */
-    return true;
+    /*  se l'allocazione fallisce setto l'errore a NoMemory e ritorno false     */
+    errset(NoMemory);
+    return false;
 }
 
 bool AFramework::AString::contains(const AString & str, const bool & cs) const{
-    /*  nulla da commentare                                                     */
-    return (indexOf(str.m_str, 0, cs) != -1);
-}
-
-bool AFramework::AString::contains(const char * str, const bool & cs) const{
     /*  nulla da commentare                                                     */
     return (indexOf(str, 0, cs) != -1);
 }
@@ -218,80 +184,83 @@ bool AFramework::AString::contains(const char & chr, const bool & cs) const{
 }
 
 bool AFramework::AString::compare(const AString & str, const bool & cs) const{
-    /*  nulla da commentare                                                     */
-    return compare(str.m_str, cs);
-}
-
-bool AFramework::AString::compare(const char * str, const bool & cs) const{
-    /*  nulla da commentare                                                     */
-    if(size() != strlen(str)){
+    /*  se hanno dimensione diversa sono ovviamente diverse, per cui            */
+    if(m_dim != str.m_dim){
+        /*  ritorno false                                                       */
         return false;
     }
+    /*  se hanno la stessa dimensione allora chiamo indexOf che deve dare zero  */
+    /*  come risultato                                                          */
     return (indexOf(str, 0, cs) == 0);
 }
 
 bool AFramework::AString::compare(const char & chr, const bool & cs) const{
-    /*  nulla da commentare                                                     */
-    if(size() != 1){
+    /*  se la dimensione è diversa da 1 non possono mai essere confrontati      */
+    /*  per cui                                                                 */
+    if(m_dim != 1){
+        /*  in questo caso ritorno false                                        */
         return false;
     }
-    return ccm(chr, m_str[0], cs);
+    /*  altrimenti ritorno il confronto dei caratteri con ccmp                  */
+    return ccmp(chr, m_str[0], cs);
 }
 
 bool AFramework::AString::replace(const AString & before, const AString & after, const bool & cs){
-    /*  nulla da commentare                                                     */
-    return replace(before.m_str, after.m_str, cs);
-}
-
-bool AFramework::AString::replace(const char * before, const char * after, const bool & cs){
-    uint32_t    m_sd1 = 0;
-    uint32_t    m_sd2 = 0;
-    uint32_t    m_is1 = 0;
-    uint32_t    m_is2 = 0;
-    int32_t     m_pos = 0;
-    char    *   m_new = NULL;
-    /*  calcolo la dimensione della stringa dopo la rimozione di before         */
-    m_sd1 = 1 + size() - strlen(before);
-    /*  calcolo la dimensione della stringa che devo inserire                   */
-    m_sd2 = strlen(after);
-    /*  cerco l'indice della sottostringa                                       */
-    m_pos = indexOf(before, 0, cs);
-    /*  se non trovo la sottostringa                                            */
-    if(m_pos == -1){
+    uint32 tmpDim = 0;
+    uint32 indOne = 0;
+    uint32 indTwo = 0;
+    sint32 strInd = 0;
+    char * newStr = NULL;
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  calcolo la dimensione della stringa dopo la dimensione di before        */
+    tmpDim = 1 + m_dim - before.m_dim;
+    /*  cerco l'indice della sottostringa before                                */
+    strInd = indexOf(before, 0, cs);
+    /*  se non ho trovato la sottostringa                                       */
+    if(strInd < 0){
         /*  ritorno false                                                       */
         return false;
     }
-    /*  provo ad allocare                                                       */
-    m_new = new char[m_sd1 + m_sd2];
-    /*  se l'allocazione non è andata a buon fine                               */
-    if(!m_new){
-        /*  ritorno false                                                       */
-        return false;
-    }
-    /*  se sono arrivato qui è andato tutto bene, per cui copio le stringhe     */
-    for(uint32_t i = 0; i < m_sd1 + m_sd2 - 1; i++){
-        if(i < m_pos || i > m_pos + m_sd2){
-            m_new[i] = m_str[m_is1++];
-        }else{
-            m_new[i] = after[m_is2++];
+    /*  provo ad allocare il nuovo vettore                                      */
+    if(System::safeAlloc(&newStr, tmpDim + after.m_dim)){
+        /*  se ci sono riuscito inizio la copia delle stringhe                  */
+        for(uint32 i = 0; i < tmpDim + after.m_dim - 1; i++){
+            /*  se il contatore è uguale all'indice di inizio di before aggiun- */
+            /*  la dimensione di before così quando ricopio parto dai caratteri */
+            /*  che seguono                                                     */
+            if(i == strInd){
+                indOne += before.m_dim + 1;
+            }
+            /*  se il contatore è minore dell'indice di inizio di before o mag- */
+            /*  giore dello stesso indice più la dimensione di after            */
+            if(i < strInd || i > strInd + after.m_dim){
+                /*  ricopio i caratteri della vecchia stringa                   */
+                newStr[i] = m_str[indOne++];
+            /*  altrimenti                                                      */
+            }else{
+                /*  inserisco i caratteri di after                              */
+                newStr[i] = after.m_str[indTwo++];
+            }
         }
+        /*  inserisco la terminazione                                           */
+        newStr[tmpDim + after.m_dim - 1] = 0x00;
+        /*  scambio i puntatori (al solito decrementando la dimensione di uno)  */
+        ptrswp(newStr, tmpDim + after.m_dim);
+        /*  ritorno true                                                        */
+        return true;
     }
-    /*  aggiungo la terminazione                                                */
-    m_new[m_sd1 + m_sd2 - 1] = 0x00;
-    /*  libero la memoria                                                       */
-    delete [] m_str;
-    /*  riassegno il puntatore                                                  */
-    m_str = m_new;
-    /*  ritorno true                                                            */
-    return true;
+    /*  se l'allocazione fallisce setto l'errore a NoMemory e ritorno false     */
+    errset(NoMemory);
+    return false;
 }
 
 bool AFramework::AString::replace(const char & before, const char & after, const bool & cs){
-    int32_t m_pos = indexOf(before, 0, cs);
+    sint32 chrInd = indexOf(before, 0, cs);
     /*  se trovo il carattere                                                   */
-    if(m_pos != -1){
+    if(chrInd != -1){
         /*  lo sostituisco                                                      */
-        m_str[m_pos] = after;
+        m_str[chrInd] = after;
         /*  e ritorno true                                                      */
         return true;
     }
@@ -299,57 +268,65 @@ bool AFramework::AString::replace(const char & before, const char & after, const
     return false;
 }
 
-int32_t AFramework::AString::indexOf(const AString & str, const uint32_t & index, const bool & cs) const{
-    /*  nulla da commentare                                                     */
-    return indexOf(str.m_str, index, cs);
-}
-
-int32_t AFramework::AString::indexOf(const char * str, const uint32_t & index, const bool & cs) const{
-    uint32_t m_sd1 = size();
-    uint32_t m_sd2 = strlen(str);
-    bool m_flg = true;
-    /*  se la sottostringa da cercare è più lunga della stringa o l'indice      */
-    /*  passato non permette di ricercarla                                      */
-    if(!m_sd2 || m_sd2 > m_sd1 || (index + m_sd2 > m_sd1)){
-        /*  ritorno -1                                                          */
+AFramework::sint32 AFramework::AString::indexOf(const AString & str, const uint32 & index, const bool & cs) const{
+    bool    flag = true;
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  se la sottostringa passata è vuota oppure indice e/o dimensione non     */
+    /*  premettono la ricerca                                                   */
+    if(!str.m_dim || (index + str.m_dim > m_dim)){
+        /*  setto l'errore ad OutOfRange                                        */
+        errset(OutOfRange);
+        /*  e ritorno -1                                                        */
         return -1;
     }
     /*  inizio a scorrere la stringa fino a quando posso fare l'ultimo confron- */
     /*  to                                                                      */
-    for(int32_t i = index; i <= m_sd1 - m_sd2; i++){
-        /*  esamino una sottostringa in modo simmetrico                         */
-        for(int32_t j = 0; j <= m_sd2 / 2; j++){
-            /*  non appena trovo differenze                                     */
-            if( !ccm(str[j              ] , m_str[i + j             ] , cs) ||
-                !ccm(str[m_sd2 - 1 - j  ] , m_str[m_sd2 - 1 + i - j ] , cs) ){
+    for(uint32 i = index; i <= m_dim - str.m_dim; i++){
+        /*  esamino in modo simmetrico                                          */
+        for(uint32 j = 0; j <= str.m_dim / 2; j++){
+            /*  alla prima differenza trovata                                   */
+            if(!ccmp(str.m_str[j                ], m_str[i + j                ], cs) ||
+               !ccmp(str.m_str[str.m_dim - 1 - j], m_str[str.m_dim - 1 + i - j], cs) ){
                 /*  metto il flag a false                                       */
-                m_flg = false;
-                /*  e smetto di scorrere                                        */
+                flag = false;
+                /*  e smetto di esaminare                                       */
                 break;
             }
         }
-        /*  se il flag è false                                                  */
-        if(!m_flg){
-            /*  lo metto a true pensando che se questo non viene messo a false  */
-            /*  allora ho trovato la sottostringa                               */
-            m_flg = true;
-        /*  altrimenti se il flag è true                                        */
+        /*  se trovo il flag a false vuol dire che non ho trovato la sotto-     */
+        /*  stringa, per cui                                                    */
+        if(!flag){
+            /*  lo rimetto a true, di modo che se non viene toccato significa   */
+            /*  che la sottostringa è stata trovata                             */
+            flag = true;
+        /*  se invece trovo il flag a true implica che ho trovato la sotto-     */
+        /*  stringa, per cui ritorno l'indice                                   */
         }else{
-            /*  restituisco l'indice                                            */
             return i;
         }
     }
-    /*  altrimenti restituisco -1                                               */
+    /*  se sono arrivato qui vuol dire che la sottostringa non è presente per   */
+    /*  cui ritorno -1                                                          */
     return -1;
 }
 
-int32_t AFramework::AString::indexOf(const char & chr, const uint32_t & index, const bool & cs) const{
-    uint32_t m_dim = size();
-    /*  inizio a scorrere la stringa dall'indice passato (se l'indice non è va- */
-    /*  lido il ciclo neanche parte)                                            */
-    for(int32_t i = index; i < m_dim; i++){
+AFramework::sint32 AFramework::AString::indexOf(const char & chr, const uint32 & index, const bool & cs) const{
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  praticamente il problema non sussiste perchè se l'indice è fuori range  */
+    /*  le iterazioni neanche partono, però per coerenza ritengo sia meglio     */
+    /*  inserire il controllo                                                   */
+    if(index > m_dim){
+        /*  per cui come dicevo setto l'errore                                  */
+        errset(OutOfRange);
+        /*  e ritorno -1                                                        */
+        return -1;
+    }
+    /*  inizio a scorrere la stringa dall'indice passato                        */
+    for(uint32 i = index; i < m_dim; i++){
         /*  se trovo il carattere                                               */
-        if(ccm(chr, m_str[i], cs)){
+        if(ccmp(chr, m_str[i], cs)){
             /*  ritorno l'indice corrispondete                                  */
             return i;
         }
@@ -358,237 +335,197 @@ int32_t AFramework::AString::indexOf(const char & chr, const uint32_t & index, c
     return -1;
 }
 
-bool AFramework::AString::insert(const AString & str, const uint32_t & index){
-    /*  nulla da commentare                                                     */
-    return insert(str.m_str, index);
+bool AFramework::AString::insert(const AString & str, const uint32 & index){
+    uint32  indOne = 0;
+    uint32  indTwo = 0;
+    uint32  newDim = 0;
+    char * newStr = NULL;
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  se l'indice passato è più grande della dimensione attuale               */
+    if(index > m_dim){
+        /*  setto l'errore ad OutOfRange                                        */
+        errset(OutOfRange);
+        /*  e ritorno false                                                     */
+        return false;
+    }
+    /*  calcolo la dimensione del nuovo vettore                                 */
+    newDim = 1 + m_dim + str.m_dim;
+    /*  provo ad allocare il vettore                                            */
+    if(System::safeAlloc(&newStr, newDim)){
+        /*  se ci sono riuscito inizio la copia delle stringhe                  */
+        for(uint32 i = 0; i < newDim - 1; i++){
+            /*  se il contatore è compreso tra l'indice da dove inserire e lo   */
+            /*  stesso indice più la dimensione della stringa da inserire       */
+            if(i >= index && i <= index + str.m_dim - 1){
+                /*  inserisco i caratteri della nuova sottostringa              */
+                newStr[i] = str.m_str[indTwo++];
+            }else{
+                /*  altrimenti ricopio i vecchi caratteri                       */
+                newStr[i] = m_str[indOne++];
+            }
+        }
+        /*  inserisco la terminazione                                           */
+        newStr[newDim - 1] = 0x00;
+        /*  scambio i puntatori (decrementando la dimensione)                   */
+        ptrswp(newStr, --newDim);
+        /*  e ritorno true                                                      */
+        return true;
+    }
+    /*  altrimenti setto l'errore                                               */
+    errset(NoMemory);
+    /*  e ritorno false                                                         */
+    return false;
 }
 
 bool AFramework::AString::insert(const AString & str, const AString & after, const bool & cs){
-    /*  nulla da commentare                                                     */
-    return insert(str.m_str, after.m_str, cs);
-}
-
-bool AFramework::AString::insert(const char * str, const uint32_t & index){
-    uint32_t    m_sd1 = size();
-    uint32_t    m_sd2 = strlen(str);
-    uint32_t    m_si1 = 0;
-    uint32_t    m_si2 = 0;
-    char    *   m_new = NULL;
-    /*  se l'indice passato è maggiore della dimensione attuale                 */
-    if(index > m_sd1){
+    sint32 strInd = 0;
+    /*  ricerco l'indice della sottostringa after                               */
+    strInd = indexOf(after);
+    /*  se non ho trovato la sottostringa                                       */
+    if(strInd < 0){
         /*  ritorno false                                                       */
         return false;
     }
-    /*  controllo di poter allocare la stringa                                  */
-    m_new = new char[m_sd1 + m_sd2 + 1];
-    /*  se l'allocazione è andata a buon fine                                   */
-    if(m_new){
-        /*  inizio la copia della stringhe                                      */
-        for(uint32_t i = 0; i < m_sd1 + m_sd2; i++){
-            /*  se sono nelle posizioni dove deve essere inserita la nuova      */
-            /*  stringa                                                         */
-            if(i >= index && i <= index + m_sd2 - 1){
-                /*  copio quella da inserire                                    */
-                m_new[i] = str[m_si2++];
-            /*  altrimenti                                                      */
-            }else{
-                /*  ricopio la vecchia                                          */
-                m_new[i] = m_str[m_si1++];
-            }
-        }
-        /*  aggiungo la terminazione                                            */
-        m_new[m_sd1 + m_sd2] = 0x00;
-        /*  cancello la vecchia stringa                                         */
-        delete [] m_str;
-        /*  riassegno la nuova                                                  */
-        m_str = m_new;
-        /*  ritorno true                                                        */
-        return true;
-    }
-    /*  in questo caso è fallita l'allocazione per cui ritorno false            */
-    return false;
+    /*  se invece l'ho trovata, chiamo la versione di insert con l'indice som-  */
+    /*  mando a index la dimensione di after                                    */
+    return insert(str, strInd + after.m_dim);
 }
 
-bool AFramework::AString::insert(const char * str, const char * after, const bool & cs){
-    int32_t m_index = indexOf(after, 0, cs);
-    /*  se non ho trovato occorrenze della sottostringa                         */
-    if(m_index == -1){
-        /*  ritorno false                                                       */
-        return false;
-    }
-    /*  aggiungo la posizione corretta                                          */
-    m_index += strlen(after);
-    return insert(str, m_index);
-}
-
-bool AFramework::AString::insert(const char & chr, const uint32_t & index){
-    uint32_t    m_dim = 2 + size();
-    uint32_t    m_ind = 0;
-    char    *   m_new = NULL;
+bool AFramework::AString::insert(const char & chr, const uint32 & index){
+    uint32 newDim = 2 + m_dim;
+    uint32 strInd = 0;
+    char * newStr = NULL;
+    /*  resetto la variabile d'errore                                           */
+    errset();
     /*  se l'indice è fuori range                                               */
-    if(index > size()){
-    /*  ritorno false                                                           */
+    if(index > m_dim){
+        /*  imposto l'errore come OutOfRange                                    */
+        errset(OutOfRange);
+        /*  e ritorno false                                                     */
         return false;
     }
-    /*  provo ad allocare un nuovo vettore                                      */
-    m_new = new char[m_dim];
-    /*  se l'allocazione è andata a buon fine                                   */
-    if(m_new){
-        /*  inizio la copia                                                     */
-        for(uint32_t i = 0; i < m_dim - 1; i++){
+    /*  provo ad allocare il nuovo vettore                                      */
+    if(System::safeAlloc(&newStr, newDim)){
+        /*  se ci sono riuscito inizio la copia                                 */
+        for(uint32 i = 0; i < newDim - 1; i++){
             /*  inserisco i vari caratteri a seconda che sia nel posto giusto o */
             /*  no                                                              */
-            m_new[i] = (i == index ? chr : m_str[m_ind++]);
+            newStr[i] = (i == index ? chr : m_str[strInd++]);
         }
-        /*  inserirsco il carattere di terminazione                             */
-        m_new[m_dim - 1] = 0x00;
-        /*  libero la memoria                                                   */
-        delete [] m_str;
-        /*  riassegno il puntatore                                              */
-        m_str = m_new;
+        /*  inserisco la terminazione                                           */
+        newStr[newDim - 1] = 0x00;
+        /*  scambio i puntatori (al solito decrementando la dimensione di uno)  */
+        ptrswp(newStr, --newDim);
         /*  ritorno true                                                        */
         return true;
     }
-    /*  altrimenti ritorno false                                                */
+    /*  altrimenti setto l'errore a NoMemory e ritorno false                    */
+    errset(NoMemory);
     return false;
-}
-
-bool AFramework::AString::insert(const char & chr, const char * after, const bool & cs){
-    /*  nulla da commentare                                                     */
-    return insert(chr, indexOf(after, 0, cs) + strlen(after));
 }
 
 bool AFramework::AString::append(const AString & str){
     /*  nulla da commentare                                                     */
-    return append(str.m_str);
-}
-
-bool AFramework::AString::append(const char * str){
-    /*  nulla da commentare                                                     */
-    return insert(str, size());
+    return insert(str, m_dim);
 }
 
 bool AFramework::AString::append(const char & chr){
     /*  nulla da commentare                                                     */
-    return insert(chr, size());
+    return insert(chr, m_dim);
 }
 
 bool AFramework::AString::prepend(const AString & str){
     /*  nulla da commentare                                                     */
-    return prepend(str.m_str);
-}
-
-bool AFramework::AString::prepend(const char * str){
-    /*  nulla da commentare                                                     */
-    int i = 0;
+    uint32 i = 0;
     return insert(str, i);
 }
 
 bool AFramework::AString::prepend(const char & chr){
     /*  nulla da commentare                                                     */
-    int i = 0;
+    uint32 i = 0;
     return insert(chr, i);
 }
 
 void AFramework::AString::toLower(){
-    char * m_tmp = m_str;
+    char * tmp = m_str;
     /*  se la stringa non è vuota                                               */
-    if(m_tmp){
+    if(tmp){
         /*  fino a che non trovo il carattere di terminazione                   */
-        while(*m_tmp != 0x00){
+        while(*tmp != 0x00){
             /*  se il carattere puntato è compreso tra A e Z                    */
-            if(*m_tmp >= 0x41 && *m_tmp <= 0x5A){
+            if(*tmp >= 0x41 && *tmp <= 0x5A){
                 /*  sommo 32 ed ottengo il minuscolo                            */
-                *m_tmp += 0x20;
+                *tmp += 0x20;
             }
             /*  incremento il puntatore                                         */
-            m_tmp++;
+            tmp++;
         }
     }
 }
 
 void AFramework::AString::toUpper(){
-    char * m_tmp = m_str;
+    char * tmp = m_str;
     /*  se la stringa non è vuota                                               */
-    if(m_tmp){
+    if(tmp){
         /*  fino a che non trovo il carattere di terminazione                   */
-        while(*m_tmp != 0x00){
+        while(*tmp != 0x00){
             /*  se il carattere puntato è compreso tra a e z                    */
-            if(*m_tmp >= 0x61 && *m_tmp <= 0x7A){
+            if(*tmp >= 0x61 && *tmp <= 0x7A){
                 /*  sottraggo 32 ed ottengo il maiuscolo                        */
-                *m_tmp -= 0x20;
+                *tmp -= 0x20;
             }
             /*  incremento il puntatore                                         */
-            m_tmp++;
+            tmp++;
         }
     }
 }
 
 void AFramework::AString::reverse(){
-    char        m_temp = 0x00;
-    uint32_t    m_size = size();
+    char tmp = 0x00;
     /*  scorro la stringa fino a metà (se la stringa è vuota non succede nulla) */
-    for(uint32_t i = 0; i < m_size / 2; i++){
+    for(uint32 i = 0; i < m_dim / 2; i++){
         /*  copio temporaneamente l'ultimo i-esimo elemento                     */
-        m_temp = m_str[m_size - 1 - i];
+        tmp = m_str[m_dim - 1 - i];
         /*  sostituisco l'ultimo i-esimo con l'i-esimo                          */
-        m_str[m_size - 1 - i] = m_str[i];
+        m_str[m_dim - 1 - i] = m_str[i];
         /*  sostituisco l'i-esimo con la copia dell'ultimo i-esimo              */
-        m_str[i] = m_temp;
+        m_str[i] = tmp;
     }
 }
 
-uint32_t AFramework::AString::size() const{
+AFramework::uint32 AFramework::AString::size() const{
     /*  nulla da commentare                                                     */
-    return strlen(m_str);
+    return m_dim;
 }
 
 bool AFramework::AString::isEmpty() const{
     /*  nulla da commentare                                                     */
-    return !size();
-}
-
-AFramework::AString * AFramework::AString::clone() const{
-    AString     *   m_new = NULL;
-    uint32_t        m_dim = 1 + size();
-    /*  provo ad allocare una nuova stringa                                     */
-    m_new = new AString();
-    /*  se l'allocazione è andata a buon fine                                   */
-    if(m_new){
-        /*  se la stringa non è vuota                                           */
-        if(m_str){
-            /*  provo ad allocare il vettore                                    */
-            m_new->m_str = new char[m_dim];
-            /*  se l'allocazione è andata a buon fine                           */
-            if(m_new->m_str){
-                /*  effettuo la copia                                           */
-                for(uint32_t i = 0; i < m_dim; i++){
-                    m_new->m_str[i] = m_str[i];
-                }
-            }else{
-                /*  Altrimenti faccio rollback, cancello la nuova stringa       */
-                delete m_new;
-                /*  e metto a NULL                                              */
-                m_new = NULL;
-            }
-        }
-    }
-    /*  ritorno il puntatore alla stringa                                       */
-    return m_new;
+    return !m_dim;
 }
 
 bool AFramework::AString::clear(){
-    /*  nulla da commentare                                                     */
+    /*  se la stringa è già vuota                                               */
     if(!m_str){
+        /*  ritorno false                                                       */
         return false;
     }
+    /*  libero la memoria                                                       */
     delete [] m_str;
+    /*  azzero la dimensione                                                    */
+    m_dim = 0;
+    /*  ritorno true                                                            */
     return true;
 }
 
-char AFramework::AString::at(const uint32_t& index) const{
-    /*  se la stringa è vuota oppure sono andato fuori range                    */
-    if(!m_str || index > size()){
+char AFramework::AString::at(const uint32 & index) const{
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  se il puntatore è null (stringa totalmente vuota) o l'indice fuori è    */
+    /*  fuori range                                                             */
+    if(!m_str || index > m_dim){
+        /*  setto l'errore ad OutOfRange                                        */
+        errset(OutOfRange);
         /*  ritorno il carattere di terminazione                                */
         return 0x00;
     }
@@ -597,11 +534,6 @@ char AFramework::AString::at(const uint32_t& index) const{
 }
 
 bool AFramework::AString::startsWith(const AString & str, const bool & cs){
-    /*  nulla da commentare                                                     */
-    return startsWith(str.m_str, cs);
-}
-
-bool AFramework::AString::startsWith(const char * str, const bool & cs){
     /*  nulla da commentare                                                     */
     return (indexOf(str, 0, cs) == 0);
 }
@@ -613,13 +545,7 @@ bool AFramework::AString::startsWith(const char & chr, const bool & cs){
 
 bool AFramework::AString::endsWith(const AString & str, const bool & cs){
     /*  nulla da commentare                                                     */
-    return endsWith(str.m_str, cs);
-}
-
-bool AFramework::AString::endsWith(const char * str, const bool & cs){
-    /*  nulla da commentare                                                     */
-    uint32_t m_dim = size() - strlen(str);
-    return ((indexOf(str, m_dim, cs) == m_dim));
+    return (indexOf(str, m_dim - str.m_dim, cs) == m_dim - str.m_dim);
 }
 
 bool AFramework::AString::endsWith(const char & chr, const bool & cs){
@@ -629,28 +555,28 @@ bool AFramework::AString::endsWith(const char & chr, const bool & cs){
         return false;
     }
     /*  altrimenti confronto l'ultimo carattere                                 */
-    return ccm(chr, m_str[size() - 1], cs);
+    return ccmp(chr, m_str[size() - 1], cs);
 }
 
-int AFramework::AString::toInt(bool & ok) const{
-    char    *   m_tmp = m_str;
-    int32_t     m_sig = 1;
-    int32_t     m_res = 0;
+AFramework::sint32 AFramework::AString::toInt32(bool & ok) const{
+    sint32 sig = 1;
+    sint32 res = 0;
+    char * str = m_str;
     /*  metto il flag a false                                                   */
     ok = false;
     /*  se la stringa non è vuota                                               */
-    if(m_tmp){
+    if(str){
         /*  se il primo carattere è un meno o un più                            */
-        if(*m_tmp == 0x2D || *m_tmp == 0x2B){
+        if(*str == 0x2D || *str == 0x2B){
             /*  imposto il segno                                                */
-            m_sig = (*m_tmp == 0x2D ? -1 : 1);
+            sig = (*str == 0x2D ? -1 : 1);
             /*  incremento il puntatore                                         */
-            m_tmp++;
+            str++;
         }
         /*  fino a che non sono alla fine                                       */
-        while(*m_tmp){
+        while(*str){
             /*  non appena trovo un carattere che non sia numerico              */
-            if(*m_tmp < 0x30 || *m_tmp > 0x39){
+            if(*str < 0x30 || *str > 0x39){
                 /*  ritorno zero con il flag ok a false                         */
                 ok = false;
                 return 0;
@@ -658,44 +584,44 @@ int AFramework::AString::toInt(bool & ok) const{
             }else{
                 /*  metto il flag a true e accodo le cifre                      */
                 ok = true;
-                m_res = (m_res * 10) + static_cast<int>(*m_tmp - 0x30);
+                res = (res * 10) + static_cast<sint32>(*str - 0x30);
             }
             /*  sposto in avanti il puntatore                                   */
-            m_tmp++;
+            str++;
         }
     }
     /*  ritorno il valore                                                       */
-    return m_sig * m_res;
+    return sig * res;
 }
 
 float AFramework::AString::toFloat(bool & ok) const{
-    char    *   m_tmp = m_str;
-    int32_t     m_sig = 1;
-    float       m_res = 0;
-    uint32_t    m_dot = 0;
-    uint32_t    m_stp = 0;
+    float  res = 0;
+    sint32 sig = 1;
+    uint32 dot = 0;
+    uint32 stp = 0;
+    char * str = m_str;
     /*  metto il flag a false                                                   */
     ok = false;
     /*  se la stringa non è vuota                                               */
-    if(m_tmp){
+    if(str){
         /*  se il primo carattere è un meno o un più                            */
-        if(*m_tmp == 0x2D || *m_tmp == 0x2B){   
+        if(*str == 0x2D || *str == 0x2B){
             /*  imposto il segno                                                */
-            m_sig = (*m_tmp == 0x2D ? -1 : 1);
+            sig = (*str == 0x2D ? -1 : 1);
             /*  incremento il puntatore                                         */
-            m_tmp++;
+            str++;
         }
         /*  fino a che non sono alla fine                                       */
-        while(*m_tmp){
+        while(*str){
             /*  incremento il numero di step                                    */
-            m_stp++;
+            stp++;
             /*  se il carattere non è numerico                                  */
-            if((*m_tmp < 0x30 || *m_tmp > 0x39)){
+            if((*str < 0x30 || *str > 0x39)){
                 /*  se è un punto o una virgola e non ne ho trovati altri prima */
                 /*  e inoltre non è neanche il primo carattere                  */
-                if((*m_tmp == 0x2C || *m_tmp == 0x2E) && (m_stp != 1) && !m_dot){
+                if((*str == 0x2C || *str == 0x2E) && (stp != 1) && !dot){
                     /*  tengo traccia di dove ho trovato il punto               */
-                    m_dot = m_stp;
+                    dot = stp;
                 /*  altrimenti                                                  */
                 }else{
                     /*  ritorno zero con il flag ok a false                     */
@@ -706,51 +632,51 @@ float AFramework::AString::toFloat(bool & ok) const{
             }else{
                 /*  metto il flag a true e accodo le cifre                      */
                 ok = true;
-                m_res = (m_res * 10) + static_cast<int>(*m_tmp - 0x30);
+                res = (res * 10) + static_cast<sint32>(*str - 0x30);
             }
             /*  sposto in avanti il puntatore                                   */
-            m_tmp++;
+            str++;
         }
     }
     /*  imposto per quante volte devo dividere per 10                           */
-    m_dot = (m_dot ? m_stp - m_dot : 0);
+    dot = (dot ? stp - dot : 0);
     /*  effettuo la divisione                                                   */
-    while(m_dot){
-        m_dot--;
-        m_res /= 10;
+    while(dot){
+        dot--;
+        res /= 10;
     }
     /*  ritorno il valore                                                       */
-    return m_sig * m_res;
+    return sig * res;
 }
 
 double AFramework::AString::toDouble(bool & ok) const{
-    char    *   m_tmp = m_str;
-    int32_t     m_sig = 1;
-    double      m_res = 0;
-    uint32_t    m_dot = 0;
-    uint32_t    m_stp = 0;
+    double res = 0;
+    sint32 sig = 1;
+    uint32 dot = 0;
+    uint32 stp = 0;
+    char * str = m_str;
     /*  metto il flag a false                                                   */
     ok = false;
     /*  se la stringa non è vuota                                               */
-    if(m_tmp){
+    if(str){
         /*  se il primo carattere è un meno o un più                            */
-        if(*m_tmp == 0x2D || *m_tmp == 0x2B){
+        if(*str == 0x2D || *str == 0x2B){
             /*  imposto il segno                                                */
-            m_sig = (*m_tmp == 0x2D ? -1 : 1);
+            sig = (*str == 0x2D ? -1 : 1);
             /*  incremento il puntatore                                         */
-            m_tmp++;
+            str++;
         }
         /*  fino a che non sono alla fine                                       */
-        while(*m_tmp){
+        while(*str){
             /*  incremento il numero di step                                    */
-            m_stp++;
+            stp++;
             /*  se il carattere non è numerico                                  */
-            if((*m_tmp < 0x30 || *m_tmp > 0x39)){
+            if((*str < 0x30 || *str > 0x39)){
                 /*  se è un punto o una virgola e non ne ho trovati altri prima */
                 /*  e inoltre non è neanche il primo carattere                  */
-                if((*m_tmp == 0x2C || *m_tmp == 0x2E) && (m_stp != 1) && !m_dot){
+                if((*str == 0x2C || *str == 0x2E) && (stp != 1) && !dot){
                     /*  tengo traccia di dove ho trovato il punto               */
-                    m_dot = m_stp;
+                    dot = stp;
                 /*  altrimenti                                                  */
                 }else{
                     /*  ritorno zero con il flag ok a false                     */
@@ -761,128 +687,133 @@ double AFramework::AString::toDouble(bool & ok) const{
             }else{
                 /*  metto il flag a true e accodo le cifre                      */
                 ok = true;
-                m_res = (m_res * 10) + static_cast<int>(*m_tmp - 0x30);
+                res = (res * 10) + static_cast<sint32>(*str - 0x30);
             }
             /*  sposto in avanti il puntatore                                   */
-            m_tmp++;
+            str++;
         }
     }
     /*  imposto per quante volte devo dividere per 10                           */
-    m_dot = (m_dot ? m_stp - m_dot : 0);
+    dot = (dot ? stp - dot : 0);
     /*  effettuo la divisione                                                   */
-    while(m_dot){
-        m_dot--;
-        m_res /= 10;
+    while(dot){
+        dot--;
+        res /= 10;
     }
     /*  ritorno il valore                                                       */
-    return m_sig * m_res;
+    return sig * res;
 }
 
 AFramework::AStringList * AFramework::AString::split(const char & sep, const bool &keepEmpty, const bool & cs) const{
-    AStringList * m_list = NULL;
-    uint32_t m_tdim = 0;
-    uint32_t m_tind = 0;
-    int32_t m_prev = 0;
-    int32_t m_next = -1;
-    int32_t m_temp = 0;
-    AString * m_item = NULL;
+    bool          flag =  false;
+    uint32        tdim =  0;
+    uint32        tind =  0;
+    sint32        prev =  0;
+    sint32        next = -1;
+    sint32        temp =  0;
+    AString       item;
+    AStringList * list =  NULL;
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  se la stringa non è vuota e l'ultimo carattere prima della terminazione */
+    /*  è diverso dal separatore imposto il flag a true perchè vuol dire che    */
+    /*  devo controllare anche l'ultima parte della stringa                     */
+    flag = (m_dim && (m_str[m_dim - 1] != sep) ? true : false);
     /*  provo ad allocare la StringList                                         */
-    m_list = new AStringList();
-    /*  se la lista è stata allocata correttamente                              */
-    if(m_list){
-        /*  cerco tutti gli indici dove trovo il separatore indicato            */
-        while((m_next = indexOf(sep, m_prev, cs)) != -1){
+    if(System::safeAlloc(&list)){
+        /*  se la lista è stata allocata correttamente cerco tutti gli indici   */
+        /*  trovo il separatore indicato                                        */
+        while(((next = indexOf(sep, prev, cs)) != -1) || flag){
             /*  se l'indice non è cambiato (nel senso che ho iniziato con un un */
             /*  separatore                                                      */
-            if(m_next == m_prev){
+            if(next == prev){
                 /*  sposto l'indice in avanti                                   */
-                m_prev++;
+                prev++;
                 /*  e continuo a cercare                                        */
                 continue;
             }
-            /*  per evitare di fare casini con gli indici copio m_next su un    */
+            /*  per evitare di fare casini con gli indici copio next su un      */
             /*  altra variabile posizionandomi una posizione prima del separa-  */
-            /*  tore                                                            */
-            m_temp = m_next - 1;
-            /*  in questo caso quindi m_next e m_prev sono diversi, m_prev è    */
-            /*  l'indice dove inizia il token mentre m_next è l'indice del se-  */
-            /*  paratore successivo. Adesso la politica dipende da keepEmpty    */
+            /*  tore, inoltre se trovo next negativo vuol dire che il flag è    */
+            /*  true per cui devo controlloare anche la parte finale della      */
+            /*  stringa                                                         */
+            temp = (next > 0 ? next - 1 : m_dim - 1);
+            /*  in questo caso quindi next e prev sono diversi, prev è l'indice */
+            /*  dove inizia il token mentre next è l'indice del separatore suc- */
+            /*  cessivo. Adesso la politica dipende da keepEmpty:               */
             /*  Se keepEmpty è true copio il token per come lo trovo, mentre    */
             /*  se keepEmpty è false                                            */
             if(!keepEmpty){
                 /*  devo riscalare gli indici fino a quando non trovo caratteri */
-                /*  per cui porto m_prev in avanti                              */
-                while(m_str[m_prev] == 0x20 && m_prev < m_next){
-                    m_prev++;
+                /*  per cui porto prev in avanti                                */
+                while(m_str[prev] == 0x20 && prev < temp){
+                    prev++;
                 }
-                /*  se sono andato avanti fino a raggiungere m_next vuol dire   */
-                /*  che tutto il token è fatto da caratteri non stampabili per  */
-                /*  cui va ignorato                                             */
-                if(m_next == m_prev){
+                /*  se sono andato avanti fino a raggiungere prev vuol dire che */
+                /*  tutto il token è fatto da caratteri non stampabili per cui  */
+                /*  va ignorato                                                 */
+                if(prev == temp && m_str[prev] == 0x20){
                     /*  quindi sposto l'indice in avanti                        */
-                    m_prev++;
+                    prev = 1 + next;
                     /*  e continuo a cercare                                    */
                     continue;
                 }
-                /*  se sono arrivato qui vuol dire che tra m_prev ed m_next ci  */
-                /*  sono caratteri, per cui posso tranquillamente scorrere a    */
-                /*  ritroso senza avere paura di bucare l'array                 */
-                while(m_str[m_temp] == 0x20){
-                    m_temp--;
+                /*  se sono arrivato qui vuol dire che tra prev ed temp ci sono */
+                /*  caratteri, per cui posso tranquillamente scorrere a ritroso */
+                /*  senza avere paura di bucare l'array                         */
+                while(m_str[temp] == 0x20){
+                    temp--;
                 }
             }
-            /* calcolo la dimensione */
-            m_tdim = 2 + m_temp - m_prev;
-            /* provo ad allocare la stringa */
-            m_item = new AString();
-            /* se l'allocazione non è andata a buon fine */
-            if(!m_item){
-                /* faccio rollback, elimino tutto e purtoppo torno null */
-                delete m_list;
+            /* calcolo la dimensione                                            */
+            tdim = 2 + temp - prev;
+            if(!System::safeAlloc(&(item.m_str), tdim)){
+                /*  setto la variabile d'errore                                 */
+                errset(NoMemory);
+                /*  faccio rollback, elimino tutto e purtroppo torno null       */
+                delete list;
                 return NULL;
             }
-            /* provo ad allocare il vettore per la stringa */
-            m_item->m_str = new char[m_tdim];
-            /* se l'allocazione non è andata a buon fine */
-            if(!(m_item->m_str)){
-                /* faccio rollback, elimino tutto e purtroppo torno null */
-                delete m_item;
-                delete m_list;
-                return NULL;
+            /*  copio il token */
+            for(uint32_t i = prev; i <= temp; i++){
+                item.m_str[tind++] = m_str[i];
             }
-            /* copio il token */
-            for(uint32_t i = m_prev; i <= m_temp; i++){
-                m_item->m_str[m_tind++] = m_str[i];
-            }
-            /* aggiungo la terminazione */
-            m_item->m_str[m_tdim - 1] = 0x00;
-            /* se fallisce l'append */
-            if(!(m_list->append(m_item))){
-                /* al solito rollback e torno null */
-                delete m_item;
-                delete m_list;
+            /*  aggiungo la terminazione */
+            item.m_str[tdim - 1] = 0x00;
+            /*  setto la dimensione*/
+            item.m_dim = tdim - 1;
+            /*  se fallisce l'append                                            */
+            if(!(list->append(item))){
+                /*  setto la variabile d'errore                                 */
+                errset(NoMemory);
+                /*  al solito rollback e torno null                             */
+                delete list;
                 return NULL;
             }
             /* azzero l'indice per la copia */
-            m_tind = 0;
-            /* sposto in avanti l'indice */
-            m_prev = 1 + m_next;
+            tind = 0;
+            /*  se trovo sia next uguale a -1 che il flag a true metto flag a   */
+            /*  false così termino le iterazioni                                */
+            if(next == -1 && flag){
+                flag = false;
+            }else{
+                /*  altrimenti sposto in avanti l'indice                        */
+                prev = 1 + next;
+            }
         }
+    }else{
+        /*  setto l'errore a NoMemory                                           */
+        errset(NoMemory);
     }
-    return m_list;
+    return list;
 }
 
-char AFramework::AString::operator[](const uint32_t & index) const{
+char AFramework::AString::operator[](const uint32 & index) const{
     /*  nulla da commentare                                                     */
     return at(index);
 }
 
 bool AFramework::AString::operator==(const AString & str) const{
-    /*  nulla da commentare                                                     */
-    return compare(str);
-}
-
-bool AFramework::AString::operator==(const char * str) const{
     /*  nulla da commentare                                                     */
     return compare(str);
 }
@@ -897,22 +828,12 @@ bool AFramework::AString::operator!=(const AString & str) const{
     return !compare(str);
 }
 
-bool AFramework::AString::operator!=(const char * str) const{
-    /*  nulla da commentare                                                     */
-    return !compare(str);
-}
-
 bool AFramework::AString::operator!=(const char & chr) const{
     /*  nulla da commentare                                                     */
     return !compare(chr);
 }
 
 bool AFramework::AString::operator+=(const AString & str){
-    /*  nulla da commentare                                                     */
-    return append(str);
-}
-
-bool AFramework::AString::operator+=(const char * str){
     /*  nulla da commentare                                                     */
     return append(str);
 }
@@ -927,11 +848,6 @@ bool AFramework::AString::operator-=(const AString & str){
     return remove(str);
 }
 
-bool AFramework::AString::operator-=(const char * str){
-    /*  nulla da commentare                                                     */
-    return remove(str);
-}
-
 bool AFramework::AString::operator-=(const char & chr){
     /*  nulla da commentare                                                     */
     return remove(chr);
@@ -942,12 +858,6 @@ AFramework::AString AFramework::AString::operator+(const AString & str){
     return operator+(str.m_str);
 }
 
-AFramework::AString AFramework::AString::operator+(const char * str){
-    AString m_res = *this;
-    /*  nulla da commentare                                                     */
-    m_res.append(str);
-    return m_res;
-}
 
 AFramework::AString AFramework::AString::operator+(const char & chr){
     AString m_res = *this;
@@ -961,13 +871,6 @@ AFramework::AString AFramework::AString::operator-(const AString & str){
     return operator-(str.m_str);
 }
 
-AFramework::AString AFramework::AString::operator-(const char * str){
-    AString m_res = *this;
-    /*  nulla da commentare                                                     */
-    m_res.remove(str);
-    return m_res;
-}
-
 AFramework::AString AFramework::AString::operator-(const char & chr){
     AString m_res = *this;
     /*  nulla da commentare                                                     */
@@ -976,26 +879,23 @@ AFramework::AString AFramework::AString::operator-(const char & chr){
 }
 
 AFramework::AString & AFramework::AString::operator=(const AString & str){
-    /*  nulla da commentare                                                     */
-    return operator=(str.m_str);
-}
-
-AFramework::AString & AFramework::AString::operator=(const char * str){
-    uint32_t m_dim = 1 + strlen(str);
-    char * m_new = new char[m_dim];
-    /*  se sono riuscito ad allocare la memoria                                 */
-    if(m_new){
-        /*  cancello la vecchia stringa                                         */
-        clear();
-        /* per tutta la lunghezza di str                                        */
-        for(uint32_t i = 0; i < m_dim; i++){
-            /*  ricopio i caratteri                                             */
-            m_new[i] = str[i];
+    uint32  newDim = 1 + str.m_dim;
+    char * newStr = NULL;
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  provo ad allocare un il nuvo vettore                                    */
+    if(System::safeAlloc(&newStr, newDim)){
+        /*  se ci sono riuscito                                                 */
+        for(uint32 i = 0; i < newDim; i++){
+            /*  copio i caratteri                                               */
+            newStr[i] = str.m_str[i];
         }
-        /*  riassegno il puntatore                                              */
-        m_str = m_new;
+        /*  scambio i puntatori                                                 */
+        ptrswp(newStr, --newDim);
+    }else{
+        /*  altrimenti setto l'errore a NoMemory                                */
+        errset(NoMemory);
     }
-    /*  ritorno l'oggetto corrente                                              */
     return *this;
 }
 
@@ -1016,7 +916,7 @@ AFramework::AString & AFramework::AString::operator=(const char & chr){
     return *this;
 }
 
-bool AFramework::AString::ccm(const char & ch1, const char & ch2, const bool & cs){
+bool AFramework::AString::ccmp(const char & ch1, const char & ch2, const bool & cs){
     bool m_ch1 = (ch1 >= 0x41 && ch1 <= 0x5A) || (ch1 >= 0x61 && ch1 <= 0x7A);
     bool m_ch2 = (ch2 >= 0x41 && ch2 <= 0x5A) || (ch2 >= 0x61 && ch2 <= 0x7A);
     bool m_res = (ch1 == ch2);
@@ -1025,4 +925,13 @@ bool AFramework::AString::ccm(const char & ch1, const char & ch2, const bool & c
         m_res = (ch1 == ch2) || (ch1 == ch2 + 0x20) || (ch1 == ch2 - 0x20);
     }
     return m_res;
+}
+
+void AFramework::AString::ptrswp(char * ptr, const uint32 & dim){
+    /*  libero la memoria                                                       */
+    delete [] m_str;
+    /*  assegno ptr al puntatore membro                                         */
+    m_str = ptr;
+    /*  aggiorno la dimensione                                                  */
+    m_dim = dim;
 }

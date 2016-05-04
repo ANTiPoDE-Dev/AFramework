@@ -30,6 +30,8 @@
 
 #define _vol volatile
 
+#include <cstdlib>
+
 namespace AFramework{
 
     typedef unsigned char       uchar;
@@ -42,6 +44,39 @@ namespace AFramework{
     typedef signed int          sint32;
     typedef unsigned long long  uint64;
     typedef signed long long    sint64;
-    
+
+    class AError{
+
+        public:
+
+            enum AErrors{   NoError,
+                            NoMemory,
+                            OutOfRange  };
+
+            AError(){
+
+                m_err = NoError;
+            }
+
+            AErrors lastError() const{
+
+                return m_err;
+            }
+
+            bool good() const{
+
+                return m_err == NoError;
+            }
+
+        protected:
+
+            mutable AErrors m_err;
+
+            void errset(const AErrors &err = NoError) const{
+
+                m_err = err;
+            }
+    };
+
 }
 #endif // ACOMMONS_H
