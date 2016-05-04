@@ -51,11 +51,11 @@ void operator delete[](void* addr){
 
 class AFramework::System::Segment{
     public:
-        void        *   data    ();
-        Segment     *   vNext   ();
-        uint32_t        m_stat : 0x01;
-        uint32_t        m_size : 0x1F;
-        Segment     *   m_next;
+        void    *   data ();
+        Segment *   vNext();
+        uint32      m_stat : 0x01;
+        uint32      m_size : 0x1F;
+        Segment *   m_next;
 };
 void * AFramework::System::Segment::data(){
     /*  Per evitare di inserire nella classe un altro campo (il puntatore void  */
@@ -69,7 +69,7 @@ AFramework::System::Segment * AFramework::System::Segment::vNext(){
     /*  Calcolo l'indirizzo virtuale a cui dovrebbe trovarsi ipoteticamente il  */
     /*  prossimo blocco: partendo da data() che fornisce la memoria utile allo  */
     /*  utilizzatore aggiungo un offset di size() bytes.                        */
-    return (reinterpret_cast<Segment *>(reinterpret_cast<uint32_t>(data()) + m_size));
+    return (reinterpret_cast<Segment *>(reinterpret_cast<uint32>(data()) + m_size));
 }
 
 bool AFramework::System::init(size_t heapSize){

@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp
+SOURCEFILES_QUOTED_IF_SPACED=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APort.cpp
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/ACore.o.d ${OBJECTDIR}/_ext/1445274692/AString.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APort.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/ACore.o.d ${OBJECTDIR}/_ext/1445274692/AString.o.d ${OBJECTDIR}/_ext/1445274692/APort.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o
+OBJECTFILES=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APort.o
 
 # Source Files
-SOURCEFILES=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp
+SOURCEFILES=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APort.cpp
 
 
 CFLAGS=
@@ -118,6 +118,12 @@ ${OBJECTDIR}/_ext/1445274692/AString.o: ../../src/AString.cpp  nbproject/Makefil
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AString.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AString.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AString.o.d" -o ${OBJECTDIR}/_ext/1445274692/AString.o ../../src/AString.cpp  
 	
+${OBJECTDIR}/_ext/1445274692/APort.o: ../../src/APort.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/APort.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/APort.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/APort.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/APort.o.d" -o ${OBJECTDIR}/_ext/1445274692/APort.o ../../src/APort.cpp  
+	
 else
 ${OBJECTDIR}/_ext/1445274692/main.o: ../../src/main.cpp  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
@@ -136,6 +142,12 @@ ${OBJECTDIR}/_ext/1445274692/AString.o: ../../src/AString.cpp  nbproject/Makefil
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AString.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AString.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AString.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AString.o.d" -o ${OBJECTDIR}/_ext/1445274692/AString.o ../../src/AString.cpp  
+	
+${OBJECTDIR}/_ext/1445274692/APort.o: ../../src/APort.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/APort.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/APort.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/APort.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/APort.o.d" -o ${OBJECTDIR}/_ext/1445274692/APort.o ../../src/APort.cpp  
 	
 endif
 

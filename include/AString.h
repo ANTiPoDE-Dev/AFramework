@@ -34,113 +34,75 @@
 #include "AContainers.h"
 
 namespace AFramework{
-
+    
     class AString;
-
     typedef ALinkedList<AString> AStringList;
-
+    
     class AString : public AObject{
-
         public:
-
             static  uint32  strlen(const char  * str);
-
+            
             AString();
             AString(const AString & str);
             AString(const char    * str);
-
             explicit AString(const sint32 & val);
             explicit AString(const float  & val, const uint8 & prec = 3);
             explicit AString(const double & val, const uint8 & prec = 3);
-
             ~AString();
-
             bool remove(const AString & str, const bool & cs = false);
             bool remove(const char    & chr, const bool & cs = false);
-
             bool contains(const AString & str, const bool & cs = false) const;
             bool contains(const char    & chr, const bool & cs = false) const;
-
             bool compare(const AString & str, const bool & cs = false) const;
             bool compare(const char    & chr, const bool & cs = false) const;
-
             bool replace(const AString & before, const AString & after, const bool & cs = false);
             bool replace(const char    & before, const char    & after, const bool & cs = false);
-
             sint32 indexOf(const AString & str, const uint32 & index = 0, const bool & cs = false) const;
             sint32 indexOf(const char    & chr, const uint32 & index = 0, const bool & cs = false) const;
-
             bool insert(const AString & str, const uint32  & index);
             bool insert(const AString & str, const AString & after, const bool & cs = false);
-
             bool insert(const char & chr, const uint32 & index);
             bool insert(const char & chr, const char   * after, const bool & cs = false);
-
             bool append(const AString & str);
             bool append(const char    & chr);
-
             bool prepend(const AString & str);
             bool prepend(const char    & chr);
-
             void toLower();
             void toUpper();
-
             void reverse();
-
             uint32 size() const;
-
             bool isEmpty() const;
-
             bool clear();
-
             char at(const uint32 & index) const;
-
             bool startsWith(const AString & str, const bool & cs = false);
             bool startsWith(const char    & chr, const bool & cs = false);
-
             bool endsWith(const AString & str, const bool & cs = false);
             bool endsWith(const char    & chr, const bool & cs = false);
-
             sint32 toInt32(bool & ok) const;
-
             float toFloat(bool & ok) const;
-
             double toDouble(bool & ok) const;
-
             AStringList * split(const char & sep, const bool & keepEmpty = false, const bool & cs = false) const;
-
             char operator[](const uint32 & index) const;
-
             bool operator==(const AString & str) const;
             bool operator==(const char    & chr) const;
-
             bool operator!=(const AString & str) const;
             bool operator!=(const char    & chr) const;
-
             bool operator+=(const AString & str);
             bool operator+=(const char    & chr);
-
             bool operator-=(const AString & str);
             bool operator-=(const char    & chr);
-
             AString operator+(const AString & str);
             AString operator+(const char    & chr);
-
             AString operator-(const AString & str);
             AString operator-(const char    & chr);
-
             AString & operator=(const AString & str);
             AString & operator=(const char    & chr);
-
         private:
             template <class T>  static  char * numToASCII(const T val, const uint8 prc);
-
-                                static  bool   ccmp(const char & ch1, const char & ch2, const bool & cs = true );
-
-                                        void   ptrswp(char * ptr, const uint32 & dim);
-
-										uint32 m_dim;
-                                        char * m_str;
+            static  bool   ccmp(const char & ch1, const char & ch2, const bool & cs = true );
+            void   ptrswp(char * ptr, const uint32 & dim);
+            uint32 m_dim;
+            char * m_str;
     };
 
     template <class T> char * AString::numToASCII(const T val, const uint8 prc){

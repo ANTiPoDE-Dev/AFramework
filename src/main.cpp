@@ -10,10 +10,10 @@ using namespace std;
 int main(){
     unsigned int a = 0xFFFF;
     
-    portA.m_TRIS_SET = a;
-    portA.m_ANSEL_CLR = a;
-    portA.m_LAT_CLR = a;
-    portA.m_ODC_CLR = a;
+    PortA.m_TRIS_SET = a;
+    PortA.m_ANSEL_CLR = a;
+    PortA.m_LAT_CLR = a;
+    PortA.m_ODC_CLR = a;
     
     TRISB = 0xEFAF; //1110 1111 1010 1111
     ANSELB = 0x0000;

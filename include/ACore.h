@@ -29,7 +29,7 @@
 #define ACORE_H
 
 #include <cstdlib>
-#include <cstdint>
+//#include <cstdint>
 
 #include "ACommons.h"
 
@@ -52,11 +52,11 @@ namespace AFramework{
 
             class Segment;
 
-            static Segment *   m_heap_head;
-            static size_t      m_heap_size;
-            static size_t      m_heap_busy;
-            static size_t      m_xc32_offs;
-            static bool        m_init_flag;
+            static Segment * m_heap_head;
+            static size_t    m_heap_size;
+            static size_t    m_heap_busy;
+            static size_t    m_xc32_offs;
+            static bool      m_init_flag;
     };
 
     template <class T> bool System::safeAlloc(T ** ptr, const uint32 & num){

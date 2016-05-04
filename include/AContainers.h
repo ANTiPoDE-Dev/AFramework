@@ -41,7 +41,6 @@ namespace AFramework{
     template <class T> class AAbstractList : public AObject{
         public:
             AAbstractList();
-
             virtual ~AAbstractList();
             virtual void indexClear() const = 0;
             virtual uint32 removeAll(const T & item) = 0;
@@ -53,7 +52,6 @@ namespace AFramework{
             virtual bool clear() = 0;
             virtual T next() const = 0;
             virtual T at(const uint32 & index) const = 0;
-
             bool isEmpty() const;
             bool prepend(const T & item);
             bool append(const T & item);

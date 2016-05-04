@@ -775,7 +775,7 @@ AFramework::AStringList * AFramework::AString::split(const char & sep, const boo
                 return NULL;
             }
             /*  copio il token */
-            for(uint32_t i = prev; i <= temp; i++){
+            for(uint32 i = prev; i <= temp; i++){
                 item.m_str[tind++] = m_str[i];
             }
             /*  aggiungo la terminazione */
@@ -790,7 +790,7 @@ AFramework::AStringList * AFramework::AString::split(const char & sep, const boo
                 delete list;
                 return NULL;
             }
-            /* azzero l'indice per la copia */
+            /*  azzero l'indice per la copia                                    */
             tind = 0;
             /*  se trovo sia next uguale a -1 che il flag a true metto flag a   */
             /*  false così termino le iterazioni                                */

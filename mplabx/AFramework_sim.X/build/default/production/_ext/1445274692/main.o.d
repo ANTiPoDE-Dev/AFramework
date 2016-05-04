@@ -1,9 +1,0 @@
-build/default/production/_ext/1445274692/main.o:  \
-../../src/main.cpp  \
- ../../include/ASystemConfig.h  \
-../../include/ACore.h  \
- ../../include/ACommons.h  \
-../../include/APort.h  \
-../../include/AString.h  \
- ../../include/ACore.h  \
-../../include/AContainers.h 
