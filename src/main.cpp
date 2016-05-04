@@ -1,9 +1,7 @@
 #define ANTIPODE32MR
 #include "ASystemConfig.h"
-#include "ASerial.h"
 #include "ACore.h"
 #include "APort.h"
-#include "AContainers.h"
 #include "AString.h"
 
 using namespace AFramework;
@@ -29,8 +27,8 @@ int main(){
     //System::init(16392);
     System::init(520);
     AString s = "a/b/c";
-    s.remove("a/b");
-    AStringList * t = s.split('/');
+    s.indexOf("/");
+    AStringList *t = s.split('/');
     
     while(1){
     
