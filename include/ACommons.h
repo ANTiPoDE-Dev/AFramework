@@ -45,7 +45,7 @@ namespace AFramework{
     typedef unsigned long long  uint64;
     typedef signed long long    sint64;
 
-    class AError{
+    class AObject{
 
         public:
 
@@ -53,7 +53,7 @@ namespace AFramework{
                             NoMemory,
                             OutOfRange  };
 
-            AError(){
+            AObject(){
 
                 m_err = NoError;
             }
