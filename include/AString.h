@@ -39,7 +39,7 @@ namespace AFramework{
 
     typedef ALinkedList<AString> AStringList;
 
-    class AString : public AError{
+    class AString : public AObject{
 
         public:
 

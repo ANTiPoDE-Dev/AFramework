@@ -30,6 +30,12 @@ int main(){
     s.indexOf("/");
     AStringList *t = s.split('/');
     
+    if(s.good()){
+        while(t->hasNext()){
+            t->next().reverse();
+        }
+    }
+    
     while(1){
     
     }

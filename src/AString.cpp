@@ -42,7 +42,7 @@ AFramework::uint32 AFramework::AString::strlen(const char * val){
     return res;
 }
 
-AFramework::AString::AString() : AError(), m_str(NULL), m_dim(0) {
+AFramework::AString::AString() : AObject(), m_str(NULL), m_dim(0) {
     /*  Nulla da commentare                                                     */
 }
 
