@@ -25,13 +25,18 @@
 *   Copyright 2015, 2016 Milazzo Giuseppe
 *
 */
+
 #include <cstring>
+
 #include "ACore.h"
-AFramework::System::Segment *   AFramework::System::m_heap_head(NULL);
-size_t                          AFramework::System::m_heap_size(0);
-size_t                          AFramework::System::m_heap_busy(0);
-size_t                          AFramework::System::m_xc32_offs(8);
-bool                            AFramework::System::m_init_flag(false);
+#include "APortDefs.h"
+
+AFramework::System::Segment * AFramework::System::m_heap_head(NULL);
+AFramework::uint32            AFramework::System::m_systemclk(0);
+size_t                        AFramework::System::m_heap_size(0);
+size_t                        AFramework::System::m_heap_busy(0);
+size_t                        AFramework::System::m_xc32_offs(8);
+bool                          AFramework::System::m_init_flag(false);
 
 void * operator new(size_t size){
     return AFramework::System::malloc(size);
@@ -72,7 +77,7 @@ AFramework::System::Segment * AFramework::System::Segment::vNext(){
     return (reinterpret_cast<Segment *>(reinterpret_cast<uint32>(data()) + m_size));
 }
 
-bool AFramework::System::init(size_t heapSize){
+bool AFramework::System::init(size_t heapSize, const uint32 & systemClock){
     /*  Controllo che la funzione non sia già stata chiamata                    */
     if(m_init_flag){
         /*  in questo caso restituisco false                                    */
@@ -105,12 +110,15 @@ bool AFramework::System::init(size_t heapSize){
     m_heap_busy += sizeof(Segment);
     /*  Imposto il puntatore al blocco successivo a NULL                        */
     m_heap_head->m_next = NULL;
-
+    /*  imposto il clock di sistema                                             */
+    m_systemclk = systemClock;
+    
     /*
         PARTE RELATIVA ALLA CODA DEI THREAD <ANCORA DA PROGETTARE>
         ...
     */
     #warning "bool AFramework::System::init(size_t heapSize) coda Thread da progettare"
+
     /*  Imposto il flag di avvenuta inizializzazione                            */
     m_init_flag = true;
     /*  Abilito lo scheduler                                                    */
@@ -300,6 +308,17 @@ void * AFramework::System::malloc(size_t size){
     scwake();
     /*  e restituisco NULL                                                      */
     return NULL;
+}
+
+AFramework::uint32 AFramework::System::frequency(){
+    /*  nulla da commentare                                                     */
+    return m_systemclk;
+}
+
+double AFramework::System::period(){
+    /*  per evitare eccezzioni della cpu ritorno il risultato della divisione   */
+    /*  se la frequenza è diversa da zero, altrimenti zero.                     */
+    return (m_systemclk ? (1 / static_cast<double>(m_systemclk)) : 0);
 }
 
 void AFramework::System::scsusp(){

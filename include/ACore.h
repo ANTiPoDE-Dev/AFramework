@@ -29,9 +29,10 @@
 #define ACORE_H
 
 #include <cstdlib>
-//#include <cstdint>
+
 
 #include "ACommons.h"
+#include "APorts.h"
 
 namespace AFramework{
 
@@ -39,12 +40,14 @@ namespace AFramework{
         public:
             template <class T>  static bool safeAlloc(T ** ptr, const uint32 & num = 1);
 
-            static bool init(size_t heapSize);
+            static bool init(size_t heapSize, const uint32 & systemClock = 40000000U);
             static void kill();
             static size_t memstat();
             static size_t heapSize();
             static void * malloc(size_t size);
             static bool free(void * address);
+            static uint32 frequency();
+            static double period();
         private:
             static void scsusp();
             static void scwake();
@@ -56,6 +59,7 @@ namespace AFramework{
             static size_t    m_heap_size;
             static size_t    m_heap_busy;
             static size_t    m_xc32_offs;
+            static uint32    m_systemclk;
             static bool      m_init_flag;
     };
 

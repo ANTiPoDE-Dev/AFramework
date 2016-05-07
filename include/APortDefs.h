@@ -28,27 +28,33 @@
 #ifndef APORTDEFS_H
 #define	APORTDEFS_H
 
-#define _BIT_0_ 0x00
-#define _BIT_1_ 0x01
-#define _BIT_2_ 0x02
-#define _BIT_3_ 0x03
-#define _BIT_4_ 0x04
-#define _BIT_5_ 0x05
-#define _BIT_6_ 0x06
-#define _BIT_7_ 0x07
-#define _BIT_8_ 0x08
-#define _BIT_9_ 0x09
-#define _BIT_A_ 0x0A
-#define _BIT_B_ 0x0B
-#define _BIT_C_ 0x0C
-#define _BIT_D_ 0x0D
-#define _BIT_E_ 0x0E
-#define _BIT_F_ 0x0F
+/*
+ * su rb4 c'è il led di sistema
+ * su ra2 ed ra3 c'è il quarzo
+ */
+
+#define ALL     0xFFFFU
+#define NO_ONE  0x0000U
+
+#define _BIT_0_ 0x0001U
+#define _BIT_1_ 0x0002U
+#define _BIT_2_ 0x0004U
+#define _BIT_3_ 0x0008U
+#define _BIT_4_ 0x0010U
+#define _BIT_5_ 0x0020U
+#define _BIT_6_ 0x0040U
+#define _BIT_7_ 0x0080U
+#define _BIT_8_ 0x0100U
+#define _BIT_9_ 0x0200U
+#define _BIT_A_ 0x0400U
+#define _BIT_B_ 0x0800U
+#define _BIT_C_ 0x1000U
+#define _BIT_D_ 0x2000U
+#define _BIT_E_ 0x4000U
+#define _BIT_F_ 0x8000U
 
 #define A0  _BIT_0_
 #define A1  _BIT_1_
-#define A2  _BIT_2_
-#define A3  _BIT_3_
 #define A4  _BIT_4_
 #define A7  _BIT_7_
 #define A8  _BIT_8_
@@ -61,13 +67,11 @@
 #define B3  _BIT_3_
 #define B4  _BIT_4_
 #define B5  _BIT_5_
-#define B6  _BIT_6_
 #define B7  _BIT_7_
 #define B8  _BIT_8_
 #define B9  _BIT_9_
 #define B10 _BIT_A_
 #define B11 _BIT_B_
-#define B12 _BIT_C_
 #define B13 _BIT_D_
 #define B14 _BIT_E_
 #define B15 _BIT_F_
@@ -83,6 +87,7 @@
 #define C8  _BIT_8_
 #define C9  _BIT_9_
 
+#define StatusLed B4
 
 #endif	/* APORTDEFS_H */
 

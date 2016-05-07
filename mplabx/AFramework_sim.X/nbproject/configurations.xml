@@ -8,9 +8,10 @@
       <itemPath>../../include/ASystemConfig.h</itemPath>
       <itemPath>../../include/ACore.h</itemPath>
       <itemPath>../../include/AContainers.h</itemPath>
-      <itemPath>../../include/APort.h</itemPath>
       <itemPath>../../include/AString.h</itemPath>
       <itemPath>../../include/APortDefs.h</itemPath>
+      <itemPath>../../include/ATimers.h</itemPath>
+      <itemPath>../../include/APorts.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -22,7 +23,7 @@
       <itemPath>../../src/main.cpp</itemPath>
       <itemPath>../../src/ACore.cpp</itemPath>
       <itemPath>../../src/AString.cpp</itemPath>
-      <itemPath>../../src/APort.cpp</itemPath>
+      <itemPath>../../src/APorts.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -42,7 +43,7 @@
         <targetDevice>PIC32MX270F256D</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
@@ -138,7 +139,7 @@
         <property key="optimization-level" value=""/>
         <property key="preprocessor-macros" value=""/>
         <property key="remove-unused-sections" value="false"/>
-        <property key="report-memory-usage" value="false"/>
+        <property key="report-memory-usage" value="true"/>
         <property key="stack-size" value=""/>
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>

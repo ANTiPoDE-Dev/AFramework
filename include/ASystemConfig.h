@@ -30,7 +30,7 @@
 /*
 *
 */
-#include <xc.h>
+//#include <xc.h>
 
 #ifdef ANTIPODE32MR
     #pragma config PMDL1WAY     = OFF       //Peripheral Module Disable Configuration (Allow multiple reconfigurations)

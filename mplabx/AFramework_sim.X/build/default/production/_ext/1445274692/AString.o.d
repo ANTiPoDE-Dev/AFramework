@@ -3,4 +3,6 @@ build/default/production/_ext/1445274692/AString.o:  \
  ../../include/AString.h  \
 ../../include/ACore.h  \
 ../../include/ACommons.h  \
+ ../../include/APorts.h  \
+../../include/APortDefs.h  \
  ../../include/AContainers.h 

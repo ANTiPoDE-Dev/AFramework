@@ -28,7 +28,8 @@
 #ifndef ACOMMONS_H
 #define ACOMMONS_H
 
-#define _vol volatile
+#define A_COHERENT        volatile
+#define A_CONST_COHERENT  volatile const
 
 #include <cstdlib>
 
@@ -44,6 +45,28 @@ namespace AFramework{
     typedef signed int          sint32;
     typedef unsigned long long  uint64;
     typedef signed long long    sint64;
+    
+    enum LogicLevel{
+        Lo,
+        Hi
+    };
+    
+    enum Priority{
+        Ip1 = 1,
+        Ip2,
+        Ip3,
+        Ip4,
+        Ip5,
+        Ip6,
+        Ip7
+    };
+    
+    enum SubPriority{
+        Isp0,
+        Isp1,
+        Isp2,
+        Isp3
+    };
 
     class AObject{
 
