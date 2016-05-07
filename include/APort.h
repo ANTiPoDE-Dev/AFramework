@@ -35,53 +35,55 @@ namespace AFramework{
 
     class APort{
         public:
-//            APort();
-//            void config(const uint32 & out, const uint32 & in, const uint32 & odc);
-//            void invert(const uint32 & gpios);
-//            void write(const uint32 & gpios);
-//            bool read(const uint32 & gpios);
+            APort();
+            void analCfg();
+            void ioCfg();
+            void 
+            void invert(const uint32 & gpios);
+            void write(const uint32 & gpios);
+            bool read(const uint32 & gpios);
             
         private:
-            uint32 m_ANSEL;
-            uint32 m_ANSEL_CLR;
-            uint32 m_ANSEL_SET;
-            uint32 m_ANSEL_INV;
-            uint32 m_TRIS;
-            uint32 m_TRIS_CLR;
-            uint32 m_TRIS_SET;
-            uint32 m_TRIS_INV;
-            uint32 m_PORT;
-            uint32 m_PORT_CLR;
-            uint32 m_PORT_SET;
-            uint32 m_PORT_INV;
-            uint32 m_LAT;
-            uint32 m_LAT_CLR;
-            uint32 m_LAT_SET;
-            uint32 m_LAT_INV;
-            uint32 m_ODC;
-            uint32 m_ODC_CLR;
-            uint32 m_ODC_SET;
-            uint32 m_ODC_INV;
-            uint32 m_CNPU;
-            uint32 m_CNPU_CLR;
-            uint32 m_CNPU_SET;
-            uint32 m_CNPU_INV;
-            uint32 m_CNPD;
-            uint32 m_CNPD_CLR;
-            uint32 m_CNPD_SET;
-            uint32 m_CNPD_INV;
-            uint32 m_CNCON;
-            uint32 m_CNCON_CLR;
-            uint32 m_CNCON_SET;
-            uint32 m_CNCON_INV;
-            uint32 m_CNEN;
-            uint32 m_CNEN_CLR;
-            uint32 m_CNEN_SET;
-            uint32 m_CNEN_INV;
-            uint32 m_CNSTAT;
-            uint32 m_CNSTAT_CLR;
-            uint32 m_CNSTAT_SET;
-            uint32 m_CNSTAT_INV;
+            uint32 m_ANSEL;         //registro per impostare gli ingressi analogici
+            uint32 m_ANSEL_CLR;     //      CLR associato
+            uint32 m_ANSEL_SET;     //      SET associato
+            uint32 m_ANSEL_INV;     //      INV associato
+            uint32 m_TRIS;          //registro per impostare la direzione (1 ingresso - 0 uscita)
+            uint32 m_TRIS_CLR;      //      CLR associato
+            uint32 m_TRIS_SET;      //      SET associato
+            uint32 m_TRIS_INV;      //      INV associato
+            uint32 m_PORT;          //registro per lettura del pin fisico
+            uint32 m_PORT_CLR;      //      CLR associato
+            uint32 m_PORT_SET;      //      SET associato
+            uint32 m_PORT_INV;      //      INV associato
+            uint32 m_LAT;           //registro per controllare il latch
+            uint32 m_LAT_CLR;       //      CLR associato
+            uint32 m_LAT_SET;       //      SET associato
+            uint32 m_LAT_INV;       //      INV associato
+            uint32 m_ODC;           //registro per configurare l'open drain collecton (tensioni di ~5v anche con alimentazione a 3.3v)
+            uint32 m_ODC_CLR;       //      CLR associato
+            uint32 m_ODC_SET;       //      SET associato
+            uint32 m_ODC_INV;       //      INV associato
+            uint32 m_CNPU;          //registro per i resistori di pull-up (periferica change notice)
+            uint32 m_CNPU_CLR;      //      CLR associato
+            uint32 m_CNPU_SET;      //      SET associato
+            uint32 m_CNPU_INV;      //      INV associato
+            uint32 m_CNPD;          //registro per i resitori di pull-down (periferica change notice)
+            uint32 m_CNPD_CLR;      //      CLR associato
+            uint32 m_CNPD_SET;      //      SET associato
+            uint32 m_CNPD_INV;      //      INV associato
+            uint32 m_CNCON;         //registro per abilitare la periferica change notice
+            uint32 m_CNCON_CLR;     //      CLR associato
+            uint32 m_CNCON_SET;     //      SET associato
+            uint32 m_CNCON_INV;     //      INV associato
+            uint32 m_CNEN;          //registro per abilitare i pin da configurare con il change notice
+            uint32 m_CNEN_CLR;      //      CLR associato
+            uint32 m_CNEN_SET;      //      SET associato
+            uint32 m_CNEN_INV;      //      INV associato
+            uint32 m_CNSTAT;        //registro per controllare quale pin è cambiato di stato (periferica change notice)
+            uint32 m_CNSTAT_CLR;    //      CLR associato
+            uint32 m_CNSTAT_SET;    //      SET associato
+            uint32 m_CNSTAT_INV;    //      INV associato
     };
     
     APort PortA __attribute__((address(0xBF886000)));

@@ -28,4 +28,10 @@
 
 #include "APort.h"
 
+#define ALL     0xFFFF
+#define ZERO    0x0000
 
+AFramework::APort::APort() : m_LAT_CLR(ALL) {}
+
+AFramework::APort::
+        
