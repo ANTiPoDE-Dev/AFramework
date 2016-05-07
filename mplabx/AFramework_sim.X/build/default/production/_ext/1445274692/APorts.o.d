@@ -3,5 +3,4 @@ build/default/production/_ext/1445274692/APorts.o:  \
  ../../include/APorts.h  \
 ../../include/ACore.h  \
 ../../include/ACommons.h  \
- ../../include/APorts.h  \
-../../include/APortDefs.h 
+ ../../include/APortDefs.h 

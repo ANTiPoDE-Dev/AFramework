@@ -30,7 +30,6 @@
 #define ASTRING_H
 
 #include "ACore.h"
-#include "ACommons.h"
 #include "AContainers.h"
 
 namespace AFramework{
