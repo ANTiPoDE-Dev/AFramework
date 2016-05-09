@@ -3,4 +3,5 @@ build/default/production/_ext/1445274692/AString.o:  \
  ../../include/AString.h  \
 ../../include/ACore.h  \
 ../../include/ACommons.h  \
- ../../include/AContainers.h 
+ ../../include/ASystemConfig.h  \
+../../include/AContainers.h 

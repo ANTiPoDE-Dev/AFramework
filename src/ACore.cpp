@@ -29,7 +29,7 @@
 #include <cstring>
 
 #include "ACore.h"
-#include "APortDefs.h"
+#include "APorts.h"
 
 AFramework::System::Segment * AFramework::System::m_heap_head(NULL);
 AFramework::uint32            AFramework::System::m_systemclk(0);
@@ -89,6 +89,11 @@ bool AFramework::System::init(size_t heapSize, const uint32 & systemClock){
         /*  ritorno false (pena underflow)                                      */
         return false;
     }
+    /*  se il clock di sistema è zero                                           */
+    if(!systemClock){
+        /*  ritorno false                                                       */
+        return false;
+    }
     /*  Sottraggo alla dimensione dell'heap passata l'overhead del compilatore  */
     heapSize -= m_xc32_offs;
     /*  Provo ad allocare tutto l'heap alla testa della lista                   */
@@ -112,7 +117,6 @@ bool AFramework::System::init(size_t heapSize, const uint32 & systemClock){
     m_heap_head->m_next = NULL;
     /*  imposto il clock di sistema                                             */
     m_systemclk = systemClock;
-    
     /*
         PARTE RELATIVA ALLA CODA DEI THREAD <ANCORA DA PROGETTARE>
         ...

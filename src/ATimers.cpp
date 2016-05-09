@@ -26,9 +26,10 @@
 *
 */
 
-#ifndef ASYSTEMCONFIG_H
-#define ASYSTEMCONFIG_H
+#include "ATimers.h"
 
-#define ANTIPODE32MR
-
-#endif // ASYSTEMCONFIG_H
+//A_COHERENT AFramework::AUniqueTimer   AFramework::Timer1 __attribute__((address(0xBF800600)));
+//A_COHERENT AFramework::ACascadedTimer AFramework::Timer2 __attribute__((address(0xBF800800)));
+//A_COHERENT AFramework::ACascadedTimer AFramework::Timer3 __attribute__((address(0xBF800A00)));
+//A_COHERENT AFramework::ACascadedTimer AFramework::Timer4 __attribute__((address(0xBF800C00)));
+//A_COHERENT AFramework::ACascadedTimer AFramework::Timer5 __attribute__((address(0xBF800E00)));

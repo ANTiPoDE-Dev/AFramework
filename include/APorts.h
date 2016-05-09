@@ -25,56 +25,454 @@
 *   Copyright 2015, 2016 Milazzo Giuseppe
 *
 */
+
 #ifndef APORT_A
 #define APORT_A
 
 #include "ACore.h"
 #include "ACommons.h"
-#include "APortDefs.h"
+#include "ASystemConfig.h"
+
+#define ALL     0xFFFFU
+#define NO_ONE  0x0000U
+
+#define _BIT_0_ 0x0001U
+#define _BIT_1_ 0x0002U
+#define _BIT_2_ 0x0004U
+#define _BIT_3_ 0x0008U
+#define _BIT_4_ 0x0010U
+#define _BIT_5_ 0x0020U
+#define _BIT_6_ 0x0040U
+#define _BIT_7_ 0x0080U
+#define _BIT_8_ 0x0100U
+#define _BIT_9_ 0x0200U
+#define _BIT_A_ 0x0400U
+#define _BIT_B_ 0x0800U
+#define _BIT_C_ 0x1000U
+#define _BIT_D_ 0x2000U
+#define _BIT_E_ 0x4000U
+#define _BIT_F_ 0x8000U
+
+#ifdef ANTIPODE32MR
+    #define A0  _BIT_0_
+    #define A1  _BIT_1_
+    #define A4  _BIT_4_
+    #define A7  _BIT_7_
+    #define A8  _BIT_8_
+    #define A9  _BIT_9_
+    #define A10 _BIT_A_
+
+    #define B0  _BIT_0_
+    #define B1  _BIT_1_
+    #define B2  _BIT_2_
+    #define B3  _BIT_3_
+    #define TW  _BIT_4_
+    #define B5  _BIT_5_
+    #define B7  _BIT_7_
+    #define B8  _BIT_8_
+    #define B9  _BIT_9_
+    #define B10 _BIT_A_
+    #define B11 _BIT_B_
+    #define B13 _BIT_D_
+    #define B14 _BIT_E_
+    #define B15 _BIT_F_
+
+    #define C0  _BIT_0_
+    #define C1  _BIT_1_
+    #define C2  _BIT_2_
+    #define C3  _BIT_3_
+    #define C4  _BIT_4_
+    #define C5  _BIT_5_
+    #define C6  _BIT_6_
+    #define C7  _BIT_7_
+    #define C8  _BIT_8_
+    #define C9  _BIT_9_
+
+#endif
+
 
 namespace AFramework{
-
     class APort{
         friend class System;        
         public:
+            /**
+             * Costruttore di default, setta tutti i gpio come ingressi
+             * digitali.
+             */
             APort();
-            uint32 adcStatus() A_CONST_COHERENT;
-            bool isAnalog(const uint32 gpio) A_CONST_COHERENT;
-            void setDigital(const uint32 gpio) A_COHERENT;
-            void setAnalog(const uint32 gpio) A_COHERENT;
-            uint32 ioStatus() A_CONST_COHERENT;
-            bool isInput(const uint32 gpio) A_CONST_COHERENT;
-            void setInput(const uint32 gpio) A_COHERENT;
-            void setOutput(const uint32 gpio) A_COHERENT;
+            /**
+             * Effettua una diagnostica complessiva sulla configurazione 
+             * dell'ADC tramite il registro specifico analog-select della porta
+             * corrispondente (ANSELx, dove x può essere A, B o C a seconda 
+             * dell'oggetto globale chiamante). In tale registro un bit a 
+             * livello logico alto indica che il gpio corrispondete è impostato
+             * come analogico mentre un bit a livello logico basso indica che
+             * il gpio corrispondete è impostato come digitale.
+             * @return  la maschera di bit del registro analog-select.
+             */
+            uint32 adcStatus () A_CONST_COHERENT;
+            /**
+             * Effettua una diagnostica specifica sulla configurazione dell'ADC 
+             * effettuando l'and bit a bit tra il gpio passato e il registro
+             * analog-select della porta corrispondente (ANSELx, dove x può 
+             * essere A, B o C a seconda dell'oggetto globale chiamante) e 
+             * restituendo il risultato come bool.
+             * @param   gpio il gpio di cui si vuole conoscere la configurazione.
+             * @return  false se il gpio è configurato come digitale true
+             * se il gpio è configurato come analogico.
+             */
+            bool isAnalog  (const uint32 & gpio) A_CONST_COHERENT;
+            /**
+             * Configura il gpio come digitale tramite il registro CLR associato 
+             * al registro analog-select della porta corrispondente (ANSELxCLR, 
+             * dove x può essere A, B o C a seconda dell'oggetto globale 
+             * chiamante).
+             * @param   gpio gpio che sarà impostato come digitale.
+             */
+            void setDigital(const uint32 & gpio) A_COHERENT;
+            /**
+             * Configura il gpio come analogico tramite il registro SET 
+             * associato al registro analog-select della porta corrispondete 
+             * (ANSELx, dove x può essere A, B o C a seconda dell'oggetto 
+             * globale chiamante).
+             * @param   gpio gpio che sarà impostato come analogico.
+             */
+            void setAnalog (const uint32 & gpio) A_COHERENT;
+            /**
+             * Effettua una diagnostica complessiva sulla configurazione 
+             * input/output tramite il registro specifico tri-state della porta
+             * corrispondente (TRISx, dove x può essere A, B, C a seconda 
+             * dell'oggetto globale chiamante). In tale registro un bit a 
+             * livello logico alto indica che il gpio corrispondente è 
+             * configurato come ingresso mentre un bit a livello logico basso 
+             * indica che il gpio corrispondente è configurato come uscita.
+             * @return  la maschera di bit degli del registro tri-state.
+             */
+            uint32 ioStatus  () A_CONST_COHERENT;
+            /**
+             * Effettua una diagnostica specifica sulla configurazione 
+             * input/output effettuando l'and bit a bit tra il gpio passato e il
+             * registro tri-state della porta corrispondente (TRISx, dove x può
+             * essere A, B o C a seconda dell'oggetto globale chiamante) e 
+             * restituendo il risultato come bool.
+             * @param   gpio il gpio di cui si vuole conoscere la configurazione.
+             * @return  false se il gpio è configurato come uscita, true se il
+             * gpio è configurato come ingresso.
+             */
+            bool isInput   (const uint32 & gpio) A_CONST_COHERENT;
+            /**
+             * Configura il gpio passato come ingresso tramite il registro SET
+             * associato al registro tri-state della porta corrispondente 
+             * (TRISxSET, dove x può essere A, B o C a seconda dell'oggetto
+             * globale chiamante).
+             * @param   gpio gpio che sarà impostato come ingresso.
+             */
+            void setInput  (const uint32 & gpio) A_COHERENT;
+            /**
+             * Configura il gpio passato come uscita tramite il registro CLR
+             * associato al registro tri-state della porta corrispondente
+             * (TRISxCLR, dove x può essere A, B o C a seconda dell'oggetto
+             * globale chiamante).
+             * @param   gpio gpio che sarà impostato come uscita.
+             */
+            void setOutput (const uint32 & gpio) A_COHERENT;
+            /**
+             * Legge il contenuto del registro port della porta corrispondente
+             * (PORTx, dove x può essere A, B o C a seconda dell'oggetto 
+             * globale chiamante). In tale registro un bit a livello logico alto
+             * indica che il gpio corrispondente si trova a livello logico alto
+             * mentre un bit a livello logico basso indica che il gpio si trova
+             * a livello logico basso. 
+             * Si tiene a precistare che, a differenza del latch (LATx) il 
+             * registro che questo metodo interroga da informazioni sullo stato 
+             * fisico del gpio, ovvero su quale sia lo stato all'esterno del 
+             * microcontrollore.
+             * @return  la maschera di bit del registro port.
+             */
             uint32 portRead() A_CONST_COHERENT;
-            LogicLevel portRead(const uint32 gpio) A_CONST_COHERENT;
-            void portWrite(const uint32 value) A_COHERENT;
-            void portWrite(const uint32 gpios, const LogicLevel value) A_COHERENT;
+            /**
+             * Legge il contenuto del registro port della porta corrispondente
+             * (PORTx, dove x può essere A, B o C a seconda dell'oggetto globale
+             * chiamante) ed effettua l'and bit a bit con il gpio passato.
+             * Si tiene a precistare che, a differenza del latch (LATx) il 
+             * registro che questo metodo interroga da informazioni sullo stato 
+             * fisico del gpio, ovvero quale sia lo stato all'esterno del 
+             * microcontrollore.
+             * @param   gpio il gpio di cui si vuole conoscere lo stato
+             * @return  LogicLeve::Hi se il livello del gpio è alto, 
+             * LogicLevel::Lo se il livello logico del gpio è basso.
+             */
+            LogicLevel portRead(const uint32 & gpio) A_CONST_COHERENT;
+            /**
+             * Scrive value sul registro port della porta corrispondente tramite
+             * il registro SET associato (PORTxSET, dove x può essere A, B o C 
+             * a seconda dell'oggetto globale chiamante) dopo aver azzerato lo
+             * stesso registro tramite il registro CLR associato (PORTxCLR, dove
+             * x può essere A, B o C a seconda dell'oggetto globale chiamante).
+             * @param   value il valore che deve essere scritto.
+             */
+            void portWrite(const uint32 & value) A_COHERENT;
+            /**
+             * Scrive i bit specificati da gpios del registro port della porta
+             * corrispondente tramite il registro SET associato, se value è 
+             * LogicLevel::Hi, o tramite il registro CLR associato, se value è 
+             * LogicLevel::Lo, (PORTxSET/PORTxCLR, dove x può essere A, B o C a
+             * seconda dell'oggetto globale chiamante).
+             * @param   gpios gpio che devono essere scritti.
+             * @param   value livello logico dei gpio.
+             */
+            void portWrite(const uint32 & gpios, const LogicLevel & value) A_COHERENT;
+            /**
+             * Inverte i bit specificati da gpios del registro port della porta
+             * corrispondente tramite il registro INV associato (PORTxINV, dove
+             * x può essere A, B o C a seconda dell'oggetto globale chiamante).
+             * @param   gpios i gpio di cui si vuole inverire lo stato.
+             */
             void portInvert(const uint32 & gpios) A_COHERENT;
+            /**
+             * Legge il contenuto del latch della porta corrispondente (LATx,
+             * dove x può essere A, B o C a seconda dell'oggetto globale 
+             * chiamante). In tale registro un bit a livello logico alto indica
+             * che il valore del latch di uscita per il gpio corrispondete è
+             * alto mentre un bit a livello logico basso indica che il valore
+             * del latch di uscita per il gpio corrispondente è basso.
+             * Si tiene a precisare che, a differenza del registro port (PORTx)
+             * il registro che questo metodo interroga da informazioni sullo 
+             * stato del latch del gpio, ovvero su quale sia lo stato 
+             * all'interno del microcontrollore.
+             * @return  la maschera di bit del latch.
+             */
             uint32 latchRead() A_CONST_COHERENT;
-            LogicLevel latchRead(const uint32 gpio) A_CONST_COHERENT;
-            void latchWrite(const uint32 value) A_COHERENT;
-            void latchWrite(const uint32 gpios, const LogicLevel value) A_COHERENT;
-            void latchInvert(const uint32 gpios) A_COHERENT;
+            /**
+             * Legge il contenuto del latch della porta corrispondente (LATx,
+             * dove x può essere A, B o C a seconda del'oggetto globale 
+             * chiamante) ed effettua l'and bit a bit con il gpio passato.
+             * Si tiene a precisare che, a differenza del registro port (PORTx)
+             * il registro che questo metodo interroga da informazioni sullo 
+             * stato del latch del gpio, ovvero su quale sia lo stato 
+             * all'interno del microcontrollore.
+             * @param   gpio il gpio di cui si vuole conoscere lo stato.
+             * @return  LogicLeve::Hi se il livello del gpio è alto, 
+             * LogicLevel::Lo se il livello logico del gpio è basso.
+             */
+            LogicLevel latchRead(const uint32 & gpio) A_CONST_COHERENT;
+            /**
+             * Scrive value sul latch della porta corrispondente tramite il 
+             * registro SET associato (LATxSET, dove x può essere A, B o C a
+             * seconda dell'oggetto globale chiamante) dopo aver azzerato lo
+             * stesso  tramite il registro CLR associato (LATxCLR, dove x può 
+             * essere A, B o C a seconda dell'oggetto globale chiamante).
+             * @param   value il valore che deve essere scritto.
+             */
+            void latchWrite(const uint32 & value) A_COHERENT;
+            /**
+             * Scrive i bit specificati da gpios del latch della porta
+             * corrispondente tramite il registro SET associato, se value è 
+             * LogicLevel::Hi, o tramite il registro CLR associato, se value è 
+             * LogicLevel::Lo, (LATxSET/LATxCLR, dove x può essere A, B o C a
+             * seconda dell'oggetto globale chiamante).
+             * @param   gpios gpio che devono essere scritti.
+             * @param   value livello logico dei gpio.
+             */
+            void latchWrite(const uint32 & gpios, const LogicLevel & value) A_COHERENT;
+            /**
+             * Inverte i bit specificati da gpios del latch della porta
+             * corrispondente tramite il registro INV associato (LATxINV, dove
+             * x può essere A, B o C a seconda dell'oggetto globale chiamante).
+             * @param   gpios i gpio di cui si vuole inverire lo stato.
+             */
+            void latchInvert(const uint32 & gpios) A_COHERENT;
+            /**
+             * Effettua una diagnostica complessiva sulla configurazione 
+             * dell'open-drain tramite il registro specifico open-drain-config 
+             * della porta corrispondente (ODCx, dove x può essere A, B o C a 
+             * seconda dell'oggetto globale chiamante). In tale registro un bit 
+             * a livello logico alto indica che il gpio corrispondete è 
+             * impostato con open-drain attivo mentre un bit a livello logico 
+             * basso indica che il gpio corrispondete è impostato con open-drain
+             * disattivato.
+             * Si tiene a precisare che la configurazione open-drain permette
+             * di avere tensioni di uscita maggiori rispetto a quelle di 
+             * alimentazione con l'uso di un pull-up esterno ed inoltre bisogna
+             * ricordare che questa funzionalità è diponibile solo su i gpio che
+             * sono 5.0V tolleranti. Si rimanda al datasheet del PIC32MX270F256D
+             * per l'elenco dei gpio che supportano questa funzionalità.
+             * @return  la maschera di bit del registro open-drain-config.
+             */
             uint32 openDrainStatus() A_CONST_COHERENT;
-            bool isOpenDrain(const uint32 gpio) A_CONST_COHERENT;
-            void setOpenDrain(const uint32 gpio) A_COHERENT;
-            void setStandard(const uint32 gpio) A_COHERENT;
+            /* Effettua una diagnostica specifica sulla configurazione 
+             * dell'open-drain effettuando l'and bit a bit tra il gpio passato e 
+             * il registro open-drain-config della porta corrispondente (ODCx, 
+             * dove x può essere A, B o C a seconda dell'oggetto globale 
+             * chiamante) e restituendo il risultato come bool.
+             * @param   gpio il gpio di cui si vuole conoscere la configurazione.
+             * @return  false se il gpio è configurato con open-drain 
+             * disattivato, true se il gpio è configurato con open-drain attivo.
+             */
+            bool isOpenDrain(const uint32 & gpio) A_CONST_COHERENT;
+            /**
+             * Configura il gpio passato con open drain attivo tramite il 
+             * registro SET associato al registro open-drain-config della porta 
+             * corrispondente (ODCxSET, dove x può essere A, B o C a seconda 
+             * dell'oggetto globale chiamante).
+             * Si tiene a precisare che la configurazione open-drain permette
+             * di avere tensioni di uscita maggiori rispetto a quelle di 
+             * alimentazione con l'uso di un pull-up esterno ed inoltre bisogna
+             * ricordare che questa funzionalità è diponibile solo su i gpio che
+             * sono 5.0V tolleranti. Si rimanda al datasheet del PIC32MX270F256D
+             * per l'elenco dei gpio che supportano questa funzionalità.
+             * @param   gpio gpio che sarà impostato come uscita.
+             */
+            void setOpenDrain(const uint32 & gpio) A_COHERENT;
+            /**
+             * Configura il gpio passato con open drain disattivato tramite il 
+             * registro CLR associato al registro open-drain-config della porta 
+             * corrispondente (ODCxCLR, dove x può essere A, B o C a seconda 
+             * dell'oggetto globale chiamante).
+             * @param   gpio gpio che sarà impostato come uscita.
+             */            
+            void setStandard(const uint32 & gpio) A_COHERENT;
+            /**
+             * Effettua una diagnostica complessiva sulla configurazione 
+             * dei pull-up della periferica change-notice tramite il registro 
+             * specifico change-notice-pull-up della porta corrispondente 
+             * (CNPUx, dove x può essere A, B o C a seconda dell'oggetto globale 
+             * chiamante). In tale registro un bit a livello logico alto indica 
+             * che il gpio corrispondete ha il pull-up attivo mentre un bit a 
+             * livello logico basso indica che il gpio corrispondete ha il
+             * pull-up disattivato.
+             * @return  la maschera di bit del registro change-notice-pull-up.
+             */            
             uint32 pullUpStatus() A_CONST_COHERENT;
-            bool isPullUpEnabled(const uint32 gpio) A_CONST_COHERENT;
-            void enablePullUp(const uint32 gpio) A_COHERENT;
-            void disablePullUp(const uint32 gpio) A_COHERENT;
+            /* Effettua una diagnostica specifica sulla configurazione 
+             * dei pull-up della periferica change-notice effettuando l'and bit 
+             * a bit tra il gpio passato e il registro change-notice-pull-up 
+             * della porta corrispondente (CNPUx, dove x può essere A, B o C a 
+             * seconda dell'oggetto globale chiamante) e restituendo il 
+             * risultato come bool.
+             * @param   gpio il gpio di cui si vuole conoscere la configurazione.
+             * @return  false se il gpio è configurato con pull-up disattivato 
+             * true se il gpio è configurato con pull-up attivo.
+             */
+            bool isPullUpEnabled(const uint32 & gpio) A_CONST_COHERENT;
+            /**
+             * Configura il gpio passato con pull-up attivo tramite il 
+             * registro SET associato al registro change-notice-pull-up della 
+             * porta corrispondente (CNPUxSET, dove x può essere A, B o C a 
+             * seconda dell'oggetto globale chiamante).
+             * @param   gpio gpio che sarà impostato con pull-up attivo.
+             */
+            void enablePullUp(const uint32 & gpio) A_COHERENT;
+            /**
+             * Configura il gpio passato con pull-up disattivato tramite il 
+             * registro CLR associato al registro change-notice-pull-up della 
+             * porta corrispondente (CNPUxCLR, dove x può essere A, B o C a 
+             * seconda dell'oggetto globale chiamante).
+             * @param   gpio gpio che sarà impostato con pull-up disattivato.
+             */
+            void disablePullUp(const uint32 & gpio) A_COHERENT;
+            /* Effettua una diagnostica complessiva sulla configurazione 
+             * dei pull-down della periferica change-notice tramite il registro 
+             * specifico change-notice-pull-down della porta corrispondente 
+             * (CNPDx, dove x può essere A, B o C a seconda dell'oggetto globale 
+             * chiamante). In tale registro un bit a livello logico alto indica 
+             * che il gpio corrispondete ha il pull-down attivo mentre un bit a 
+             * livello logico basso indica che il gpio corrispondete ha il
+             * pull-down disattivato.
+             * @return  la maschera di bit del registro change-notice-pull-down.
+             */     
             uint32 pullDownStatus() A_CONST_COHERENT;
-            bool isPullDownEnabled(const uint32 gpio) A_CONST_COHERENT;
-            void enablePullDown(const uint32 gpio) A_COHERENT;
-            void disablePullDown(const uint32 gpio) A_COHERENT;
+            /* Effettua una diagnostica specifica sulla configurazione 
+             * dei pull-down della periferica change-notice effettuando l'and 
+             * bit a bit tra il gpio passato e il registro 
+             * change-notice-pull-down della porta corrispondente (CNPDx, dove 
+             * x può essere A, B o C a seconda dell'oggetto globale chiamante) 
+             * e restituendo il risultato come bool.
+             * @param   gpio il gpio di cui si vuole conoscere la configurazione.
+             * @return  false se il gpio è configurato con pull-down disattivato 
+             * true se il gpio è configurato con pull-down attivo.
+             */
+            bool isPullDownEnabled(const uint32 & gpio) A_CONST_COHERENT;
+            /**
+             * Configura il gpio passato con pull-down attivo tramite il 
+             * registro SET associato al registro change-notice-pull-down della 
+             * porta corrispondente (CNPDxSET, dove x può essere A, B o C a 
+             * seconda dell'oggetto globale chiamante).
+             * @param   gpio gpio che sarà impostato con pull-down attivo.
+             */
+            void enablePullDown(const uint32 & gpio) A_COHERENT;
+            /**
+             * Configura il gpio passato con pull-down disattivato tramite il 
+             * registro CLR associato al registro change-notice-pull-down della 
+             * porta corrispondente (CNPDxCLR, dove x può essere A, B o C a 
+             * seconda dell'oggetto globale chiamante).
+             * @param   gpio gpio che sarà impostato con pull-down disattivato.
+             */
+            void disablePullDown(const uint32 & gpio) A_COHERENT;
+            /**
+             * Effettua una diagnostica sullo stato di abilitazione 
+             * dell'interrupt della periferica change-notice tramite il registro
+             * specifico associato change-notice-config (CNCONx, dove x può
+             * essere A, B o C a seconda dell'oggetto globale chiamante) e 
+             * interrogando il controller degli interrupt.
+             * @return  false se l'interrupt è disabilitato, true se l'interrupt
+             * è abilitato.
+             */
             bool isInterrutptEnabled() A_CONST_COHERENT;
-            void enableInterrupt(const uint32 gpios, const Priority pri, const SubPriority = SubPriority::Isp0, const bool idleStop = false) A_COHERENT;
+            /**
+             * Abilità l'interrupt sui gpio passati con priorità pri e 
+             * sotto-priorità sub eventualmente impostando lo stop della
+             * periferica change-notice durante lo stand-by del 
+             * microcontrollore.
+             * @param gpios     i gpio su cui si vuole abilitare l'interrupt.
+             * @param pri       la priorità dell'interrupt.
+             * @param sub       la sottopriorità dell'interrutp.
+             * @param idleStop  flag per lo stop in stand-by della periferica.
+             */
+            void enableInterrupt(const uint32 & gpios, const Priority & pri, const SubPriority & sub = SubPriority::Isp0, const bool & idleStop = false) A_COHERENT;
+            /**
+             * Disabilita l'interrupt della periferica change-notice sia dai 
+             * registri propri che attraverso il controller degli interrupt.
+             */
             void disableInterrupt() A_COHERENT;
+            /* Effettua una diagnostica complessiva sulla stato dei gpio
+             * che hanno l'interrupt abilitato sulla periferica change-notice 
+             * tramite il registro specifico change-notice-status della porta 
+             * corrispondente (CNSTATx, dove x può essere A, B o C a seconda 
+             * dell'oggetto globale chiamante). In tale registro un bit a 
+             * livello logico alto indica che il gpio corrispondete ha subito 
+             * un cambio di stato mentre un bit a livello logico basso indica 
+             * che il gpio corrispondete non ha subito un cambio di stato.
+             * @return  la maschera di bit del registro change-notice-pull-down.
+             */
             uint32 changeNoticeStatus() A_CONST_COHERENT;
-            bool hasInterruptOccurred(const uint32 gpio) A_CONST_COHERENT;
-            void resetInterruptFlag(const uint32 gpios = ALL) A_COHERENT;
+            /* Effettua una diagnostica specifica sullo stato dei gpio che hanno
+             * l'interrupt abilitato periferica change-notice effettuando l'and 
+             * bit a bit tra il gpio passato e il registro change-notice-status 
+             * della porta corrispondente (CNSTATx, dove x può essere A, B o C 
+             * a seconda dell'oggetto globale chiamante) e restituendo il 
+             * risultato come bool.
+             * @param   gpio il gpio di cui si vuole conoscere se ha subito 
+             * un cambio di stato.
+             * @return  false se il gpio è non ha subito un cambio di stato, 
+             * true se il gpio ha subito un cambio di stato.
+             */
+            bool hasInterruptOccurred(const uint32 & gpio) A_CONST_COHERENT;
+            /**
+             * Resetta il flag di interrupt dal controller degli interrupt e 
+             * azzera i bit corrispondenti a gpios dal registro 
+             * change-notice-status tramite il registro CLR associato 
+             * (CNSTATxCLR, dove x può essere A, B o C a seconda dell'oggetto
+             * globale chiamante). Generalmente questa operazione è effettuata
+             * su tutti i bit, per cui, per comodità, chiamando questo metodo
+             * senza parametri se effettua il reset su tutti i bit.
+             * @param   gpios i gpio di cui si desidera azzerare i flag di 
+             * interrupt.
+             */
+            void clearInterruptFlag(const uint32 & gpios = ALL) A_COHERENT;
         private:
+            uint8 whois() A_CONST_COHERENT;
+            
             A_COHERENT uint32 m_ANSEL;         //registro per impostare gli ingressi analogici
             A_COHERENT uint32 m_ANSEL_CLR;     //      CLR associato
             A_COHERENT uint32 m_ANSEL_SET;     //      SET associato
@@ -117,9 +515,10 @@ namespace AFramework{
             A_COHERENT uint32 m_CNSTAT_INV;    //      INV associato
     };
     
-    extern A_COHERENT APort PortA;
-    extern A_COHERENT APort PortB;
-    extern A_COHERENT APort PortC;
-    
+    #ifdef ANTIPODE32MR
+        extern A_COHERENT APort PortA;
+        extern A_COHERENT APort PortB;
+        extern A_COHERENT APort PortC;
+    #endif
 }
 #endif // APORT_A

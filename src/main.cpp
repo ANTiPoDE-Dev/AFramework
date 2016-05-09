@@ -1,9 +1,8 @@
-#define ANTIPODE32MR
-
 #include "ASystemConfig.h"
 #include "ACore.h"
 #include "APorts.h"
 #include "AString.h"
+#include "ATimers.h"
 
 using namespace AFramework;
 
