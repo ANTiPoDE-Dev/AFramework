@@ -33,65 +33,11 @@
 #include "ACommons.h"
 #include "ASystemConfig.h"
 
-#define ALL     0xFFFFU
-#define NO_ONE  0x0000U
-
-#define _BIT_0_ 0x0001U
-#define _BIT_1_ 0x0002U
-#define _BIT_2_ 0x0004U
-#define _BIT_3_ 0x0008U
-#define _BIT_4_ 0x0010U
-#define _BIT_5_ 0x0020U
-#define _BIT_6_ 0x0040U
-#define _BIT_7_ 0x0080U
-#define _BIT_8_ 0x0100U
-#define _BIT_9_ 0x0200U
-#define _BIT_A_ 0x0400U
-#define _BIT_B_ 0x0800U
-#define _BIT_C_ 0x1000U
-#define _BIT_D_ 0x2000U
-#define _BIT_E_ 0x4000U
-#define _BIT_F_ 0x8000U
-
-#ifdef ANTIPODE32MR
-    #define A0  _BIT_0_
-    #define A1  _BIT_1_
-    #define A4  _BIT_4_
-    #define A7  _BIT_7_
-    #define A8  _BIT_8_
-    #define A9  _BIT_9_
-    #define A10 _BIT_A_
-
-    #define B0  _BIT_0_
-    #define B1  _BIT_1_
-    #define B2  _BIT_2_
-    #define B3  _BIT_3_
-    #define TW  _BIT_4_
-    #define B5  _BIT_5_
-    #define B7  _BIT_7_
-    #define B8  _BIT_8_
-    #define B9  _BIT_9_
-    #define B10 _BIT_A_
-    #define B11 _BIT_B_
-    #define B13 _BIT_D_
-    #define B14 _BIT_E_
-    #define B15 _BIT_F_
-
-    #define C0  _BIT_0_
-    #define C1  _BIT_1_
-    #define C2  _BIT_2_
-    #define C3  _BIT_3_
-    #define C4  _BIT_4_
-    #define C5  _BIT_5_
-    #define C6  _BIT_6_
-    #define C7  _BIT_7_
-    #define C8  _BIT_8_
-    #define C9  _BIT_9_
-
-#endif
-
-
 namespace AFramework{
+    
+    extern const uint32 All;
+    extern const uint32 NoOne;
+
     class APort{
         friend class System;        
         public:
@@ -110,7 +56,7 @@ namespace AFramework{
              * il gpio corrispondete è impostato come digitale.
              * @return  la maschera di bit del registro analog-select.
              */
-            uint32 adcStatus () A_CONST_COHERENT;
+            uint32 adcStatus() const volatile;
             /**
              * Effettua una diagnostica specifica sulla configurazione dell'ADC 
              * effettuando l'and bit a bit tra il gpio passato e il registro
@@ -121,7 +67,7 @@ namespace AFramework{
              * @return  false se il gpio è configurato come digitale true
              * se il gpio è configurato come analogico.
              */
-            bool isAnalog  (const uint32 & gpio) A_CONST_COHERENT;
+            bool isAnalog(const uint32 & gpio) const volatile;
             /**
              * Configura il gpio come digitale tramite il registro CLR associato 
              * al registro analog-select della porta corrispondente (ANSELxCLR, 
@@ -129,7 +75,7 @@ namespace AFramework{
              * chiamante).
              * @param   gpio gpio che sarà impostato come digitale.
              */
-            void setDigital(const uint32 & gpio) A_COHERENT;
+            void setDigital(const uint32 & gpio) volatile;
             /**
              * Configura il gpio come analogico tramite il registro SET 
              * associato al registro analog-select della porta corrispondete 
@@ -137,7 +83,7 @@ namespace AFramework{
              * globale chiamante).
              * @param   gpio gpio che sarà impostato come analogico.
              */
-            void setAnalog (const uint32 & gpio) A_COHERENT;
+            void setAnalog(const uint32 & gpio) volatile;
             /**
              * Effettua una diagnostica complessiva sulla configurazione 
              * input/output tramite il registro specifico tri-state della porta
@@ -148,7 +94,7 @@ namespace AFramework{
              * indica che il gpio corrispondente è configurato come uscita.
              * @return  la maschera di bit degli del registro tri-state.
              */
-            uint32 ioStatus  () A_CONST_COHERENT;
+            uint32 ioStatus() const volatile;
             /**
              * Effettua una diagnostica specifica sulla configurazione 
              * input/output effettuando l'and bit a bit tra il gpio passato e il
@@ -159,7 +105,7 @@ namespace AFramework{
              * @return  false se il gpio è configurato come uscita, true se il
              * gpio è configurato come ingresso.
              */
-            bool isInput   (const uint32 & gpio) A_CONST_COHERENT;
+            bool isInput(const uint32 & gpio) const volatile;
             /**
              * Configura il gpio passato come ingresso tramite il registro SET
              * associato al registro tri-state della porta corrispondente 
@@ -167,7 +113,7 @@ namespace AFramework{
              * globale chiamante).
              * @param   gpio gpio che sarà impostato come ingresso.
              */
-            void setInput  (const uint32 & gpio) A_COHERENT;
+            void setInput(const uint32 & gpio) volatile;
             /**
              * Configura il gpio passato come uscita tramite il registro CLR
              * associato al registro tri-state della porta corrispondente
@@ -175,7 +121,7 @@ namespace AFramework{
              * globale chiamante).
              * @param   gpio gpio che sarà impostato come uscita.
              */
-            void setOutput (const uint32 & gpio) A_COHERENT;
+            void setOutput(const uint32 & gpio) volatile;
             /**
              * Legge il contenuto del registro port della porta corrispondente
              * (PORTx, dove x può essere A, B o C a seconda dell'oggetto 
@@ -189,7 +135,7 @@ namespace AFramework{
              * microcontrollore.
              * @return  la maschera di bit del registro port.
              */
-            uint32 portRead() A_CONST_COHERENT;
+            uint32 portRead() const volatile;
             /**
              * Legge il contenuto del registro port della porta corrispondente
              * (PORTx, dove x può essere A, B o C a seconda dell'oggetto globale
@@ -202,7 +148,7 @@ namespace AFramework{
              * @return  LogicLeve::Hi se il livello del gpio è alto, 
              * LogicLevel::Lo se il livello logico del gpio è basso.
              */
-            LogicLevel portRead(const uint32 & gpio) A_CONST_COHERENT;
+            LogicLevel portRead(const uint32 & gpio) const volatile;
             /**
              * Scrive value sul registro port della porta corrispondente tramite
              * il registro SET associato (PORTxSET, dove x può essere A, B o C 
@@ -211,7 +157,7 @@ namespace AFramework{
              * x può essere A, B o C a seconda dell'oggetto globale chiamante).
              * @param   value il valore che deve essere scritto.
              */
-            void portWrite(const uint32 & value) A_COHERENT;
+            void portWrite(const uint32 & value) volatile;
             /**
              * Scrive i bit specificati da gpios del registro port della porta
              * corrispondente tramite il registro SET associato, se value è 
@@ -221,14 +167,14 @@ namespace AFramework{
              * @param   gpios gpio che devono essere scritti.
              * @param   value livello logico dei gpio.
              */
-            void portWrite(const uint32 & gpios, const LogicLevel & value) A_COHERENT;
+            void portWrite(const uint32 & gpios, const LogicLevel & value) volatile;
             /**
              * Inverte i bit specificati da gpios del registro port della porta
              * corrispondente tramite il registro INV associato (PORTxINV, dove
              * x può essere A, B o C a seconda dell'oggetto globale chiamante).
              * @param   gpios i gpio di cui si vuole inverire lo stato.
              */
-            void portInvert(const uint32 & gpios) A_COHERENT;
+            void portInvert(const uint32 & gpios) volatile;
             /**
              * Legge il contenuto del latch della porta corrispondente (LATx,
              * dove x può essere A, B o C a seconda dell'oggetto globale 
@@ -242,7 +188,7 @@ namespace AFramework{
              * all'interno del microcontrollore.
              * @return  la maschera di bit del latch.
              */
-            uint32 latchRead() A_CONST_COHERENT;
+            uint32 latchRead() const volatile;
             /**
              * Legge il contenuto del latch della porta corrispondente (LATx,
              * dove x può essere A, B o C a seconda del'oggetto globale 
@@ -255,7 +201,7 @@ namespace AFramework{
              * @return  LogicLeve::Hi se il livello del gpio è alto, 
              * LogicLevel::Lo se il livello logico del gpio è basso.
              */
-            LogicLevel latchRead(const uint32 & gpio) A_CONST_COHERENT;
+            LogicLevel latchRead(const uint32 & gpio) const volatile;
             /**
              * Scrive value sul latch della porta corrispondente tramite il 
              * registro SET associato (LATxSET, dove x può essere A, B o C a
@@ -264,7 +210,7 @@ namespace AFramework{
              * essere A, B o C a seconda dell'oggetto globale chiamante).
              * @param   value il valore che deve essere scritto.
              */
-            void latchWrite(const uint32 & value) A_COHERENT;
+            void latchWrite(const uint32 & value) volatile;
             /**
              * Scrive i bit specificati da gpios del latch della porta
              * corrispondente tramite il registro SET associato, se value è 
@@ -274,14 +220,14 @@ namespace AFramework{
              * @param   gpios gpio che devono essere scritti.
              * @param   value livello logico dei gpio.
              */
-            void latchWrite(const uint32 & gpios, const LogicLevel & value) A_COHERENT;
+            void latchWrite(const uint32 & gpios, const LogicLevel & value) volatile;
             /**
              * Inverte i bit specificati da gpios del latch della porta
              * corrispondente tramite il registro INV associato (LATxINV, dove
              * x può essere A, B o C a seconda dell'oggetto globale chiamante).
              * @param   gpios i gpio di cui si vuole inverire lo stato.
              */
-            void latchInvert(const uint32 & gpios) A_COHERENT;
+            void latchInvert(const uint32 & gpios) volatile;
             /**
              * Effettua una diagnostica complessiva sulla configurazione 
              * dell'open-drain tramite il registro specifico open-drain-config 
@@ -299,7 +245,7 @@ namespace AFramework{
              * per l'elenco dei gpio che supportano questa funzionalità.
              * @return  la maschera di bit del registro open-drain-config.
              */
-            uint32 openDrainStatus() A_CONST_COHERENT;
+            uint32 openDrainStatus() const volatile;
             /* Effettua una diagnostica specifica sulla configurazione 
              * dell'open-drain effettuando l'and bit a bit tra il gpio passato e 
              * il registro open-drain-config della porta corrispondente (ODCx, 
@@ -309,7 +255,7 @@ namespace AFramework{
              * @return  false se il gpio è configurato con open-drain 
              * disattivato, true se il gpio è configurato con open-drain attivo.
              */
-            bool isOpenDrain(const uint32 & gpio) A_CONST_COHERENT;
+            bool isOpenDrain(const uint32 & gpio) const volatile;
             /**
              * Configura il gpio passato con open drain attivo tramite il 
              * registro SET associato al registro open-drain-config della porta 
@@ -323,7 +269,7 @@ namespace AFramework{
              * per l'elenco dei gpio che supportano questa funzionalità.
              * @param   gpio gpio che sarà impostato come uscita.
              */
-            void setOpenDrain(const uint32 & gpio) A_COHERENT;
+            void setOpenDrain(const uint32 & gpio) volatile;
             /**
              * Configura il gpio passato con open drain disattivato tramite il 
              * registro CLR associato al registro open-drain-config della porta 
@@ -331,7 +277,7 @@ namespace AFramework{
              * dell'oggetto globale chiamante).
              * @param   gpio gpio che sarà impostato come uscita.
              */            
-            void setStandard(const uint32 & gpio) A_COHERENT;
+            void setStandard(const uint32 & gpio) volatile;
             /**
              * Effettua una diagnostica complessiva sulla configurazione 
              * dei pull-up della periferica change-notice tramite il registro 
@@ -343,7 +289,7 @@ namespace AFramework{
              * pull-up disattivato.
              * @return  la maschera di bit del registro change-notice-pull-up.
              */            
-            uint32 pullUpStatus() A_CONST_COHERENT;
+            uint32 pullUpStatus() const volatile;
             /* Effettua una diagnostica specifica sulla configurazione 
              * dei pull-up della periferica change-notice effettuando l'and bit 
              * a bit tra il gpio passato e il registro change-notice-pull-up 
@@ -354,7 +300,7 @@ namespace AFramework{
              * @return  false se il gpio è configurato con pull-up disattivato 
              * true se il gpio è configurato con pull-up attivo.
              */
-            bool isPullUpEnabled(const uint32 & gpio) A_CONST_COHERENT;
+            bool isPullUpEnabled(const uint32 & gpio) const volatile;
             /**
              * Configura il gpio passato con pull-up attivo tramite il 
              * registro SET associato al registro change-notice-pull-up della 
@@ -362,7 +308,7 @@ namespace AFramework{
              * seconda dell'oggetto globale chiamante).
              * @param   gpio gpio che sarà impostato con pull-up attivo.
              */
-            void enablePullUp(const uint32 & gpio) A_COHERENT;
+            void enablePullUp(const uint32 & gpio) volatile;
             /**
              * Configura il gpio passato con pull-up disattivato tramite il 
              * registro CLR associato al registro change-notice-pull-up della 
@@ -370,7 +316,7 @@ namespace AFramework{
              * seconda dell'oggetto globale chiamante).
              * @param   gpio gpio che sarà impostato con pull-up disattivato.
              */
-            void disablePullUp(const uint32 & gpio) A_COHERENT;
+            void disablePullUp(const uint32 & gpio) volatile;
             /* Effettua una diagnostica complessiva sulla configurazione 
              * dei pull-down della periferica change-notice tramite il registro 
              * specifico change-notice-pull-down della porta corrispondente 
@@ -381,7 +327,7 @@ namespace AFramework{
              * pull-down disattivato.
              * @return  la maschera di bit del registro change-notice-pull-down.
              */     
-            uint32 pullDownStatus() A_CONST_COHERENT;
+            uint32 pullDownStatus() const volatile;
             /* Effettua una diagnostica specifica sulla configurazione 
              * dei pull-down della periferica change-notice effettuando l'and 
              * bit a bit tra il gpio passato e il registro 
@@ -392,7 +338,7 @@ namespace AFramework{
              * @return  false se il gpio è configurato con pull-down disattivato 
              * true se il gpio è configurato con pull-down attivo.
              */
-            bool isPullDownEnabled(const uint32 & gpio) A_CONST_COHERENT;
+            bool isPullDownEnabled(const uint32 & gpio) const volatile;
             /**
              * Configura il gpio passato con pull-down attivo tramite il 
              * registro SET associato al registro change-notice-pull-down della 
@@ -400,7 +346,7 @@ namespace AFramework{
              * seconda dell'oggetto globale chiamante).
              * @param   gpio gpio che sarà impostato con pull-down attivo.
              */
-            void enablePullDown(const uint32 & gpio) A_COHERENT;
+            void enablePullDown(const uint32 & gpio) volatile;
             /**
              * Configura il gpio passato con pull-down disattivato tramite il 
              * registro CLR associato al registro change-notice-pull-down della 
@@ -408,7 +354,7 @@ namespace AFramework{
              * seconda dell'oggetto globale chiamante).
              * @param   gpio gpio che sarà impostato con pull-down disattivato.
              */
-            void disablePullDown(const uint32 & gpio) A_COHERENT;
+            void disablePullDown(const uint32 & gpio) volatile;
             /**
              * Effettua una diagnostica sullo stato di abilitazione 
              * dell'interrupt della periferica change-notice tramite il registro
@@ -418,7 +364,7 @@ namespace AFramework{
              * @return  false se l'interrupt è disabilitato, true se l'interrupt
              * è abilitato.
              */
-            bool isInterrutptEnabled() A_CONST_COHERENT;
+            bool isInterrutptEnabled() const volatile;
             /**
              * Abilità l'interrupt sui gpio passati con priorità pri e 
              * sotto-priorità sub eventualmente impostando lo stop della
@@ -429,12 +375,12 @@ namespace AFramework{
              * @param sub       la sottopriorità dell'interrutp.
              * @param idleStop  flag per lo stop in stand-by della periferica.
              */
-            void enableInterrupt(const uint32 & gpios, const Priority & pri, const SubPriority & sub = SubPriority::Isp0, const bool & idleStop = false) A_COHERENT;
+            void enableInterrupt(const uint32 & gpios, const Priority & pri, const SubPriority & sub = SubPriority::Isp0, const bool & idleStop = false) volatile;
             /**
              * Disabilita l'interrupt della periferica change-notice sia dai 
              * registri propri che attraverso il controller degli interrupt.
              */
-            void disableInterrupt() A_COHERENT;
+            void disableInterrupt() volatile;
             /* Effettua una diagnostica complessiva sulla stato dei gpio
              * che hanno l'interrupt abilitato sulla periferica change-notice 
              * tramite il registro specifico change-notice-status della porta 
@@ -445,7 +391,7 @@ namespace AFramework{
              * che il gpio corrispondete non ha subito un cambio di stato.
              * @return  la maschera di bit del registro change-notice-pull-down.
              */
-            uint32 changeNoticeStatus() A_CONST_COHERENT;
+            uint32 changeNoticeStatus() const volatile;
             /* Effettua una diagnostica specifica sullo stato dei gpio che hanno
              * l'interrupt abilitato periferica change-notice effettuando l'and 
              * bit a bit tra il gpio passato e il registro change-notice-status 
@@ -457,7 +403,7 @@ namespace AFramework{
              * @return  false se il gpio è non ha subito un cambio di stato, 
              * true se il gpio ha subito un cambio di stato.
              */
-            bool hasInterruptOccurred(const uint32 & gpio) A_CONST_COHERENT;
+            bool hasInterruptOccurred(const uint32 & gpio) const volatile;
             /**
              * Resetta il flag di interrupt dal controller degli interrupt e 
              * azzera i bit corrispondenti a gpios dal registro 
@@ -469,56 +415,88 @@ namespace AFramework{
              * @param   gpios i gpio di cui si desidera azzerare i flag di 
              * interrupt.
              */
-            void clearInterruptFlag(const uint32 & gpios = ALL) A_COHERENT;
+            void clearInterruptFlag(const uint32 & gpios = All) volatile;
         private:
-            uint8 whois() A_CONST_COHERENT;
+            uint32 whois() const volatile;
+            bool chkown(const uint32 & val) const volatile;
             
-            A_COHERENT uint32 m_ANSEL;         //registro per impostare gli ingressi analogici
-            A_COHERENT uint32 m_ANSEL_CLR;     //      CLR associato
-            A_COHERENT uint32 m_ANSEL_SET;     //      SET associato
-            A_COHERENT uint32 m_ANSEL_INV;     //      INV associato
-            A_COHERENT uint32 m_TRIS;          //registro per impostare la direzione (1 ingresso - 0 uscita)
-            A_COHERENT uint32 m_TRIS_CLR;      //      CLR associato
-            A_COHERENT uint32 m_TRIS_SET;      //      SET associato
-            A_COHERENT uint32 m_TRIS_INV;      //      INV associato
-            A_COHERENT uint32 m_PORT;          //registro per lettura del pin fisico
-            A_COHERENT uint32 m_PORT_CLR;      //      CLR associato
-            A_COHERENT uint32 m_PORT_SET;      //      SET associato
-            A_COHERENT uint32 m_PORT_INV;      //      INV associato
-            A_COHERENT uint32 m_LAT;           //registro per controllare il latch
-            A_COHERENT uint32 m_LAT_CLR;       //      CLR associato
-            A_COHERENT uint32 m_LAT_SET;       //      SET associato
-            A_COHERENT uint32 m_LAT_INV;       //      INV associato
-            A_COHERENT uint32 m_ODC;           //registro per configurare l'open drain collecton (tensioni di ~5v anche con alimentazione a 3.3v)
-            A_COHERENT uint32 m_ODC_CLR;       //      CLR associato
-            A_COHERENT uint32 m_ODC_SET;       //      SET associato
-            A_COHERENT uint32 m_ODC_INV;       //      INV associato
-            A_COHERENT uint32 m_CNPU;          //registro per i resistori di pull-up (periferica change notice)
-            A_COHERENT uint32 m_CNPU_CLR;      //      CLR associato
-            A_COHERENT uint32 m_CNPU_SET;      //      SET associato
-            A_COHERENT uint32 m_CNPU_INV;      //      INV associato
-            A_COHERENT uint32 m_CNPD;          //registro per i resitori di pull-down (periferica change notice)
-            A_COHERENT uint32 m_CNPD_CLR;      //      CLR associato
-            A_COHERENT uint32 m_CNPD_SET;      //      SET associato
-            A_COHERENT uint32 m_CNPD_INV;      //      INV associato
-            A_COHERENT uint32 m_CNCON;         //registro per abilitare la periferica change notice
-            A_COHERENT uint32 m_CNCON_CLR;     //      CLR associato
-            A_COHERENT uint32 m_CNCON_SET;     //      SET associato
-            A_COHERENT uint32 m_CNCON_INV;     //      INV associato
-            A_COHERENT uint32 m_CNEN;          //registro per abilitare i pin da configurare con il change notice
-            A_COHERENT uint32 m_CNEN_CLR;      //      CLR associato
-            A_COHERENT uint32 m_CNEN_SET;      //      SET associato
-            A_COHERENT uint32 m_CNEN_INV;      //      INV associato
-            A_COHERENT uint32 m_CNSTAT;        //registro per controllare quale pin è cambiato di stato (periferica change notice)
-            A_COHERENT uint32 m_CNSTAT_CLR;    //      CLR associato
-            A_COHERENT uint32 m_CNSTAT_SET;    //      SET associato
-            A_COHERENT uint32 m_CNSTAT_INV;    //      INV associato
+            volatile uint32 m_ANSEL;         //registro per impostare gli ingressi analogici
+            volatile uint32 m_ANSEL_CLR;     //      CLR associato
+            volatile uint32 m_ANSEL_SET;     //      SET associato
+            volatile uint32 m_ANSEL_INV;     //      INV associato
+            volatile uint32 m_TRIS;          //registro per impostare la direzione (1 ingresso - 0 uscita)
+            volatile uint32 m_TRIS_CLR;      //      CLR associato
+            volatile uint32 m_TRIS_SET;      //      SET associato
+            volatile uint32 m_TRIS_INV;      //      INV associato
+            volatile uint32 m_PORT;          //registro per lettura del pin fisico
+            volatile uint32 m_PORT_CLR;      //      CLR associato
+            volatile uint32 m_PORT_SET;      //      SET associato
+            volatile uint32 m_PORT_INV;      //      INV associato
+            volatile uint32 m_LAT;           //registro per controllare il latch
+            volatile uint32 m_LAT_CLR;       //      CLR associato
+            volatile uint32 m_LAT_SET;       //      SET associato
+            volatile uint32 m_LAT_INV;       //      INV associato
+            volatile uint32 m_ODC;           //registro per configurare l'open drain collecton (tensioni di ~5v anche con alimentazione a 3.3v)
+            volatile uint32 m_ODC_CLR;       //      CLR associato
+            volatile uint32 m_ODC_SET;       //      SET associato
+            volatile uint32 m_ODC_INV;       //      INV associato
+            volatile uint32 m_CNPU;          //registro per i resistori di pull-up (periferica change notice)
+            volatile uint32 m_CNPU_CLR;      //      CLR associato
+            volatile uint32 m_CNPU_SET;      //      SET associato
+            volatile uint32 m_CNPU_INV;      //      INV associato
+            volatile uint32 m_CNPD;          //registro per i resitori di pull-down (periferica change notice)
+            volatile uint32 m_CNPD_CLR;      //      CLR associato
+            volatile uint32 m_CNPD_SET;      //      SET associato
+            volatile uint32 m_CNPD_INV;      //      INV associato
+            volatile uint32 m_CNCON;         //registro per abilitare la periferica change notice
+            volatile uint32 m_CNCON_CLR;     //      CLR associato
+            volatile uint32 m_CNCON_SET;     //      SET associato
+            volatile uint32 m_CNCON_INV;     //      INV associato
+            volatile uint32 m_CNEN;          //registro per abilitare i pin da configurare con il change notice
+            volatile uint32 m_CNEN_CLR;      //      CLR associato
+            volatile uint32 m_CNEN_SET;      //      SET associato
+            volatile uint32 m_CNEN_INV;      //      INV associato
+            volatile uint32 m_CNSTAT;        //registro per controllare quale pin è cambiato di stato (periferica change notice)
+            volatile uint32 m_CNSTAT_CLR;    //      CLR associato
+            volatile uint32 m_CNSTAT_SET;    //      SET associato
+            volatile uint32 m_CNSTAT_INV;    //      INV associato
     };
     
     #ifdef ANTIPODE32MR
-        extern A_COHERENT APort PortA;
-        extern A_COHERENT APort PortB;
-        extern A_COHERENT APort PortC;
+        extern volatile APort PortA;
+        extern volatile APort PortB;
+        extern volatile APort PortC;
+        extern const uint32 A0;
+        extern const uint32 A1;
+        extern const uint32 A4;
+        extern const uint32 A7;
+        extern const uint32 A8;
+        extern const uint32 A9;
+        extern const uint32 A10;
+        extern const uint32 B0;
+        extern const uint32 B1;
+        extern const uint32 B2;
+        extern const uint32 B3;
+        extern const uint32 TW;
+        extern const uint32 B5;
+        extern const uint32 B7;
+        extern const uint32 B8;
+        extern const uint32 B9;
+        extern const uint32 B10;
+        extern const uint32 B11;
+        extern const uint32 B13;
+        extern const uint32 B14;
+        extern const uint32 B15;
+        extern const uint32 C0;
+        extern const uint32 C1;
+        extern const uint32 C2;
+        extern const uint32 C3;
+        extern const uint32 C4;
+        extern const uint32 C5;
+        extern const uint32 C6;
+        extern const uint32 C7;
+        extern const uint32 C8;
+        extern const uint32 C9;
     #endif
 }
 #endif // APORT_A
