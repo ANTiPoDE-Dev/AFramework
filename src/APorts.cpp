@@ -28,293 +28,150 @@
 
 #include "APorts.h"
 
+
 const AFramework::uint32 AFramework::All   = 0xFFFFU;
 const AFramework::uint32 AFramework::NoOne = 0x0000U;
 
-const AFramework::uint32 PORTMASK  = 0x000F0000U;
-
 #ifdef ANTIPODE32MR
-    volatile AFramework::APort AFramework::PortA __attribute__((address(0xBF886000)));
-    volatile AFramework::APort AFramework::PortB __attribute__((address(0xBF886100)));
-    volatile AFramework::APort AFramework::PortC __attribute__((address(0xBF886200)));
-    const AFramework::uint32 AFramework::A0  = 0x00010001U;
-    const AFramework::uint32 AFramework::A1  = 0x00010002U;
-    const AFramework::uint32 AFramework::A4  = 0x00010010U;
-    const AFramework::uint32 AFramework::A7  = 0x00010080U;
-    const AFramework::uint32 AFramework::A8  = 0x00010100U;
-    const AFramework::uint32 AFramework::A9  = 0x00010200U;
-    const AFramework::uint32 AFramework::A10 = 0x00010400U;
-    const AFramework::uint32 AFramework::B0  = 0x00020001U;
-    const AFramework::uint32 AFramework::B1  = 0x00020002U;
-    const AFramework::uint32 AFramework::B2  = 0x00020008U;
-    const AFramework::uint32 AFramework::B3  = 0x00020008U;
-    const AFramework::uint32 AFramework::TW  = 0x00020010U;
-    const AFramework::uint32 AFramework::B5  = 0x00020020U;
-    const AFramework::uint32 AFramework::B7  = 0x00020080U;
-    const AFramework::uint32 AFramework::B8  = 0x00020100U;
-    const AFramework::uint32 AFramework::B9  = 0x00020200U;
-    const AFramework::uint32 AFramework::B10 = 0x00020400U;
-    const AFramework::uint32 AFramework::B11 = 0x00020800U;
-    const AFramework::uint32 AFramework::B13 = 0x00022000U;
-    const AFramework::uint32 AFramework::B14 = 0x00024000U;
-    const AFramework::uint32 AFramework::B15 = 0x00028000U;
-    const AFramework::uint32 AFramework::C0  = 0x00040001U;
-    const AFramework::uint32 AFramework::C1  = 0x00040002U;
-    const AFramework::uint32 AFramework::C2  = 0x00040004U;
-    const AFramework::uint32 AFramework::C3  = 0x00040008U;
-    const AFramework::uint32 AFramework::C4  = 0x00040010U;
-    const AFramework::uint32 AFramework::C5  = 0x00040020U;
-    const AFramework::uint32 AFramework::C6  = 0x00040040U;
-    const AFramework::uint32 AFramework::C7  = 0x00040080U;
-    const AFramework::uint32 AFramework::C8  = 0x00040100U;
-    const AFramework::uint32 AFramework::C9  = 0x00040200U;
+
+    #define PORTA_ADDRESS 0xBF886000U
+    #define PORTB_ADDRESS 0xBF886100U
+    #define PORTC_ADDRESS 0xBF886200U
+    #define PORTA         0x00010000U
+    #define PORTB         0x00020000U
+    #define PORTC         0x00040000U
+    #define PORTMASK      0x000F0000U
+    #define GPIOMASK      0x0000FFFFU
+
+    volatile AFramework::APortA AFramework::PortA __attribute__((address(PORTA_ADDRESS)));
+    volatile AFramework::APortB AFramework::PortB __attribute__((address(PORTB_ADDRESS)));
+    volatile AFramework::APortC AFramework::PortC __attribute__((address(PORTC_ADDRESS)));
+    volatile AFramework::AErrorNotifier::AErrors m_PortA_Error;
+    volatile AFramework::AErrorNotifier::AErrors m_PortB_Error;
+    volatile AFramework::AErrorNotifier::AErrors m_PortC_Error;
+
+
 #endif
     
-AFramework::APort::APort() : m_ANSEL_CLR(All), 
-                             m_TRIS_SET(All), 
-                             m_LAT_CLR(All), 
-                             m_ODC_CLR(All), 
-                             m_CNPU_CLR(All), 
-                             m_CNPD_CLR(All), 
-                             m_CNCON_CLR(All), 
-                             m_CNEN_CLR(All), 
-                             m_CNSTAT_CLR(All){
+AFramework::AHardwarePort::AHardwarePort() : m_ANSEL_CLR(All), 
+                                             m_TRIS_SET(All), 
+                                             m_LAT_CLR(All), 
+                                             m_ODC_CLR(All), 
+                                             m_CNPU_CLR(All), 
+                                             m_CNPD_CLR(All), 
+                                             m_CNCON_CLR(All), 
+                                             m_CNEN_CLR(All), 
+                                             m_CNSTAT_CLR(All){
 
 }
-       
-AFramework::uint32 AFramework::APort::adcStatus() const volatile{
-    /*  ritorno il contenuto del registro ANSEL                                 */
-    return m_ANSEL;
+
+bool AFramework::AHardwarePort::open() volatile{
+    /*  le porte hardware sono sempre aperte, per cui, ritorno sempre true      */
+    return true;
 }
 
-bool AFramework::APort::isAnalog(const uint32 & gpio) const volatile{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_ANSEL & gpio;
-}
-
-void AFramework::APort::setDigital(const uint32 & gpio) volatile{
-    /*  utilizzo il registro clr associato                                      */
-    m_ANSEL_CLR = gpio;
-}
-
-void AFramework::APort::setAnalog(const uint32 & gpio) volatile{
-    /*  utilizzo il registro set associato                                      */
-    m_ANSEL_SET = gpio;
-}
-
-AFramework::uint32 AFramework::APort::ioStatus() const volatile{
-    /*  ritorno il contenuto del registro TRIS                                  */
-    return m_TRIS;
-}
-
-bool AFramework::APort::isInput(const uint32 & gpio) const volatile{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_TRIS & gpio;
-}
-
-void AFramework::APort::setInput(const uint32 & gpio) volatile{
-    /*  utilizzo il registro set associato                                      */
-    m_TRIS_SET = gpio;
-}
-
-void AFramework::APort::setOutput(const uint32 & gpio) volatile{
-    /*  utilizzo il registro clr associato                                      */
-    m_TRIS_CLR = gpio;
-}
-
-AFramework::uint32 AFramework::APort::portRead() const volatile{
-    /*  ritorno il contenuto del registro port                                  */
-    return m_PORT;
-}
-
-AFramework::LogicLevel AFramework::APort::portRead(const uint32 & gpio) const volatile{
-    /*  ritorno l'and con il gpio passato                                       */
-    return ((m_PORT & gpio) ? Hi : Lo);
-}
-
-void AFramework::APort::portWrite(const uint32 & value) volatile{
-    /*  utilizzo il registro clr associato per azzerare la il registro PORT     */
-    m_PORT_CLR = All;
-    /*  utilizzo il registro set per scrivere il valore                         */
-    m_PORT_SET = value;
-}
-
-void AFramework::APort::portWrite(const uint32 & gpios, const LogicLevel & value) volatile{
-    /*  se devo mettere alto                                                    */
-    if(value == Hi){
-        /*  utilizzo il registro set associato                                  */
-        m_PORT_SET = gpios;
-    /*  se invece devo mettere basso                                            */
-    }else if(value == Lo){
-        /*  utilizzo il registro clr associato                                  */
-        m_PORT_CLR = gpios;
-    }
-}
-
-void AFramework::APort::portInvert(const uint32 & gpios) volatile{
-    /*  utilizzo il registro inv associato                                      */
-    m_PORT_INV = gpios;
-}
-
-AFramework::uint32 AFramework::APort::latchRead() const volatile{
-    /*  ritorno il contenuto del registro LAT                                   */
-    return m_LAT;
-}
-
-AFramework::LogicLevel AFramework::APort::latchRead(const uint32 & gpio) const volatile{
-    /*  ritorno l'and con il gpio passato                                       */
-    return ((m_LAT & gpio) ? Hi : Lo);
-}
-
-void AFramework::APort::latchWrite(const uint32 & value) volatile{
-    /*  utilizzo il registro clr per azzerare il registro LAT                   */
-    m_LAT_CLR = All;
-    /*  utilizzo il registro set per scrivere il valore                         */
-    m_LAT_SET = value;
-}
-
-void AFramework::APort::latchWrite(const uint32 & gpios, const LogicLevel & value) volatile{
-    /*  se devo mettere alto                                                    */
-    if(value == Hi){
-        /*  utilizzo il registro set associato                                  */
-        m_LAT_SET = gpios;
-    /*  se invece devo mettere basso                                            */
-    }else if(value == Lo){
-        /*  utilizzo il registro clr associato                                  */
-        m_LAT_CLR = gpios;
-    }
-}
-
-void AFramework::APort::latchInvert(const uint32 & gpios) volatile{
-    /*  utilizzo il registro inv associato                                      */
-    m_LAT_INV = gpios;
-}
-
-AFramework::uint32 AFramework::APort::openDrainStatus() const volatile{
-    /*  ritorno il contenuto del registro odc                                   */
-    return m_ODC;
-}
-
-bool AFramework::APort::isOpenDrain(const uint32 & gpio) const volatile{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_ODC & gpio;    
-}
-
-void AFramework::APort::setOpenDrain(const uint32 & gpio) volatile{
-    /*  utilizzo il registro set associato                                      */
-    m_ODC_SET = gpio;
-}
-
-void AFramework::APort::setStandard(const uint32 & gpio) volatile{
-    /* utilizzo il registro clr associato                                       */
-    m_ODC_CLR = gpio;
-}
-
-AFramework::uint32 AFramework::APort::pullUpStatus() const volatile{
-    /*  ritorno il contenuto del registro cnpu                                  */
-    return m_CNPU;
-}
-
-bool AFramework::APort::isPullUpEnabled(const uint32 & gpio) const volatile{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_CNPU & gpio;
-}
-
-void AFramework::APort::enablePullUp(const uint32 & gpio) volatile{
-    /*  disabilito i pull down sui gpio passati                                 */
-    m_CNPD_CLR = gpio;
-    /*  abilito i pull up sui gpio passati                                      */
-    m_CNPU_SET = gpio;
-}
-
-void AFramework::APort::disablePullUp(const uint32 & gpio) volatile{
-    /*  utilizzo il registro clr associato                                      */
-    m_CNPU_CLR = gpio;
-}
-
-AFramework::uint32 AFramework::APort::pullDownStatus() const volatile{
-    /*  ritorno il contenuto del registro cnpd                                  */
-    return m_CNPD;
-}
-
-bool AFramework::APort::isPullDownEnabled(const uint32 & gpio) const volatile{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_CNPD & gpio;
-}
-
-void AFramework::APort::enablePullDown(const uint32 & gpio) volatile{
-    /*  disabilito i pull up sui gpio passati                                   */
-    m_CNPU_CLR = gpio;
-    /*  abilito i pull down sui gpio passati                                    */
-    m_CNPD_SET = gpio;
-}
-
-void AFramework::APort::disablePullDown(const uint32 & gpio) volatile{
-    /*  utilizzo il registro clr associato                                      */
-    m_CNPD_CLR = gpio;
-}
-
-bool AFramework::APort::isInterrutptEnabled() const volatile{
-    
-    /*  dovrebbe venire qualcosa tipo l'and con CNCON (bit ON) e l'enable del   */
-    /*  controller dell'interrupt                                               */
-    #warning "bool AFramework::APort::isInterrutptEnabled() A_CONST_COHERENT non ancora implementata"
+bool AFramework::AHardwarePort::close() volatile{
+    /*  le porte hardware sono sempre aperte, per cui, ritorno sempre false     */
     return false;
 }
 
-void AFramework::APort::enableInterrupt(const uint32 & gpios, const Priority & pri, const SubPriority & sub, const bool & idleStop) volatile{
-    #warning "void AFramework::APort::enableInterrupt(A_CONST_COHERENT uint32 & gpios, A_CONST_COHERENT Priority pri, A_CONST_COHERENT SubPriority, A_CONST_COHERENT bool idleStop) A_COHERENT non ancora implementata"
+bool AFramework::AHardwarePort::isOpen() const volatile{
+    /*  le porte hardware sono sempre aperte, per cui, ritorno sempre true      */
+    return true;
 }
 
-void AFramework::APort::disableInterrupt() volatile{
-    /*  utilizzo il registro clr associato                                      */
-    m_CNCON_CLR = All;
-    #warning "void AFramework::APort::disableInterrupt() A_COHERENT bisogna ancora disabilitare dal controller dell'interrupt"
+AFramework::uint32 AFramework::AHardwarePort::read() const volatile{
+    /*  ritorno il contenuto del registro m_PORT                                */
+    return m_PORT;
 }
 
-AFramework::uint32 AFramework::APort::changeNoticeStatus() const volatile{
-    /*  ritorno il contenuto del registro cnstat                                */
-    return m_CNSTAT;
+bool AFramework::AHardwarePort::write(const uint32& val) volatile{
+    /*  cancello il contenuto del registro m_LAT tramite m_LAT_CLR che rende    */
+    /*  l'operazione atomica                                                    */
+    m_LAT_CLR = All;
+    /*  scrivo il valore passato su m_LAT tramite il m_LAT_SET che rende        */
+    /*  l'operazione atomica                                                    */
+    m_LAT_SET = val;
+    /*  controllo che il dato sia stato scritto correttamente                   */
+    return m_LAT == val;
 }
 
-bool AFramework::APort::hasInterruptOccurred(const uint32 & gpio) const volatile{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_CNSTAT & gpio;
+
+/********************************************************************************/
+//  PORTA A
+/********************************************************************************/
+char AFramework::APortA::getChar() const volatile{
+    return static_cast<char>(0x00);
 }
 
-void AFramework::APort::clearInterruptFlag(const uint32 & gpios) volatile{
-    /*  azzero i flag di change notice sui gpio richiesti (generalmente tutti)  */
-    /*  ma non sapendo cosa la gente ha in testa devo dare questa possibilità   */
-    m_CNSTAT_CLR = gpios;
-    #warning "void AFramework::APort::resetInterruptFlag() A_CONST_COHERENT manca da pulire il flag dal controller dell'interrupt"
+bool AFramework::APortA::putChar(const char & chr) volatile{
+    return true;
 }
 
-AFramework::uint32 AFramework::APort::whois() const volatile{
-    #ifdef ANTIPODE32MR
-        if(this == reinterpret_cast<APort *>(0xBF886000)){
-            return 0x00010000;
-        }
-        if(this == reinterpret_cast<APort *>(0xBF886100)){
-            return 0x00020000;
-        }
-        if(this == reinterpret_cast<APort *>(0xBF886200)){
-            return 0x00040000;
-        }
-    #endif
+bool AFramework::APortA::good() const volatile{
+    return m_PortA_Error == NoError;
 }
 
-bool AFramework::APort::chkown(const uint32& val) const volatile{
-    /*  per evitare di fare assegnamenti strani... Ad esempio, supponiamo di    */
-    /*  trovare scritto nel codice PortA.setDigital(A0 | B3), questa senza con- */
-    /*  trollo funziona tranquillamente, il problema diventa l'utente voleva    */
-    /*  settare la porta A con A0 e A3 digitali oppure la porta B con B0 e B3   */
-    /*  digitali? per fare questo le costanti hanno il padre nei bit più signi- */
-    /*  ficativi di modo che l'and con port mask 0x000F0000 restituisce la porta*/
-    /*  padre del gpio, facendo lo xor con whois che restituisce di quale porta */
-    /*  si sta parlando tramite la mappatura in memoria, se il padre è lo stesso*/
-    /*  fa zero che negato da uno, mentre se il padre è diverso come nell'esem- */
-    /*  pio A0 = 0x00010001 e B0 = 0x00020001 l'or tra i due risulta 0x00030001 */
-    /*  che facendo l'and con port mask da 0x00030000 e in xor con i possibili  */
-    /*  valori di whois darà sempre un numero diverso da zero!                  */
-    return !((val & PORTMASK) ^ whois());
+AFramework::AErrorNotifier::AErrors AFramework::APortA::lastError() const volatile{
+    return m_PortA_Error;
+}
+
+void AFramework::APortA::errset(const AErrors & err) const volatile{
+    m_PortA_Error = err;
+}
+
+AFramework::uint32 AFramework::APortA::devnum() const volatile{
+    return 0x00010000U;
+}
+/********************************************************************************/
+//  PORTA B
+/********************************************************************************/
+char AFramework::APortB::getChar() const volatile{
+    return static_cast<char>(0x00);
+}
+
+bool AFramework::APortB::putChar(const char & chr) volatile{
+    return true;
+}
+
+bool AFramework::APortB::good() const volatile{
+    return m_PortB_Error == NoError;
+}
+
+AFramework::AErrorNotifier::AErrors AFramework::APortB::lastError() const volatile{
+    return m_PortB_Error;
+}
+
+void AFramework::APortB::errset(const AErrors & err) const volatile{
+    m_PortB_Error = err;
+}
+
+AFramework::uint32 AFramework::APortB::devnum() const volatile{
+    return 0x00020000U;
+}
+/********************************************************************************/
+//  PORTA C
+/********************************************************************************/
+char AFramework::APortC::getChar() const volatile{
+    return static_cast<char>(0x00);
+}
+
+bool AFramework::APortC::putChar(const char & chr) volatile{
+    return true;
+}
+
+bool AFramework::APortC::good() const volatile{
+    return m_PortC_Error == NoError;
+}
+
+AFramework::AErrorNotifier::AErrors AFramework::APortC::lastError() const volatile{
+    return m_PortC_Error;
+}
+
+void AFramework::APortC::errset(const AErrors & err) const volatile{
+    m_PortC_Error = err;
+}
+
+AFramework::uint32 AFramework::APortC::devnum() const volatile{
+    return 0x00040000U;
 }

@@ -6,6 +6,7 @@ build/default/production/_ext/1445274692/main.o:  \
 ../../include/ASystemConfig.h  \
  ../../include/APorts.h  \
 ../../include/ACore.h  \
-../../include/AString.h  \
- ../../include/AContainers.h  \
-../../include/ATimers.h 
+../../include/AIODevice.h  \
+ ../../include/AString.h  \
+../../include/AContainers.h  \
+ ../../include/ATimers.h 

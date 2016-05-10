@@ -38,7 +38,7 @@ namespace AFramework{
 
     template <class T> AAbstractList<T> & operator<<(AAbstractList<T> & list, const T & item);
 
-    template <class T> class AAbstractList : public AObject{
+    template <class T> class AAbstractList : public AError{
         public:
             AAbstractList();
             virtual ~AAbstractList();
@@ -121,7 +121,7 @@ namespace AFramework{
             mutable ANode<T> * m_temp;
     };
 
-    template <class T> AAbstractList<T>::AAbstractList() : AObject(), m_size(0), m_flag(false){
+    template <class T> AAbstractList<T>::AAbstractList() : AError(), m_size(0), m_flag(false){
         /*  Nulla da commentare                                                 */
     }
 
@@ -215,7 +215,7 @@ namespace AFramework{
                 ptrswp(newLst, this->size - occNum);
             }else{
                 /*  setto la variabile d'errore                                 */
-                this->errset(AObject::NoMemory);
+                this->errset(AError::NoMemory);
             }
         }
         /*  ritorno il numero di occorrenze eliminate                           */
@@ -259,7 +259,7 @@ namespace AFramework{
         /*  se l'indice passato è maggiore o uguale alla dimensione della lista */
         if(index >= this->m_size){
             /*  imposto l'errore                                                */
-            this->errset(AObject::OutOfRange);
+            this->errset(AError::OutOfRange);
             /*  restituisco false                                               */
             return false;
         }
@@ -300,7 +300,7 @@ namespace AFramework{
         /*  se l'indice passato è più grande della dimensione della lista       */
         if(index > this->m_size){
             /*  setto la variabile d'errore                                     */
-            this->errset(AObject::OutOfRange);
+            this->errset(AError::OutOfRange);
             /*  ritorno false                                                   */
             return false;
         }
@@ -323,7 +323,7 @@ namespace AFramework{
             return true;
         }
         /*  in questo caso la memoria è finita per cui setto l'errore           */
-        this->errset(AObject::NoMemory);
+        this->errset(AError::NoMemory);
         /*  e ritorno false                                                     */
         return false;
     }
@@ -336,7 +336,7 @@ namespace AFramework{
         /*  se l'indice è maggiore o uguale alla dimensione della lista         */
         if(index >= this->m_size){
             /*  setto la variabile d'errore                                     */
-            this->errset(AObject::OutOfRange);
+            this->errset(AError::OutOfRange);
             /*  ritorno false                                                   */
             return false;
         }
@@ -356,7 +356,7 @@ namespace AFramework{
             return true;
         }
         /*  se non c'è memoria setto la variabile d'errore                      */
-        this->errset(AObject::NoMemory);
+        this->errset(AError::NoMemory);
         /*  e ritorno false                                                     */
         return false;
     }
@@ -380,7 +380,7 @@ namespace AFramework{
                     m_new->m_size = this->m_size;
                 }else{
                     /*  Altrimenti setto la variabile d'errore                  */
-                    this->errset(AObject::NoMemory);
+                    this->errset(AError::NoMemory);
                     /*  faccio rollback cancellando la lista                    */
                     delete m_new;
                     /*  e metto a NULL                                          */
@@ -388,7 +388,7 @@ namespace AFramework{
                 }
             }
         }else{
-            this->errset(AObject::NoMemory);
+            this->errset(AError::NoMemory);
         }
         /*  ritorno il puntatore alla lista                                     */
         return m_new;
@@ -417,7 +417,7 @@ namespace AFramework{
         /*  se l'indice è non valido                                            */
         if(index >= this->m_size){
             /*  setto la variabile d'errore                                     */
-            this->errset(AObject::OutOfRange);
+            this->errset(AError::OutOfRange);
             /*  e per evitare errori strani, ritorno un oggetto al volo         */
             return T();
         }
@@ -568,7 +568,7 @@ namespace AFramework{
         /*  controllo che l'indice sia valido                                   */
         if(index >= this->m_size){
             /*  se non è così setto la variabile d'errore                       */
-            this->errset(AObject::OutOfRange);
+            this->errset(AError::OutOfRange);
             /*  e ritorno false                                                 */
             return false;
         }
@@ -611,7 +611,7 @@ namespace AFramework{
         /*  controllo che l'indice sia valido                                   */
         if(index > this->m_size){
             /*  se non è così imposto la variabile d'errore                     */
-            this->errset(AObject::OutOfRange);
+            this->errset(AError::OutOfRange);
             /*  e ritorno false                                                 */
             return false;
         }
@@ -665,7 +665,7 @@ namespace AFramework{
             return true;
         }
         /*  se non sono riuscito ad allocare imposto la variabile d'errore      */
-        this->errset(AObject::NoMemory);
+        this->errset(AError::NoMemory);
         /*  e ritorno false                                                     */
         return false;
     }
@@ -677,7 +677,7 @@ namespace AFramework{
         /*  controllo che l'indice passato sia un indice valido                 */
         if(index >= this->m_size){
             /*  se non è così imposto la variabile d'errore                     */
-            this->errset(AObject::OutOfRange);
+            this->errset(AError::OutOfRange);
             /*  e ritorno false                                                 */
             return false;
         }
@@ -741,7 +741,7 @@ namespace AFramework{
                 /*  altrimenti                                                  */
                 }else{
                     /*  imposto l'errore e faccio rollback                      */
-                    this->errset(AObject::NoMemory);
+                    this->errset(AError::NoMemory);
                     /*  cancellando gli elementi che fino ad ora sono riuscito  */
                     /*  a clonare                                               */
                     newLst->clear();
@@ -755,7 +755,7 @@ namespace AFramework{
             }
         }else{
             /*  se l'allocazione non è andata a buon fine imposto l'errore      */
-            this->errset(AObject::NoMemory);
+            this->errset(AError::NoMemory);
         }
         /*  alla fine ritorno la lista (che può anche essere NULL)              */
         return newLst;
@@ -796,7 +796,7 @@ namespace AFramework{
             return m_temp->m_item;
         }
         /*  altrimenti imposto l'errore                                         */
-        this->errset(AObject::OutOfRange);
+        this->errset(AError::OutOfRange);
         /*  e ritorno un item al volo                                           */
         return T();
     }
@@ -808,7 +808,7 @@ namespace AFramework{
         /*  se l'indice non è valido                                            */
         if(index >= this->m_size){
             /*  imposto la variabile d'errore e                                 */
-            this->errset(AObject::OutOfRange);
+            this->errset(AError::OutOfRange);
             /*  per evitare errori strani, ritorno un oggetto al volo           */
             return T();
         }

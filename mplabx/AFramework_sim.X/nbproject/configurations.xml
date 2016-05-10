@@ -9,9 +9,9 @@
       <itemPath>../../include/ACore.h</itemPath>
       <itemPath>../../include/AContainers.h</itemPath>
       <itemPath>../../include/AString.h</itemPath>
-      <itemPath>../../include/APortDefs.h</itemPath>
       <itemPath>../../include/ATimers.h</itemPath>
       <itemPath>../../include/APorts.h</itemPath>
+      <itemPath>../../include/AIODevice.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

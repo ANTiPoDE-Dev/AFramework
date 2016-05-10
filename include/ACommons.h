@@ -67,39 +67,83 @@ namespace AFramework{
         Isp2,
         Isp3
     };
+    
+//    enum UserPort{
+//        A0  = 0x10001U,
+//        A1  = 0x10002U,
+//        A4  = 0x10010U,
+//        A7  = 0x10080U,
+//        A8  = 0x10100U,
+//        A9  = 0x10200U,
+//        A10 = 0x10400U,
+//        B0  = 0x20001U,
+//        B1  = 0x20002U,
+//        B2  = 0x20004U,
+//        B3  = 0x20008U,
+//        B4  = 0x20010U,
+//        B5  = 0x20020U,
+//        B7  = 0x20080U,
+//        B8  = 0x20100U,
+//        B9  = 0x20200U,
+//        B10 = 0x20400U,
+//        B11 = 0x20800U,
+//        B13 = 0x22000U,
+//        B14 = 0x24000U,
+//        B15 = 0x28000U,
+//        C0  = 0x40001U,
+//        C1  = 0x40002U,
+//        C2  = 0x40004U,
+//        C3  = 0x40008U,
+//        C4  = 0x40010U,
+//        C5  = 0x40020U,
+//        C6  = 0x40040U,
+//        C7  = 0x40080U,
+//        C8  = 0x40100U,
+//        C9  = 0x40200U
+//    };
+    
+    enum PortCPins{
+        C0  = 0x40001U,
+        C1  = 0x40002U,
+        C2  = 0x40004U,
+        C3  = 0x40008U,
+        C4  = 0x40010U,
+        C5  = 0x40020U,
+        C6  = 0x40040U,
+        C7  = 0x40080U,
+        C8  = 0x40100U,
+        C9  = 0x40200U,
+    };
 
-    class AObject{
-
+    class AErrorNotifier{
         public:
-
-            enum AErrors{   NoError,
+            enum AErrors{   
+                            NoError,
                             NoMemory,
-                            OutOfRange  };
-
-            AObject(){
-
+                            OutOfRange
+                        };
+            virtual bool good() const volatile = 0;
+            virtual AErrors lastError() const volatile = 0;
+        protected:
+            virtual void errset(const AErrors &err = NoError) const volatile = 0;
+    };
+    
+    class AError : public AErrorNotifier{
+        public:
+            AError(){
                 m_err = NoError;
             }
-
-            AErrors lastError() const{
-
+            AErrors lastError() const volatile{
                 return m_err;
             }
-
-            bool good() const{
-
+            bool good() const volatile{
                 return m_err == NoError;
             }
-
         protected:
-
-            mutable AErrors m_err;
-
-            void errset(const AErrors &err = NoError) const{
-
+            mutable volatile AErrors m_err;
+            void errset(const AErrors &err = NoError) const volatile{
                 m_err = err;
             }
     };
-
 }
 #endif // ACOMMONS_H

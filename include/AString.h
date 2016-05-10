@@ -37,7 +37,7 @@ namespace AFramework{
     class AString;
     typedef ALinkedList<AString> AStringList;
     
-    class AString : public AObject{
+    class AString : public AError{
         public:
             static  uint32  strlen(const char  * str);
             
