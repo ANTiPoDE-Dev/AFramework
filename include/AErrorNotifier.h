@@ -25,47 +25,37 @@
 *   Copyright 2015, 2016 Milazzo Giuseppe
 *
 */
-#ifndef ACOMMONS_H
-#define ACOMMONS_H
 
-#define A_COHERENT        volatile
-#define A_CONST_COHERENT  volatile const
-
-#include <cstdlib>
+#ifndef AERRORNOTIFIER_H
+#define	AERRORNOTIFIER_H
 
 namespace AFramework{
 
-    typedef unsigned char       uchar;
-    typedef signed char         schar;
-    typedef unsigned char       uint8;
-    typedef signed char         sint8;
-    typedef unsigned short int  uint16;
-    typedef signed short int    sint16;
-    typedef unsigned int        uint32;
-    typedef signed int          sint32;
-    typedef unsigned long long  uint64;
-    typedef signed long long    sint64;
-    
-    enum LogicLevel{
-        Lo,
-        Hi
+    class AAbstractErrorNotifier{
+        public:
+            enum AErrors{   
+                            NoError,
+                            NoMemory,
+                            OutOfRange,
+                            InvalidGpio,
+                            NotEnoughOut
+                        };
+            virtual bool good() const volatile = 0;
+            virtual AErrors lastError() const volatile = 0;
+        protected:
+            virtual void errset(const AErrors &err = NoError) const volatile = 0;
     };
     
-    enum Priority{
-        Ip1 = 1,
-        Ip2,
-        Ip3,
-        Ip4,
-        Ip5,
-        Ip6,
-        Ip7
-    };
-    
-    enum SubPriority{
-        Isp0,
-        Isp1,
-        Isp2,
-        Isp3
+    class AErrorNotifier : public AAbstractErrorNotifier{
+        public:
+            AErrorNotifier();
+            AAbstractErrorNotifier::AErrors lastError() const volatile;
+            bool good() const volatile;
+        protected:
+            mutable volatile AErrors m_err;
+            void errset(const AAbstractErrorNotifier::AErrors &err = AAbstractErrorNotifier::NoError) const volatile;
     };
 }
-#endif // ACOMMONS_H
+
+#endif	/* AERRORNOTIFIER_H */
+

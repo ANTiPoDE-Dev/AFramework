@@ -33,7 +33,7 @@
 
 namespace AFramework{
 
-    class AIODevice : public AErrorNotifier{
+    class AIODevice{
         public:
             virtual bool open() volatile = 0;
             virtual bool close() volatile = 0;

@@ -30,6 +30,7 @@
 #define ASTRING_H
 
 #include "ACore.h"
+#include "AErrorNotifier.h"
 #include "AContainers.h"
 
 namespace AFramework{
@@ -37,7 +38,7 @@ namespace AFramework{
     class AString;
     typedef ALinkedList<AString> AStringList;
     
-    class AString : public AError{
+    class AString : public AErrorNotifier{
         public:
             static  uint32  strlen(const char  * str);
             

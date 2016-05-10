@@ -30,147 +30,68 @@
 #define APORT_A
 
 #include "ACore.h"
-#include "ACommons.h"
-#include "ASystemConfig.h"
 #include "AIODevice.h"
+#include "AErrorNotifier.h"
 
 namespace AFramework{
     
-    extern const uint32 All;
-    extern const uint32 NoOne;
-
-    class AHardwarePort : public AIODevice{
-        friend class System;        
+    class AHardwarePort : public AAbstractErrorNotifier{
         public:
             AHardwarePort();
-            bool open() volatile;
-            bool close() volatile;
-            bool isOpen() const volatile;
             uint32 read() const volatile;
             bool write(const uint32 & val) volatile;
-        protected:
-            volatile uint32 m_ANSEL;
-            volatile uint32 m_ANSEL_CLR;
-            volatile uint32 m_ANSEL_SET;
-            volatile uint32 m_ANSEL_INV;
-            volatile uint32 m_TRIS;
-            volatile uint32 m_TRIS_CLR;
-            volatile uint32 m_TRIS_SET;
-            volatile uint32 m_TRIS_INV;
-            volatile uint32 m_PORT;
-            volatile uint32 m_PORT_CLR;
-            volatile uint32 m_PORT_SET;
-            volatile uint32 m_PORT_INV;
-            volatile uint32 m_LAT;
-            volatile uint32 m_LAT_CLR;
-            volatile uint32 m_LAT_SET;
-            volatile uint32 m_LAT_INV;
-            volatile uint32 m_ODC;
-            volatile uint32 m_ODC_CLR;
-            volatile uint32 m_ODC_SET;
-            volatile uint32 m_ODC_INV;
-            volatile uint32 m_CNPU;
-            volatile uint32 m_CNPU_CLR;
-            volatile uint32 m_CNPU_SET;
-            volatile uint32 m_CNPU_INV;
-            volatile uint32 m_CNPD;
-            volatile uint32 m_CNPD_CLR;
-            volatile uint32 m_CNPD_SET;
-            volatile uint32 m_CNPD_INV;
-            volatile uint32 m_CNCON;
-            volatile uint32 m_CNCON_CLR;
-            volatile uint32 m_CNCON_SET;
-            volatile uint32 m_CNCON_INV;
-            volatile uint32 m_CNEN;
-            volatile uint32 m_CNEN_CLR;
-            volatile uint32 m_CNEN_SET;
-            volatile uint32 m_CNEN_INV;
-            volatile uint32 m_CNSTAT;
-            volatile uint32 m_CNSTAT_CLR;
-            volatile uint32 m_CNSTAT_SET;
-            volatile uint32 m_CNSTAT_INV;
+            bool good() const volatile;
+            AErrors lastError() const volatile;
+        private:
+            bool chkown(const uint32 & val) const volatile;
+            void errset(const AErrors &err = NoError) const volatile;
+            volatile uint32 m_ANSELx;
+            volatile uint32 m_ANSELx_CLR;
+            volatile uint32 m_ANSELx_SET;
+            volatile uint32 m_ANSELx_INV;
+            volatile uint32 m_TRISx;
+            volatile uint32 m_TRISx_CLR;
+            volatile uint32 m_TRISx_SET;
+            volatile uint32 m_TRISx_INV;
+            volatile uint32 m_PORTx;
+            volatile uint32 m_PORTx_CLR;
+            volatile uint32 m_PORTx_SET;
+            volatile uint32 m_PORTx_INV;
+            volatile uint32 m_LATx;
+            volatile uint32 m_LATx_CLR;
+            volatile uint32 m_LATx_SET;
+            volatile uint32 m_LATx_INV;
+            volatile uint32 m_ODCx;
+            volatile uint32 m_ODCx_CLR;
+            volatile uint32 m_ODCx_SET;
+            volatile uint32 m_ODCx_INV;
+            volatile uint32 m_CNPUx;
+            volatile uint32 m_CNPUx_CLR;
+            volatile uint32 m_CNPUx_SET;
+            volatile uint32 m_CNPUx_INV;
+            volatile uint32 m_CNPDx;
+            volatile uint32 m_CNPDx_CLR;
+            volatile uint32 m_CNPDx_SET;
+            volatile uint32 m_CNPDx_INV;
+            volatile uint32 m_CNCONx;
+            volatile uint32 m_CNCONx_CLR;
+            volatile uint32 m_CNCONx_SET;
+            volatile uint32 m_CNCONx_INV;
+            volatile uint32 m_CNENx;
+            volatile uint32 m_CNENx_CLR;
+            volatile uint32 m_CNENx_SET;
+            volatile uint32 m_CNENx_INV;
+            volatile uint32 m_CNSTATx;
+            volatile uint32 m_CNSTATx_CLR;
+            volatile uint32 m_CNSTATx_SET;
+            volatile uint32 m_CNSTATx_INV;
     };
-    
-    #ifdef ANTIPODE32MR
-        class APortA : public AHardwarePort{
-            public:
-                enum Gpio{
-                            A0  = 0x0001U,
-                            A1  = 0x0002U,
-                            A4  = 0x0010U,
-                            A7  = 0x0080U,
-                            A8  = 0x0100U,
-                            A9  = 0x0200U,
-                            A10 = 0x0400U
-                         };
-                char getChar() const volatile;
-                bool putChar(const char & chr) volatile;
-                bool good() const volatile;
-                AErrors lastError() const volatile;
-            private:
-                void errset(const AErrors & err = NoError) const volatile;
-                uint32 devnum() const volatile;
-        };
-    
-        class APortB : public AHardwarePort{
-            public:
-                enum Gpio{
-                            B0  = 0x20001U,
-                            B1  = 0x20002U,
-                            B2  = 0x20004U,
-                            B3  = 0x20008U,
-                            B4  = 0x20010U,
-                            B5  = 0x20020U,
-                            B7  = 0x20080U,
-                            B8  = 0x20100U,
-                            B9  = 0x20200U,
-                            B10 = 0x20400U,
-                            B11 = 0x20800U,
-                            B13 = 0x22000U,
-                            B14 = 0x24000U,
-                            B15 = 0x28000U,
-                         };
-                char getChar() const volatile;
-                bool putChar(const char & chr) volatile;
-                bool good() const volatile;
-                AErrors lastError() const volatile;
-            private:
-                void errset(const AErrors & err = NoError) const volatile;
-                uint32 devnum() const volatile;
-        };
-        
-        class APortC : public AHardwarePort{
-            public:
-                enum Gpio{
-                            C0  = 0x40001U,
-                            C1  = 0x40002U,
-                            C2  = 0x40004U,
-                            C3  = 0x40008U,
-                            C4  = 0x40010U,
-                            C5  = 0x40020U,
-                            C6  = 0x40040U,
-                            C7  = 0x40080U,
-                            C8  = 0x40100U,
-                            C9  = 0x40200U
-                         };
-                char getChar() const volatile;
-                bool putChar(const char & chr) volatile;
-                bool good() const volatile;
-                AErrors lastError() const volatile;
-            private:
-                void errset(const AErrors & err = NoError) const volatile;
-                uint32 devnum() const volatile;
-        };
-        
-        extern volatile APortA PortA;
-        extern volatile APortB PortB;
-        extern volatile APortC PortC;
-        
-    #endif
 
-    class AUserPort : public AError{
-        
-    };
+    extern volatile AHardwarePort PortA;
+    
+//    class AUserPort : public AIODevice, public AErrorNotifier{
+//
+//    };
     
 }
 #endif // APORT_A

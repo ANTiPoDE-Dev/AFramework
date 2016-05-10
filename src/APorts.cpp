@@ -29,149 +29,33 @@
 #include "APorts.h"
 
 
-const AFramework::uint32 AFramework::All   = 0xFFFFU;
-const AFramework::uint32 AFramework::NoOne = 0x0000U;
+#define PORTMASK 0x000F0000U
+#define GPIOMASK 0x0000FFFFU
+#define PORTAADD 0xBF886000U
+#define PORTBADD 0xBF886100U
+#define PORTCADD 0xBF886200U
 
-#ifdef ANTIPODE32MR
+volatile AFramework::AHardwarePort::AErrors m_PORTA_ERR = AFramework::AHardwarePort::NoError;
 
-    #define PORTA_ADDRESS 0xBF886000U
-    #define PORTB_ADDRESS 0xBF886100U
-    #define PORTC_ADDRESS 0xBF886200U
-    #define PORTA         0x00010000U
-    #define PORTB         0x00020000U
-    #define PORTC         0x00040000U
-    #define PORTMASK      0x000F0000U
-    #define GPIOMASK      0x0000FFFFU
-
-    volatile AFramework::APortA AFramework::PortA __attribute__((address(PORTA_ADDRESS)));
-    volatile AFramework::APortB AFramework::PortB __attribute__((address(PORTB_ADDRESS)));
-    volatile AFramework::APortC AFramework::PortC __attribute__((address(PORTC_ADDRESS)));
-    volatile AFramework::AErrorNotifier::AErrors m_PortA_Error;
-    volatile AFramework::AErrorNotifier::AErrors m_PortB_Error;
-    volatile AFramework::AErrorNotifier::AErrors m_PortC_Error;
+volatile AFramework::AHardwarePort AFramework::PortA __attribute__((address(PORTAADD)));
 
 
-#endif
-    
-AFramework::AHardwarePort::AHardwarePort() : m_ANSEL_CLR(All), 
-                                             m_TRIS_SET(All), 
-                                             m_LAT_CLR(All), 
-                                             m_ODC_CLR(All), 
-                                             m_CNPU_CLR(All), 
-                                             m_CNPD_CLR(All), 
-                                             m_CNCON_CLR(All), 
-                                             m_CNEN_CLR(All), 
-                                             m_CNSTAT_CLR(All){
+AFramework::AHardwarePort::AHardwarePort() {
 
 }
 
-bool AFramework::AHardwarePort::open() volatile{
-    /*  le porte hardware sono sempre aperte, per cui, ritorno sempre true      */
-    return true;
-}
-
-bool AFramework::AHardwarePort::close() volatile{
-    /*  le porte hardware sono sempre aperte, per cui, ritorno sempre false     */
-    return false;
-}
-
-bool AFramework::AHardwarePort::isOpen() const volatile{
-    /*  le porte hardware sono sempre aperte, per cui, ritorno sempre true      */
-    return true;
-}
-
-AFramework::uint32 AFramework::AHardwarePort::read() const volatile{
-    /*  ritorno il contenuto del registro m_PORT                                */
-    return m_PORT;
-}
-
-bool AFramework::AHardwarePort::write(const uint32& val) volatile{
-    /*  cancello il contenuto del registro m_LAT tramite m_LAT_CLR che rende    */
-    /*  l'operazione atomica                                                    */
-    m_LAT_CLR = All;
-    /*  scrivo il valore passato su m_LAT tramite il m_LAT_SET che rende        */
-    /*  l'operazione atomica                                                    */
-    m_LAT_SET = val;
-    /*  controllo che il dato sia stato scritto correttamente                   */
-    return m_LAT == val;
-}
-
-
-/********************************************************************************/
-//  PORTA A
-/********************************************************************************/
-char AFramework::APortA::getChar() const volatile{
-    return static_cast<char>(0x00);
-}
-
-bool AFramework::APortA::putChar(const char & chr) volatile{
-    return true;
-}
-
-bool AFramework::APortA::good() const volatile{
-    return m_PortA_Error == NoError;
-}
-
-AFramework::AErrorNotifier::AErrors AFramework::APortA::lastError() const volatile{
-    return m_PortA_Error;
-}
-
-void AFramework::APortA::errset(const AErrors & err) const volatile{
-    m_PortA_Error = err;
-}
-
-AFramework::uint32 AFramework::APortA::devnum() const volatile{
-    return 0x00010000U;
-}
-/********************************************************************************/
-//  PORTA B
-/********************************************************************************/
-char AFramework::APortB::getChar() const volatile{
-    return static_cast<char>(0x00);
-}
-
-bool AFramework::APortB::putChar(const char & chr) volatile{
-    return true;
-}
-
-bool AFramework::APortB::good() const volatile{
-    return m_PortB_Error == NoError;
-}
-
-AFramework::AErrorNotifier::AErrors AFramework::APortB::lastError() const volatile{
-    return m_PortB_Error;
-}
-
-void AFramework::APortB::errset(const AErrors & err) const volatile{
-    m_PortB_Error = err;
-}
-
-AFramework::uint32 AFramework::APortB::devnum() const volatile{
-    return 0x00020000U;
-}
-/********************************************************************************/
-//  PORTA C
-/********************************************************************************/
-char AFramework::APortC::getChar() const volatile{
-    return static_cast<char>(0x00);
-}
-
-bool AFramework::APortC::putChar(const char & chr) volatile{
-    return true;
-}
-
-bool AFramework::APortC::good() const volatile{
-    return m_PortC_Error == NoError;
-}
-
-AFramework::AErrorNotifier::AErrors AFramework::APortC::lastError() const volatile{
-    return m_PortC_Error;
-}
-
-void AFramework::APortC::errset(const AErrors & err) const volatile{
-    m_PortC_Error = err;
-}
-
-AFramework::uint32 AFramework::APortC::devnum() const volatile{
-    return 0x00040000U;
+/*************************************************************************************************/
+bool AFramework::AHardwarePort::chkown(const uint32 & val) const volatile{
+    uint32 devid = 0;
+    switch(this){
+        case PORTAADD:
+            devid = 0x00010000U;
+        case PORTBADD:
+            devid = 0x00020000U;
+        case PORTCADD:
+            devid = 0x00030000U;
+        default:
+            devid = 0x00000000U;
+    }
+    return !(devid ^ (val & PORTMASK));
 }

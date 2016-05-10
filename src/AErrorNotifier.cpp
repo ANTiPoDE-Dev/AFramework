@@ -25,47 +25,25 @@
 *   Copyright 2015, 2016 Milazzo Giuseppe
 *
 */
-#ifndef ACOMMONS_H
-#define ACOMMONS_H
 
-#define A_COHERENT        volatile
-#define A_CONST_COHERENT  volatile const
+#include "AErrorNotifier.h"
 
-#include <cstdlib>
-
-namespace AFramework{
-
-    typedef unsigned char       uchar;
-    typedef signed char         schar;
-    typedef unsigned char       uint8;
-    typedef signed char         sint8;
-    typedef unsigned short int  uint16;
-    typedef signed short int    sint16;
-    typedef unsigned int        uint32;
-    typedef signed int          sint32;
-    typedef unsigned long long  uint64;
-    typedef signed long long    sint64;
-    
-    enum LogicLevel{
-        Lo,
-        Hi
-    };
-    
-    enum Priority{
-        Ip1 = 1,
-        Ip2,
-        Ip3,
-        Ip4,
-        Ip5,
-        Ip6,
-        Ip7
-    };
-    
-    enum SubPriority{
-        Isp0,
-        Isp1,
-        Isp2,
-        Isp3
-    };
+AFramework::AErrorNotifier::AErrorNotifier(){
+    /*  Nulla da commentare                                                     */
+    m_err = AAbstractErrorNotifier::NoError;
 }
-#endif // ACOMMONS_H
+
+AFramework::AAbstractErrorNotifier::AErrors AFramework::AErrorNotifier::lastError() const volatile{
+    /*  Nulla da commentare                                                     */
+    return m_err;
+}
+
+bool AFramework::AErrorNotifier::good() const volatile{
+    /*  Nulla da commentare                                                     */
+    return m_err == AAbstractErrorNotifier::NoError;
+}
+
+void AFramework::AErrorNotifier::errset(const AAbstractErrorNotifier::AErrors &err) const volatile{
+    /*  Nulla da commentare                                                     */
+    m_err = err;
+}
