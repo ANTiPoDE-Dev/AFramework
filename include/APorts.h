@@ -79,19 +79,13 @@ namespace AFramework{
             bool enablePullDown(const uint32 gpio) volatile;
             bool disablePullDown(const uint32 gpio) volatile;
             
-//            bool isInterrutptEnabled() const volatile;
-//            void enableInterrupt(const uint32 gpios, const Priority pri, const SubPriority = SubPriority::Isp0, const bool idleStop = false) volatile;
-//            void disableInterrupt() volatile;
-//            uint32 changeNoticeStatus() const volatile;
-//            bool hasInterruptOccurred(const uint32 gpio) const volatile;
-//            void resetInterruptFlag(const uint32 gpios = All) volatile;
-            
-//            bool good() const volatile;
-//            AErrors lastError() const volatile;
+            bool isInterrutptEnabled() const volatile;
+            void enableInterrupt(const uint32 gpios, const Priority pri, const SubPriority = SubPriority::Isp0, const bool idleStop = false) volatile;
+            void disableInterrupt() volatile;
+            uint32 changeNoticeStatus() const volatile;
+            bool hasInterruptOccurred(const uint32 gpio) const volatile;
+            void resetInterruptFlag(const uint32 gpios = All) volatile;
         private:
-//            uint32 devnum() const volatile;
-//            bool chkown(const uint32 & val) const volatile;
-//            void errset(const AErrors &err = NoError) const volatile;
             volatile uint32 m_ANSELx;
             volatile uint32 m_ANSELx_CLR;
             volatile uint32 m_ANSELx_SET;

@@ -9,12 +9,12 @@ int main(){
     
     System::init(16392);
     
-    PortA.setDigital(A0 | A1);
-    PortA.setOutput(A0 | A1);
+    bool r1 = PortA.setDigital(A0 | A1);
+    bool r2 = PortA.setOutput(A0 | A1);
     
-    bool p = PortA.write(A0 | A1, Hi);
-    
-    p = false;
+    bool r3 = PortA.write(A0 | A4, Hi);
+    bool r4 = PortA.write(A0 | A4, Lo);
+    bool r5 = PortA.write(A0 | A4, Hi);
     
     while(1){
     
