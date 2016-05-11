@@ -38,7 +38,8 @@ namespace AFramework{
                             NoMemory,
                             OutOfRange,
                             InvalidGpio,
-                            NotEnoughOut
+                            MultipleGpio,
+                            NotEnoughOutput
                         };
             virtual bool good() const volatile = 0;
             virtual AErrors lastError() const volatile = 0;

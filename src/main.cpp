@@ -9,11 +9,18 @@ int main(){
     
     System::init(16392);
     
-    PortA.write(0x00010001);
+    PortA.setDigital(A0 | A1);
+    PortA.setOutput(A0 | A1);
+    
+    bool p = PortA.write(A0 | A1, Hi);
+    
+    p = false;
     
     while(1){
     
     }
+    
+    
     
     return 0;
 }

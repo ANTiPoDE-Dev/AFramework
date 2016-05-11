@@ -35,16 +35,63 @@
 
 namespace AFramework{
     
-    class AHardwarePort : public AAbstractErrorNotifier{
+    extern const volatile uint32 All;
+    extern const volatile uint32 NoOne;
+    
+    class AHardwarePort{
         public:
-            AHardwarePort();
+            AHardwarePort();     
+            
+            uint32 adcStatus() const volatile;
+            bool isAnalog(const uint32 gpio) const volatile;
+            bool setDigital(const uint32 gpio) volatile;
+            bool setAnalog(const uint32 gpio) volatile;
+            
+            uint32 ioStatus() const volatile;
+            bool isInput(const uint32 gpio) const volatile;
+            bool setInput(const uint32 gpio) volatile;
+            bool setOutput(const uint32 gpio) volatile;
+            
             uint32 read() const volatile;
-            bool write(const uint32 & val) volatile;
-            bool good() const volatile;
-            AErrors lastError() const volatile;
+            LogicLevel read(const uint32 gpio) const volatile;
+            bool portWrite(const uint32 value) volatile;
+            bool portWrite(const uint32 gpios, const LogicLevel value) volatile;
+            bool portInvert(const uint32 & gpios) volatile;
+            
+            uint32 latchRead() const volatile;
+            LogicLevel latchRead(const uint32 gpio) const volatile;
+            bool write(const uint32 value) volatile;
+            bool write(const uint32 gpios, const LogicLevel value) volatile;
+            bool latchInvert(const uint32 gpios) volatile;
+            
+            uint32 openDrainStatus() const volatile;
+            bool isOpenDrain(const uint32 gpio) const volatile;
+            bool setOpenDrain(const uint32 gpio) volatile;
+            bool setStandard(const uint32 gpio) volatile;
+            
+            uint32 pullUpStatus() const volatile;
+            bool isPullUpEnabled(const uint32 gpio) const volatile;
+            bool enablePullUp(const uint32 gpio) volatile;
+            bool disablePullUp(const uint32 gpio) volatile;
+            
+            uint32 pullDownStatus() const volatile;
+            bool isPullDownEnabled(const uint32 gpio) const volatile;
+            bool enablePullDown(const uint32 gpio) volatile;
+            bool disablePullDown(const uint32 gpio) volatile;
+            
+//            bool isInterrutptEnabled() const volatile;
+//            void enableInterrupt(const uint32 gpios, const Priority pri, const SubPriority = SubPriority::Isp0, const bool idleStop = false) volatile;
+//            void disableInterrupt() volatile;
+//            uint32 changeNoticeStatus() const volatile;
+//            bool hasInterruptOccurred(const uint32 gpio) const volatile;
+//            void resetInterruptFlag(const uint32 gpios = All) volatile;
+            
+//            bool good() const volatile;
+//            AErrors lastError() const volatile;
         private:
-            bool chkown(const uint32 & val) const volatile;
-            void errset(const AErrors &err = NoError) const volatile;
+//            uint32 devnum() const volatile;
+//            bool chkown(const uint32 & val) const volatile;
+//            void errset(const AErrors &err = NoError) const volatile;
             volatile uint32 m_ANSELx;
             volatile uint32 m_ANSELx_CLR;
             volatile uint32 m_ANSELx_SET;
@@ -87,11 +134,75 @@ namespace AFramework{
             volatile uint32 m_CNSTATx_INV;
     };
 
-    extern volatile AHardwarePort PortA;
+    #ifdef ANTIPODE32MR
+
+        extern const volatile uint32 A0;
+        extern const volatile uint32 A1;
+        extern const volatile uint32 A4;
+        extern const volatile uint32 A7;
+        extern const volatile uint32 A8;
+        extern const volatile uint32 A9;
+        extern const volatile uint32 A10;
+
+        extern const volatile uint32 B0;
+        extern const volatile uint32 B1;
+        extern const volatile uint32 B2;
+        extern const volatile uint32 B3;
+        extern const volatile uint32 B4;
+        extern const volatile uint32 B5;
+        extern const volatile uint32 B7;
+        extern const volatile uint32 B8;
+        extern const volatile uint32 B9;
+        extern const volatile uint32 B10;
+        extern const volatile uint32 B11;
+        extern const volatile uint32 B13;
+        extern const volatile uint32 B14;
+        extern const volatile uint32 B15;
+
+        extern const volatile uint32 C0;
+        extern const volatile uint32 C1;
+        extern const volatile uint32 C2;
+        extern const volatile uint32 C3;
+        extern const volatile uint32 C4;
+        extern const volatile uint32 C5;
+        extern const volatile uint32 C6;
+        extern const volatile uint32 C7;
+        extern const volatile uint32 C8;
+        extern const volatile uint32 C9;
+        
+        extern volatile AHardwarePort PortA;
+        extern volatile AHardwarePort PortB;
+        extern volatile AHardwarePort PortC;
+        
+    #elif defined PIC32MX270f256B
+
+        extern const volatile uint32 A0;
+        extern const volatile uint32 A1;
+        extern const volatile uint32 A2;
+        extern const volatile uint32 A3;
+        extern const volatile uint32 A4;
+
+        extern const volatile uint32 B0;
+        extern const volatile uint32 B1;
+        extern const volatile uint32 B2;
+        extern const volatile uint32 B3;
+        extern const volatile uint32 B4;
+        extern const volatile uint32 B5;
+        extern const volatile uint32 B7;
+        extern const volatile uint32 B8;
+        extern const volatile uint32 B9;
+        extern const volatile uint32 B10;
+        extern const volatile uint32 B11;
+        extern const volatile uint32 B13;
+        extern const volatile uint32 B14;
+        extern const volatile uint32 B15;
+        
+        extern volatile AHardwarePort PortA;
+        extern volatile AHardwarePort PortB;
+        
+    #endif
     
-//    class AUserPort : public AIODevice, public AErrorNotifier{
-//
-//    };
+
     
 }
 #endif // APORT_A

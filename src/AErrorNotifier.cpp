@@ -47,3 +47,4 @@ void AFramework::AErrorNotifier::errset(const AAbstractErrorNotifier::AErrors &e
     /*  Nulla da commentare                                                     */
     m_err = err;
 }
+

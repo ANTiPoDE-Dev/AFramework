@@ -28,9 +28,6 @@
 #ifndef ACOMMONS_H
 #define ACOMMONS_H
 
-#define A_COHERENT        volatile
-#define A_CONST_COHERENT  volatile const
-
 #include <cstdlib>
 
 namespace AFramework{
@@ -48,7 +45,8 @@ namespace AFramework{
     
     enum LogicLevel{
         Lo,
-        Hi
+        Hi,
+        Unknown
     };
     
     enum Priority{

@@ -13,7 +13,6 @@
       <itemPath>../../include/APorts.h</itemPath>
       <itemPath>../../include/AIODevice.h</itemPath>
       <itemPath>../../include/AErrorNotifier.h</itemPath>
-      <itemPath>../../src/AErrorNotifier.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -27,7 +26,8 @@
       <itemPath>../../src/AString.cpp</itemPath>
       <itemPath>../../src/APorts.cpp</itemPath>
       <itemPath>../../src/ATimers.cpp</itemPath>
-      <itemPath>../../src/AConfigurationBits32MR.cpp</itemPath>
+      <itemPath>../../src/AErrorNotifier.cpp</itemPath>
+      <itemPath>../../src/AConfigurationBits.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
