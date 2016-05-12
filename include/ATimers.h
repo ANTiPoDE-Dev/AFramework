@@ -15,15 +15,15 @@ namespace AFramework{
     class AAbstractTimer{
         public:
             AAbstractTimer();
-            virtual bool open(const double period, const Priority pri = IntOff, const SubPriority sub = Isp0) volatile;
+            virtual bool open(const double period) volatile = 0;
             virtual void close() volatile;
             virtual void clear() volatile;
             virtual bool isOpen() const volatile;
-            virtual uint32 read() const volatile;
-            virtual uint32 msRead() const volatile;
+            virtual uint32 rawTime() const volatile;
+            virtual double elapsedTime() const volatile;
             virtual double period() const volatile;
             virtual double frequency() const volatile;
-            //virtual uint8 prescaler() const volatile = 0;
+            virtual uint8 prescaler() const volatile = 0;
         protected:
             volatile uint32 m_TxCON;
             volatile uint32 m_TxCON_CLR;
@@ -39,29 +39,66 @@ namespace AFramework{
             volatile uint32 m_PRx_INV;
     };
     
-    class AUniqueTimer : public AAbstractTimer{
-        friend class System;
-        public:
-            AUniqueTimer();
-            void open() volatile = 0;
-            uint8 prescaler() const volatile = 0;
-    };
+    #ifdef ANTIPODE32MR
     
-    class ACascadedTimer : public AAbstractTimer{
+    class ATimer1 : public AAbstractTimer{
         friend class System;
         public:
-            ACascadedTimer();
-            void open() volatile;
+            enum Timer1ClockSource{
+                System,
+                A4
+            };
+            ATimer1();
+            bool open(const double period) volatile;
+            bool open(const double period, const Timer1ClockSource src = System, const bool idleStop = false) volatile;
             uint8 prescaler() const volatile;
     };
     
-//    extern volatile AUniqueTimer   Timer1;
-//    extern volatile ACascadedTimer Timer2;
-//    extern volatile ACascadedTimer Timer3;
-//    extern volatile ACascadedTimer Timer4;
-//    extern volatile ACascadedTimer Timer5;
+//    class ATimer2 : public AAbstractTimer{
+//        friend class System;
+//        public:
+//            ACascadedTimer();
+//            void open() volatile;
+//            uint8 prescaler() const volatile;
+//    };
+//    
+//    class ATimer3 : public AAbstractTimer{
+//        friend class System;
+//        public:
+//            ACascadedTimer();
+//            void open() volatile;
+//            uint8 prescaler() const volatile;
+//    };
+//    
+//    class ATimer4 : public AAbstractTimer{
+//        friend class System;
+//        public:
+//            ACascadedTimer();
+//            void open() volatile;
+//            uint8 prescaler() const volatile;
+//    };
+//    
+//    class ATimer5 : public AAbstractTimer{
+//        friend class System;
+//        public:
+//            ACascadedTimer();
+//            void open() volatile;
+//            uint8 prescaler() const volatile;
+//    };
+    
+//    extern volatile ATimer1 Timer1;
+//    extern volatile ATimer2 Timer2;
+//    extern volatile ATimer3 Timer3;
+//    extern volatile ATimer4 Timer4;
+//    extern volatile ATimer5 Timer5;
+    
+    #elif defined PIC32MX270F256B
+
+    #else
+
+        #error UNDEFINED BOARD OR PROCESSOR
+
+    #endif
 }
-
-
 #endif	/* ATIMERS_H */
 

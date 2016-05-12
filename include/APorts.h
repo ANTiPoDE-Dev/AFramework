@@ -34,10 +34,7 @@
 #include "AErrorNotifier.h"
 
 namespace AFramework{
-    
-    extern const volatile uint32 All;
-    extern const volatile uint32 NoOne;
-    
+
     class AHardwarePort{
         public:
             AHardwarePort();     
@@ -84,7 +81,7 @@ namespace AFramework{
             void disableInterrupt() volatile;
             uint32 changeNoticeStatus() const volatile;
             bool hasInterruptOccurred(const uint32 gpio) const volatile;
-            void resetInterruptFlag(const uint32 gpio = All) volatile;
+            void resetInterruptFlag(const uint32 gpio = Quick::All) volatile;
         private:
             volatile uint32 m_ANSELx;
             volatile uint32 m_ANSELx_CLR;
@@ -142,7 +139,7 @@ namespace AFramework{
         extern const volatile uint32 B1;
         extern const volatile uint32 B2;
         extern const volatile uint32 B3;
-        extern const volatile uint32 B4;
+        extern const volatile uint32 B4;    //led sistema
         extern const volatile uint32 B5;
         extern const volatile uint32 B7;
         extern const volatile uint32 B8;
@@ -194,9 +191,10 @@ namespace AFramework{
         extern volatile AHardwarePort PortA;
         extern volatile AHardwarePort PortB;
         
-    #endif
-    
+    #else
 
-    
+        #error UNDEFINED BOARD OR PROCESSOR
+
+    #endif
 }
 #endif // APORT_A

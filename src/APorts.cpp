@@ -46,9 +46,6 @@
 #define _BIT_15_ 0x00008000U
 #define _BIT_MS_ 0x0000FFFFU
 
-const volatile AFramework::uint32 AFramework::All   = 0xFFFFFFFFU;
-const volatile AFramework::uint32 AFramework::NoOne = 0x00000000U;
-
 #ifdef ANTIPODE32MR
 
     #define _PORTA_ 0x00010000U
@@ -127,17 +124,21 @@ const volatile AFramework::uint32 AFramework::NoOne = 0x00000000U;
     volatile AFramework::AHardwarePort AFramework::PortA __attribute__((address(PORTAAD)));
     volatile AFramework::AHardwarePort AFramework::PortB __attribute__((address(PORTBAD)));
     
-#endif
+#else
+    
+    #error UNDEFINED BOARD OR PROCESSOR
 
-AFramework::AHardwarePort::AHardwarePort() : m_ANSELx_CLR(All), 
-                                             m_TRISx_SET(All), 
-                                             m_LATx_CLR(All), 
-                                             m_ODCx_CLR(All), 
-                                             m_CNPUx_CLR(All), 
-                                             m_CNPDx_CLR(All), 
-                                             m_CNCONx_CLR(All), 
-                                             m_CNENx_CLR(All), 
-                                             m_CNSTATx_CLR(All){
+#endif
+    
+AFramework::AHardwarePort::AHardwarePort() : m_ANSELx_CLR(Quick::All), 
+                                             m_TRISx_SET(Quick::All), 
+                                             m_LATx_CLR(Quick::All), 
+                                             m_ODCx_CLR(Quick::All), 
+                                             m_CNPUx_CLR(Quick::All), 
+                                             m_CNPDx_CLR(Quick::All), 
+                                             m_CNCONx_CLR(Quick::All), 
+                                             m_CNENx_CLR(Quick::All), 
+                                             m_CNSTATx_CLR(Quick::All){
 
 }
 
@@ -201,7 +202,7 @@ AFramework::LogicLevel AFramework::AHardwarePort::read(const uint32 gpio) const 
 
 bool AFramework::AHardwarePort::portWrite(const uint32 value) volatile{
     /*  utilizzo il registro clr associato per azzerare la il registro PORT     */
-    m_PORTx_CLR = All;
+    m_PORTx_CLR = Quick::All;
     /*  utilizzo il registro set per scrivere il valore                         */
     m_PORTx_SET = value;
     /*  controllo che il valore sia stato scritto correttamente                 */
@@ -244,7 +245,7 @@ AFramework::LogicLevel AFramework::AHardwarePort::latchRead(const uint32 gpio) c
 
 bool AFramework::AHardwarePort::write(const uint32 value) volatile{
     /*  utilizzo il registro clr per azzerare il registro LAT                   */
-    m_LATx_CLR = All;
+    m_LATx_CLR = Quick::All;
     /*  utilizzo il registro set per scrivere il valore                         */
     m_LATx_SET = value;
     /*  controllo che il/i bit sia/siano stato/i effettivamente settato/i       */
@@ -365,7 +366,7 @@ void AFramework::AHardwarePort::enableInterrupt(const uint32 gpio, const Priorit
 
 void AFramework::AHardwarePort::disableInterrupt() volatile{
     /*  utilizzo il registro clr associato                                      */
-    m_CNCONx_CLR = All;
+    m_CNCONx_CLR = Quick::All;
     #warning "void AFramework::AHardwarePort::disableInterrupt() volatile bisogna ancora disabilitare dal controller dell'interrupt"
 }
 

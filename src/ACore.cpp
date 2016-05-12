@@ -32,7 +32,9 @@
 #include "APorts.h"
 
 AFramework::System::Segment * AFramework::System::m_heap_head(NULL);
-AFramework::uint32            AFramework::System::m_systemclk(0);
+AFramework::uint32            AFramework::System::m_pri_clock(0);
+AFramework::uint32            AFramework::System::m_sec_clock(0);
+AFramework::uint32            AFramework::System::m_bus_clock(0);
 size_t                        AFramework::System::m_heap_size(0);
 size_t                        AFramework::System::m_heap_busy(0);
 size_t                        AFramework::System::m_xc32_offs(8);
@@ -77,7 +79,7 @@ AFramework::System::Segment * AFramework::System::Segment::vNext(){
     return (reinterpret_cast<Segment *>(reinterpret_cast<uint32>(data()) + m_size));
 }
 
-bool AFramework::System::init(size_t heapSize, const uint32 & systemClock){
+bool AFramework::System::init(size_t heapSize, const uint32 & systemClock, const uint32 & peripheralClock, const uint32 & secondaryOsc){
     /*  Controllo che la funzione non sia già stata chiamata                    */
     if(m_init_flag){
         /*  in questo caso restituisco false                                    */
@@ -91,6 +93,11 @@ bool AFramework::System::init(size_t heapSize, const uint32 & systemClock){
     }
     /*  se il clock di sistema è zero                                           */
     if(!systemClock){
+        /*  ritorno false                                                       */
+        return false;
+    }
+    /*  se il clock del bus delle periferiche è zero                            */
+    if(!peripheralClock){
         /*  ritorno false                                                       */
         return false;
     }
@@ -116,7 +123,12 @@ bool AFramework::System::init(size_t heapSize, const uint32 & systemClock){
     /*  Imposto il puntatore al blocco successivo a NULL                        */
     m_heap_head->m_next = NULL;
     /*  imposto il clock di sistema                                             */
-    m_systemclk = systemClock;
+    m_pri_clock = systemClock;
+    /*  imposto l'oscillatore secondario (può andarmi bene anche zero che con-  */
+    /*  sidero come non connesso)                                               */
+    m_sec_clock = secondaryOsc;
+    /*  imposto il clock del bus delle periferiche                              */
+    m_bus_clock = peripheralClock;
     /*
         PARTE RELATIVA ALLA CODA DEI THREAD <ANCORA DA PROGETTARE>
         ...
@@ -314,15 +326,37 @@ void * AFramework::System::malloc(size_t size){
     return NULL;
 }
 
-AFramework::uint32 AFramework::System::frequency(){
+AFramework::uint32 AFramework::System::priFrequency(){
     /*  nulla da commentare                                                     */
-    return m_systemclk;
+    return m_pri_clock;
 }
 
-double AFramework::System::period(){
+double AFramework::System::priPeriod(){
     /*  per evitare eccezzioni della cpu ritorno il risultato della divisione   */
     /*  se la frequenza è diversa da zero, altrimenti zero.                     */
-    return (m_systemclk ? (1 / static_cast<double>(m_systemclk)) : 0);
+    return (m_pri_clock ? (1 / static_cast<double>(m_pri_clock)) : 0);
+}
+
+AFramework::uint32 AFramework::System::secFrequency(){
+    /*  nulla da commentare                                                     */
+    return m_sec_clock;
+}
+
+double AFramework::System::secPeriod(){
+    /*  per evitare eccezzioni della cpu ritorno il risultato della divisione   */
+    /*  se la frequenza è diversa da zero, altrimenti zero.                     */
+    return (m_sec_clock ? (1 / static_cast<double>(m_sec_clock)) : 0);
+}
+
+AFramework::uint32 AFramework::System::busFrequency(){
+    /*  nulla da commentare                                                     */
+    return m_bus_clock;
+}
+
+double AFramework::System::busPeriod(){
+    /*  per evitare eccezzioni della cpu ritorno il risultato della divisione   */
+    /*  se la frequenza è diversa da zero, altrimenti zero.                     */
+    return (m_bus_clock ? (1 / static_cast<double>(m_bus_clock)) : 0);
 }
 
 void AFramework::System::scsusp(){

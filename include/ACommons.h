@@ -28,7 +28,7 @@
 #ifndef ACOMMONS_H
 #define ACOMMONS_H
 
-#include <cstdlib>
+#include "ASystemConfig.h"
 
 namespace AFramework{
 
@@ -42,6 +42,11 @@ namespace AFramework{
     typedef signed int          sint32;
     typedef unsigned long long  uint64;
     typedef signed long long    sint64;
+    
+    namespace Quick{
+        const volatile uint32 All   = 0xFFFFFFFFU;
+        const volatile uint32 NoOne = 0x00000000U;
+    }
     
     enum LogicLevel{
         Lo,
@@ -66,5 +71,87 @@ namespace AFramework{
         Isp2,
         Isp3,
     };
+    
+    #ifdef ANTIPODE32MR
+    
+        enum RPGroup1{
+            RPA0  = 0x0000U,
+            RPB3  = 0x0001U,
+            RPB15 = 0x0003U,
+            RPB7  = 0x0004U,
+            RPC7  = 0x0005U,
+            RPC0  = 0x0006U,
+            RPC5  = 0x0007U
+        };
+    
+        enum RPGroup2{
+            RPB5  = 0x0001U,
+            RPB1  = 0x0002U,
+            RPB11 = 0x0003U,
+            RPB8  = 0x0004U,
+            RPA8  = 0x0005U,
+            RPC8  = 0x0006U,
+            RPA9  = 0x0007U
+        };
+    
+        enum RPGroup3{
+            RPB6  = 0x0001U,
+            RP4A  = 0x0002U,
+            RPB13 = 0x0003U,
+            RPB2  = 0x0004U,
+            RPC6  = 0x0005U,
+            RPC1  = 0x0006U,
+            RPC3  = 0x0007U
+        };
+    
+        enum RPGroup4{
+            RPB14 = 0x0001U,
+            RPB0  = 0x0002U,
+            RPB10 = 0x0003U,
+            RPB9  = 0x0004U,
+            RPC9  = 0x0005U,
+            RPC2  = 0x0006U,
+            RPC4  = 0x0007U        
+        };
+    
+    #elif defined PIC32MX270F256B
+    
+        enum RPGroup1{
+            RPA0  = 0x0000U,
+            RPB3  = 0x0001U,
+            RPB4  = 0x0002U,
+            RPB15 = 0x0003U,
+            RPB7  = 0x0004U
+        };
+    
+        enum RPGroup2{
+            RPA1  = 0x0000U,
+            RPB5  = 0x0001U,
+            RPB1  = 0x0002U,
+            RPB11 = 0x0003U,
+            RPB8  = 0x0004U
+        };
+    
+        enum RPGroup3{
+            RPA2  = 0x0000U,
+            RPB6  = 0x0001U,
+            RP4A  = 0x0002U,
+            RPB13 = 0x0003U,
+            RPB2  = 0x0004U
+        };
+    
+        enum RPGroup4{
+            RPA3  = 0x0000U,
+            RPB14 = 0x0001U,
+            RPB0  = 0x0002U,
+            RPB10 = 0x0003U,
+            RPB9  = 0x0004U        
+        };
+    
+    #else
+    
+
+        
+    #endif
 }
 #endif // ACOMMONS_H
