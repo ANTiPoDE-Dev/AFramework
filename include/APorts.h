@@ -55,14 +55,14 @@ namespace AFramework{
             uint32 read() const volatile;
             LogicLevel read(const uint32 gpio) const volatile;
             bool portWrite(const uint32 value) volatile;
-            bool portWrite(const uint32 gpios, const LogicLevel value) volatile;
-            bool portInvert(const uint32 & gpios) volatile;
+            bool portWrite(const uint32 gpio, const LogicLevel value) volatile;
+            bool portInvert(const uint32 gpio) volatile;
             
             uint32 latchRead() const volatile;
             LogicLevel latchRead(const uint32 gpio) const volatile;
             bool write(const uint32 value) volatile;
-            bool write(const uint32 gpios, const LogicLevel value) volatile;
-            bool latchInvert(const uint32 gpios) volatile;
+            bool write(const uint32 gpio, const LogicLevel value) volatile;
+            bool latchInvert(const uint32 gpio) volatile;
             
             uint32 openDrainStatus() const volatile;
             bool isOpenDrain(const uint32 gpio) const volatile;
@@ -80,11 +80,11 @@ namespace AFramework{
             bool disablePullDown(const uint32 gpio) volatile;
             
             bool isInterrutptEnabled() const volatile;
-            void enableInterrupt(const uint32 gpios, const Priority pri, const SubPriority = SubPriority::Isp0, const bool idleStop = false) volatile;
+            void enableInterrupt(const uint32 gpio, const Priority pri, const SubPriority sub = Isp0, const bool idleStop = false) volatile;
             void disableInterrupt() volatile;
             uint32 changeNoticeStatus() const volatile;
             bool hasInterruptOccurred(const uint32 gpio) const volatile;
-            void resetInterruptFlag(const uint32 gpios = All) volatile;
+            void resetInterruptFlag(const uint32 gpio = All) volatile;
         private:
             volatile uint32 m_ANSELx;
             volatile uint32 m_ANSELx_CLR;

@@ -50,7 +50,8 @@ namespace AFramework{
     };
     
     enum Priority{
-        Ip1 = 1,
+        IntOff,
+        Ip1,
         Ip2,
         Ip3,
         Ip4,
@@ -63,7 +64,7 @@ namespace AFramework{
         Isp0,
         Isp1,
         Isp2,
-        Isp3
+        Isp3,
     };
 }
 #endif // ACOMMONS_H
