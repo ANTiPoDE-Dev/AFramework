@@ -13,7 +13,7 @@
       <itemPath>../../include/APorts.h</itemPath>
       <itemPath>../../include/AIODevice.h</itemPath>
       <itemPath>../../include/AErrorNotifier.h</itemPath>
-      <itemPath>../../include/Ap32mx270f256d.h</itemPath>
+      <itemPath>../../include/ABits.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

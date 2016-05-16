@@ -4,347 +4,378 @@
 
 #include "ACommons.h"
 
-namespace AFramework{
-    
-    class AWDT_w{
-        public:
-            volatile uint32 WDTCON;
-            volatile uint32 WDTCON_CLR;
-            volatile uint32 WDTCON_SET;
-            volatile uint32 WDTCON_INV;
-    };
-    extern volatile AWDT_w WDT_w __asm__("WDT_w") __attribute__((section("sfrs")));
-    
-    class ARTCC_w{
-        public:
-            volatile uint32 RTCCON;
-            volatile uint32 RTCCON_CLR;
-            volatile uint32 RTCCON_SET;
-            volatile uint32 RTCCON_INV;
-            volatile uint32 RTCALRM;
-            volatile uint32 RTCALRM_CLR;
-            volatile uint32 RTCALRM_SET;
-            volatile uint32 RTCALRM_INV;
-            volatile uint32 RTCTIME;
-            volatile uint32 RTCTIME_CLR;
-            volatile uint32 RTCTIME_SET;
-            volatile uint32 RTCTIME_INV;
-            volatile uint32 RTCDATE;
-            volatile uint32 RTCDATE_CLR;
-            volatile uint32 RTCDATE_SET;
-            volatile uint32 RTCDATE_INV;
-            volatile uint32 ALRMTIME;
-            volatile uint32 ALRMTIME_CLR;
-            volatile uint32 ALRMTIME_SET;
-            volatile uint32 ALRMTIME_INV;
-            volatile uint32 ALRMDATE;
-            volatile uint32 ALRMDATE_CLR;
-            volatile uint32 ALRMDATE_SET;
-            volatile uint32 ALRMDATE_INV;
-    };
-    extern volatile ARTCC_w RTCC_w __asm__("RTCC_w") __attribute__((section("sfrs")));
-    
-    class ATMR_w{
-        public:
-            volatile uint32 TxCON;
-            volatile uint32 TxCON_CLR;
-            volatile uint32 TxCON_SET;
-            volatile uint32 TxCON_INV;
-            volatile uint32 TMRx;
-            volatile uint32 TMRx_CLR;
-            volatile uint32 TMRx_SET;
-            volatile uint32 TMRx_INV;
-            volatile uint32 PRx;
-            volatile uint32 PRx_CLR;
-            volatile uint32 PRx_SET;
-            volatile uint32 PRx_INV;
-    };
-    extern volatile ATMR_w ATMR1_w __asm__("ATMR1_w") __attribute__((section("sfrs")));
-    extern volatile ATMR_w ATMR2_w __asm__("ATMR2_w") __attribute__((section("sfrs")));
-    extern volatile ATMR_w ATMR3_w __asm__("ATMR3_w") __attribute__((section("sfrs")));
-    extern volatile ATMR_w ATMR4_w __asm__("ATMR4_w") __attribute__((section("sfrs")));
-    extern volatile ATMR_w ATMR5_w __asm__("ATMR5_w") __attribute__((section("sfrs")));
-    
-    class AIC_w{
-        public:
-            volatile uint32 ICxCON;
-            volatile uint32 ICxCON_CLR;
-            volatile uint32 ICxCON_SET;
-            volatile uint32 ICxCON_INV;
-            volatile uint32 ICxBUF;
-    };
-    extern volatile AIC_w IC1_w __asm__("IC1_w") __attribute__((section("sfrs")));
-    extern volatile AIC_w IC2_w __asm__("IC2_w") __attribute__((section("sfrs")));
-    extern volatile AIC_w IC3_w __asm__("IC3_w") __attribute__((section("sfrs")));
-    extern volatile AIC_w IC4_w __asm__("IC4_w") __attribute__((section("sfrs")));
-    extern volatile AIC_w IC5_w __asm__("IC5_w") __attribute__((section("sfrs")));
-    
-    class AOC_w{
-        public:
-            volatile uint32 OCxCON;
-            volatile uint32 OCxCON_CLR;
-            volatile uint32 OCxCON_SET;
-            volatile uint32 OCxCON_INV;
-            volatile uint32 OCxR;
-            volatile uint32 OCxR_CLR;
-            volatile uint32 OCxR_SET;
-            volatile uint32 OCxR_INV;
-            volatile uint32 OCxRS;
-            volatile uint32 OCxRS_CLR;
-            volatile uint32 OCxRS_SET;
-            volatile uint32 OCxRS_INV;
-    };
-    extern volatile AOC_w OC1_w __asm__("OC1_w") __attribute__((section("sfrs")));
-    extern volatile AOC_w OC2_w __asm__("OC2_w") __attribute__((section("sfrs")));
-    extern volatile AOC_w OC3_w __asm__("OC3_w") __attribute__((section("sfrs")));
-    extern volatile AOC_w OC4_w __asm__("OC4_w") __attribute__((section("sfrs")));
-    extern volatile AOC_w OC5_w __asm__("OC5_w") __attribute__((section("sfrs")));
-    
-    class AI2C_w{
-        public:
-            volatile uint32 I2CxCON;
-            volatile uint32 I2CxCON_CLR;
-            volatile uint32 I2CxCON_SET;
-            volatile uint32 I2CxCON_INV;
-            volatile uint32 I2CxSTAT;
-            volatile uint32 I2CxSTAT_CLR;
-            volatile uint32 I2CxSTAT_SET;
-            volatile uint32 I2CxSTAT_INV;
-            volatile uint32 I2CxADD;
-            volatile uint32 I2CxADD_CLR;
-            volatile uint32 I2CxADD_SET;
-            volatile uint32 I2CxADD_INV;
-            volatile uint32 I2CxMSK;
-            volatile uint32 I2CxMSK_CLR;
-            volatile uint32 I2CxMSK_SET;
-            volatile uint32 I2CxMSK_INV;
-            volatile uint32 I2CxBRG;
-            volatile uint32 I2CxBRG_CLR;
-            volatile uint32 I2CxBRG_SET;
-            volatile uint32 I2CxBRG_INV;
-            volatile uint32 I2CxTRN;
-            volatile uint32 I2CxTRN_CLR;
-            volatile uint32 I2CxTRN_SET;
-            volatile uint32 I2CxTRN_INV;
-            volatile uint32 I2CxRCV;
-    };
-    extern volatile AI2C_w I2C1_w __asm__("I2C1_w") __attribute__((section("sfrs")));
-    extern volatile AI2C_w I2C2_w __asm__("I2C2_w") __attribute__((section("sfrs")));
-    
-    class ASPI_w{
-        public:
-            volatile uint32 SPIxCON;
-            volatile uint32 SPIxCON_CLR;
-            volatile uint32 SPIxCON_SET;
-            volatile uint32 SPIxCON_INV;
-            volatile uint32 SPIxSTAT;
-            volatile uint32 SPIxSTAT_CLR;
-            volatile uint32 SPIxSTAT_SET;
-            volatile uint32 SPIxSTAT_INV;
-            volatile uint32 SPIxBUF;
-            volatile uint32 w_00;
-            volatile uint32 w_01;
-            volatile uint32 w_02;
-            volatile uint32 SPIxBRG;
-            volatile uint32 SPIxBRG_CLR;
-            volatile uint32 SPIxBRG_SET;
-            volatile uint32 SPIxBRG_INV;
-            volatile uint32 SPIxCON2;
-            volatile uint32 SPIxCON2_CLR;
-            volatile uint32 SPIxCON2_SET;
-            volatile uint32 SPIxCON2_INV;
-    };
-    extern volatile ASPI_w SPI1_w __asm__("SPI1_w") __attribute__((section("sfrs")));
-    extern volatile ASPI_w SPI2_w __asm__("SPI2_w") __attribute__((section("sfrs")));
-    
-    class AUART_w{
-        public:
-            volatile uint32 UxMODE;
-            volatile uint32 UxMODE_CLR;
-            volatile uint32 UxMODE_SET;
-            volatile uint32 UxMODE_INV;
-            volatile uint32 UxSTA;
-            volatile uint32 UxSTA_CLR;
-            volatile uint32 UxSTA_SET;
-            volatile uint32 UxSTA_INV;
-            volatile uint32 UxTXREG;
-            volatile uint32 w_00;
-            volatile uint32 w_01;
-            volatile uint32 w_02;
-            volatile uint32 UxRXREG;
-            volatile uint32 w_03;
-            volatile uint32 w_04;
-            volatile uint32 w_05;
-            volatile uint32 UxBRG;
-            volatile uint32 UxBRG_CLR;
-            volatile uint32 UxBRG_SET;
-            volatile uint32 UxBRG_INV;
-    };
-    extern volatile AUART_w UART1_w __asm__("UART1_w") __attribute__((section("sfrs")));
-    extern volatile AUART_w UART2_w __asm__("UART2_w") __attribute__((section("sfrs")));
-    
-    class APMP_w{
-        public:
-            volatile uint32 PMxCON;
-            volatile uint32 PMxCON_CLR;
-            volatile uint32 PMxCON_SET;
-            volatile uint32 PMxCON_INV;
-            volatile uint32 PMxMODE;
-            volatile uint32 PMxMODE_CLR;
-            volatile uint32 PMxMODE_SET;
-            volatile uint32 PMxMODE_INV;
-            volatile uint32 PMxADDR;
-            volatile uint32 PMxADDR_CLR;
-            volatile uint32 PMxADDR_SET;
-            volatile uint32 PMxADDR_INV;
-            volatile uint32 PMxDOUT;
-            volatile uint32 PMxDOUT_CLR;
-            volatile uint32 PMxDOUT_SET;
-            volatile uint32 PMxDOUT_INV;
-            volatile uint32 PMxDIN;
-            volatile uint32 PMxDIN_CLR;
-            volatile uint32 PMxDIN_SET;
-            volatile uint32 PMxDIN_INV;
-            volatile uint32 PMxAEN;
-            volatile uint32 PMxAEN_CLR;
-            volatile uint32 PMxAEN_SET;
-            volatile uint32 PMxAEN_INV;
-            volatile uint32 PMxSTAT;
-            volatile uint32 PMxSTAT_CLR;
-            volatile uint32 PMxSTAT_SET;
-            volatile uint32 PMxSTAT_INV;
-    };
-    extern volatile APMP_w PMP_w __asm__("PMP_w") __attribute__((section("sfrs")));
-    
-    class AADC_w{
-        public:
-            volatile uint32 ADxCON1;
-            volatile uint32 ADxCON1_CLR;
-            volatile uint32 ADxCON1_SET;
-            volatile uint32 ADxCON1_INV;
-            volatile uint32 ADxCON2;
-            volatile uint32 ADxCON2_CLR;
-            volatile uint32 ADxCON2_SET;
-            volatile uint32 ADxCON2_INV;
-            volatile uint32 ADxCON3;
-            volatile uint32 ADxCON3_CLR;
-            volatile uint32 ADxCON3_SET;
-            volatile uint32 ADxCON3_INV;
-            volatile uint32 ADxCHS;
-            volatile uint32 ADxCHS_CLR;
-            volatile uint32 ADxCHS_SET;
-            volatile uint32 ADxCHS_INV;
-            volatile uint32 ADxCSSL;
-            volatile uint32 ADxCSSL_CLR;
-            volatile uint32 ADxCSSL_SET;
-            volatile uint32 ADxCSSL_INV;
-            volatile uint32 ADCxBUF0;
-            volatile uint32 w_00;
-            volatile uint32 w_01;
-            volatile uint32 w_02;
-            volatile uint32 ADCxBUF1;
-            volatile uint32 w_03;
-            volatile uint32 w_04;
-            volatile uint32 w_05;
-            volatile uint32 ADCxBUF2;
-            volatile uint32 w_06;
-            volatile uint32 w_07;
-            volatile uint32 w_08;
-            volatile uint32 ADCxBUF3;
-            volatile uint32 w_09;
-            volatile uint32 w_0A;
-            volatile uint32 w_0B;
-            volatile uint32 ADCxBUF4;
-            volatile uint32 w_0C;
-            volatile uint32 w_0D;
-            volatile uint32 w_0E;
-            volatile uint32 ADCxBUF5;
-            volatile uint32 w_0F;
-            volatile uint32 w_10;
-            volatile uint32 w_11;
-            volatile uint32 ADCxBUF6;
-            volatile uint32 w_12;
-            volatile uint32 w_13;
-            volatile uint32 w_14;
-            volatile uint32 ADCxBUF7;
-            volatile uint32 w_15;
-            volatile uint32 w_16;
-            volatile uint32 w_17;
-            volatile uint32 ADCxBUF8;
-            volatile uint32 w_18;
-            volatile uint32 w_19;
-            volatile uint32 w_1A;
-            volatile uint32 ADCxBUF9;
-            volatile uint32 w_1B;
-            volatile uint32 w_1C;
-            volatile uint32 w_1D;
-            volatile uint32 ADCxBUFA;
-            volatile uint32 w_1E;
-            volatile uint32 w_1F;
-            volatile uint32 w_20;
-            volatile uint32 ADCxBUFB;
-            volatile uint32 w_21;
-            volatile uint32 w_22;
-            volatile uint32 w_23;
-            volatile uint32 ADCxBUFC;
-            volatile uint32 w_24;
-            volatile uint32 w_25;
-            volatile uint32 w_26;
-            volatile uint32 ADCxBUFD;
-            volatile uint32 w_27;
-            volatile uint32 w_28;
-            volatile uint32 w_29;
-            volatile uint32 ADCxBUFE;
-            volatile uint32 w_2A;
-            volatile uint32 w_2B;
-            volatile uint32 w_2C;
-            volatile uint32 ADCxBUFF;
-            volatile uint32 w_2D;
-            volatile uint32 w_2E;
-            volatile uint32 w_2F;
-    };
-    extern volatile AADC_w ADC_w __asm__("ADC_w") __attribute__((section("sfrs")));
-    
-    class ACVRef_w{
-        public:
-            volatile uint32 CVRxCON;
-            volatile uint32 CVRxCON_CLR;
-            volatile uint32 CVRxCON_SET;
-            volatile uint32 CVRxCON_INV;
-    };
-    extern volatile ACVRef_w CVRef_w __asm__("CVRef_w") __attribute__((section("sfrs")));
-    
-    class ACM_w{
-        public:
-            volatile uint32 CM1CON;
-            volatile uint32 CM1CON_CLR;
-            volatile uint32 CM1CON_SET;
-            volatile uint32 CM1CON_INV;
-            volatile uint32 CM2CON;
-            volatile uint32 CM2CON_CLR;
-            volatile uint32 CM2CON_SET;
-            volatile uint32 CM2CON_INV;
-            volatile uint32 CM3CON;
-            volatile uint32 CM3CON_CLR;
-            volatile uint32 CM3CON_SET;
-            volatile uint32 CM3CON_INV;
-            volatile uint32 w_00;
-            volatile uint32 w_01;
-            volatile uint32 w_02;
-            volatile uint32 w_03;
-            volatile uint32 w_04;
-            volatile uint32 w_05;
-            volatile uint32 w_06;
-            volatile uint32 w_07;
-            volatile uint32 w_08;
-            volatile uint32 w_09;
-            volatile uint32 w_0A;
-            volatile uint32 w_0B;
-            volatile uint32 CMSTAT;
-    };
-    extern volatile ACM_w CM_w __asm__("CM_w") __attribute__((section("sfrs")));
-    
-}
+//namespace AFramework{
+//    
+//    class AWDT_w{
+//        public:
+//            volatile uint32 WDTCON;
+//            volatile uint32 WDTCON_CLR;
+//            volatile uint32 WDTCON_SET;
+//            volatile uint32 WDTCON_INV;
+//    };
+//    extern volatile AWDT_w WDT_w __asm__("WDT_w") __attribute__((section("sfrs")));
+//    
+//    class ARTCC_w{
+//        public:
+//            volatile uint32 RTCCON;
+//            volatile uint32 RTCCON_CLR;
+//            volatile uint32 RTCCON_SET;
+//            volatile uint32 RTCCON_INV;
+//            volatile uint32 RTCALRM;
+//            volatile uint32 RTCALRM_CLR;
+//            volatile uint32 RTCALRM_SET;
+//            volatile uint32 RTCALRM_INV;
+//            volatile uint32 RTCTIME;
+//            volatile uint32 RTCTIME_CLR;
+//            volatile uint32 RTCTIME_SET;
+//            volatile uint32 RTCTIME_INV;
+//            volatile uint32 RTCDATE;
+//            volatile uint32 RTCDATE_CLR;
+//            volatile uint32 RTCDATE_SET;
+//            volatile uint32 RTCDATE_INV;
+//            volatile uint32 ALRMTIME;
+//            volatile uint32 ALRMTIME_CLR;
+//            volatile uint32 ALRMTIME_SET;
+//            volatile uint32 ALRMTIME_INV;
+//            volatile uint32 ALRMDATE;
+//            volatile uint32 ALRMDATE_CLR;
+//            volatile uint32 ALRMDATE_SET;
+//            volatile uint32 ALRMDATE_INV;
+//    };
+//    extern volatile ARTCC_w RTCC_w __asm__("RTCC_w") __attribute__((section("sfrs")));
+//    
+//    class ATMR_w{
+//        public:
+//            volatile uint32 TxCON;
+//            volatile uint32 TxCON_CLR;
+//            volatile uint32 TxCON_SET;
+//            volatile uint32 TxCON_INV;
+//            volatile uint32 TMRx;
+//            volatile uint32 TMRx_CLR;
+//            volatile uint32 TMRx_SET;
+//            volatile uint32 TMRx_INV;
+//            volatile uint32 PRx;
+//            volatile uint32 PRx_CLR;
+//            volatile uint32 PRx_SET;
+//            volatile uint32 PRx_INV;
+//    };
+//    extern volatile ATMR_w ATMR1_w __asm__("ATMR1_w") __attribute__((section("sfrs")));
+//    extern volatile ATMR_w ATMR2_w __asm__("ATMR2_w") __attribute__((section("sfrs")));
+//    extern volatile ATMR_w ATMR3_w __asm__("ATMR3_w") __attribute__((section("sfrs")));
+//    extern volatile ATMR_w ATMR4_w __asm__("ATMR4_w") __attribute__((section("sfrs")));
+//    extern volatile ATMR_w ATMR5_w __asm__("ATMR5_w") __attribute__((section("sfrs")));
+//    
+//    class AIC_w{
+//        public:
+//            volatile uint32 ICxCON;
+//            volatile uint32 ICxCON_CLR;
+//            volatile uint32 ICxCON_SET;
+//            volatile uint32 ICxCON_INV;
+//            volatile uint32 ICxBUF;
+//    };
+//    extern volatile AIC_w IC1_w __asm__("IC1_w") __attribute__((section("sfrs")));
+//    extern volatile AIC_w IC2_w __asm__("IC2_w") __attribute__((section("sfrs")));
+//    extern volatile AIC_w IC3_w __asm__("IC3_w") __attribute__((section("sfrs")));
+//    extern volatile AIC_w IC4_w __asm__("IC4_w") __attribute__((section("sfrs")));
+//    extern volatile AIC_w IC5_w __asm__("IC5_w") __attribute__((section("sfrs")));
+//    
+//    class AOC_w{
+//        public:
+//            volatile uint32 OCxCON;
+//            volatile uint32 OCxCON_CLR;
+//            volatile uint32 OCxCON_SET;
+//            volatile uint32 OCxCON_INV;
+//            volatile uint32 OCxR;
+//            volatile uint32 OCxR_CLR;
+//            volatile uint32 OCxR_SET;
+//            volatile uint32 OCxR_INV;
+//            volatile uint32 OCxRS;
+//            volatile uint32 OCxRS_CLR;
+//            volatile uint32 OCxRS_SET;
+//            volatile uint32 OCxRS_INV;
+//    };
+//    extern volatile AOC_w OC1_w __asm__("OC1_w") __attribute__((section("sfrs")));
+//    extern volatile AOC_w OC2_w __asm__("OC2_w") __attribute__((section("sfrs")));
+//    extern volatile AOC_w OC3_w __asm__("OC3_w") __attribute__((section("sfrs")));
+//    extern volatile AOC_w OC4_w __asm__("OC4_w") __attribute__((section("sfrs")));
+//    extern volatile AOC_w OC5_w __asm__("OC5_w") __attribute__((section("sfrs")));
+//    
+//    class AI2C_w{
+//        public:
+//            volatile uint32 I2CxCON;
+//            volatile uint32 I2CxCON_CLR;
+//            volatile uint32 I2CxCON_SET;
+//            volatile uint32 I2CxCON_INV;
+//            volatile uint32 I2CxSTAT;
+//            volatile uint32 I2CxSTAT_CLR;
+//            volatile uint32 I2CxSTAT_SET;
+//            volatile uint32 I2CxSTAT_INV;
+//            volatile uint32 I2CxADD;
+//            volatile uint32 I2CxADD_CLR;
+//            volatile uint32 I2CxADD_SET;
+//            volatile uint32 I2CxADD_INV;
+//            volatile uint32 I2CxMSK;
+//            volatile uint32 I2CxMSK_CLR;
+//            volatile uint32 I2CxMSK_SET;
+//            volatile uint32 I2CxMSK_INV;
+//            volatile uint32 I2CxBRG;
+//            volatile uint32 I2CxBRG_CLR;
+//            volatile uint32 I2CxBRG_SET;
+//            volatile uint32 I2CxBRG_INV;
+//            volatile uint32 I2CxTRN;
+//            volatile uint32 I2CxTRN_CLR;
+//            volatile uint32 I2CxTRN_SET;
+//            volatile uint32 I2CxTRN_INV;
+//            volatile uint32 I2CxRCV;
+//    };
+//    extern volatile AI2C_w I2C1_w __asm__("I2C1_w") __attribute__((section("sfrs")));
+//    extern volatile AI2C_w I2C2_w __asm__("I2C2_w") __attribute__((section("sfrs")));
+//    
+//    class ASPI_w{
+//        public:
+//            volatile uint32 SPIxCON;
+//            volatile uint32 SPIxCON_CLR;
+//            volatile uint32 SPIxCON_SET;
+//            volatile uint32 SPIxCON_INV;
+//            volatile uint32 SPIxSTAT;
+//            volatile uint32 SPIxSTAT_CLR;
+//            volatile uint32 SPIxSTAT_SET;
+//            volatile uint32 SPIxSTAT_INV;
+//            volatile uint32 SPIxBUF;
+//            volatile uint32 w_00;
+//            volatile uint32 w_01;
+//            volatile uint32 w_02;
+//            volatile uint32 SPIxBRG;
+//            volatile uint32 SPIxBRG_CLR;
+//            volatile uint32 SPIxBRG_SET;
+//            volatile uint32 SPIxBRG_INV;
+//            volatile uint32 SPIxCON2;
+//            volatile uint32 SPIxCON2_CLR;
+//            volatile uint32 SPIxCON2_SET;
+//            volatile uint32 SPIxCON2_INV;
+//    };
+//    extern volatile ASPI_w SPI1_w __asm__("SPI1_w") __attribute__((section("sfrs")));
+//    extern volatile ASPI_w SPI2_w __asm__("SPI2_w") __attribute__((section("sfrs")));
+//    
+//    class AUART_w{
+//        public:
+//            volatile uint32 UxMODE;
+//            volatile uint32 UxMODE_CLR;
+//            volatile uint32 UxMODE_SET;
+//            volatile uint32 UxMODE_INV;
+//            volatile uint32 UxSTA;
+//            volatile uint32 UxSTA_CLR;
+//            volatile uint32 UxSTA_SET;
+//            volatile uint32 UxSTA_INV;
+//            volatile uint32 UxTXREG;
+//            volatile uint32 w_00;
+//            volatile uint32 w_01;
+//            volatile uint32 w_02;
+//            volatile uint32 UxRXREG;
+//            volatile uint32 w_03;
+//            volatile uint32 w_04;
+//            volatile uint32 w_05;
+//            volatile uint32 UxBRG;
+//            volatile uint32 UxBRG_CLR;
+//            volatile uint32 UxBRG_SET;
+//            volatile uint32 UxBRG_INV;
+//    };
+//    extern volatile AUART_w UART1_w __asm__("UART1_w") __attribute__((section("sfrs")));
+//    extern volatile AUART_w UART2_w __asm__("UART2_w") __attribute__((section("sfrs")));
+//    
+//    class APMP_w{
+//        public:
+//            volatile uint32 PMxCON;
+//            volatile uint32 PMxCON_CLR;
+//            volatile uint32 PMxCON_SET;
+//            volatile uint32 PMxCON_INV;
+//            volatile uint32 PMxMODE;
+//            volatile uint32 PMxMODE_CLR;
+//            volatile uint32 PMxMODE_SET;
+//            volatile uint32 PMxMODE_INV;
+//            volatile uint32 PMxADDR;
+//            volatile uint32 PMxADDR_CLR;
+//            volatile uint32 PMxADDR_SET;
+//            volatile uint32 PMxADDR_INV;
+//            volatile uint32 PMxDOUT;
+//            volatile uint32 PMxDOUT_CLR;
+//            volatile uint32 PMxDOUT_SET;
+//            volatile uint32 PMxDOUT_INV;
+//            volatile uint32 PMxDIN;
+//            volatile uint32 PMxDIN_CLR;
+//            volatile uint32 PMxDIN_SET;
+//            volatile uint32 PMxDIN_INV;
+//            volatile uint32 PMxAEN;
+//            volatile uint32 PMxAEN_CLR;
+//            volatile uint32 PMxAEN_SET;
+//            volatile uint32 PMxAEN_INV;
+//            volatile uint32 PMxSTAT;
+//            volatile uint32 PMxSTAT_CLR;
+//            volatile uint32 PMxSTAT_SET;
+//            volatile uint32 PMxSTAT_INV;
+//    };
+//    extern volatile APMP_w PMP_w __asm__("PMP_w") __attribute__((section("sfrs")));
+//    
+//    class AADC_w{
+//        public:
+//            volatile uint32 ADxCON1;
+//            volatile uint32 ADxCON1_CLR;
+//            volatile uint32 ADxCON1_SET;
+//            volatile uint32 ADxCON1_INV;
+//            volatile uint32 ADxCON2;
+//            volatile uint32 ADxCON2_CLR;
+//            volatile uint32 ADxCON2_SET;
+//            volatile uint32 ADxCON2_INV;
+//            volatile uint32 ADxCON3;
+//            volatile uint32 ADxCON3_CLR;
+//            volatile uint32 ADxCON3_SET;
+//            volatile uint32 ADxCON3_INV;
+//            volatile uint32 ADxCHS;
+//            volatile uint32 ADxCHS_CLR;
+//            volatile uint32 ADxCHS_SET;
+//            volatile uint32 ADxCHS_INV;
+//            volatile uint32 ADxCSSL;
+//            volatile uint32 ADxCSSL_CLR;
+//            volatile uint32 ADxCSSL_SET;
+//            volatile uint32 ADxCSSL_INV;
+//            volatile uint32 ADCxBUF0;
+//            volatile uint32 w_00;
+//            volatile uint32 w_01;
+//            volatile uint32 w_02;
+//            volatile uint32 ADCxBUF1;
+//            volatile uint32 w_03;
+//            volatile uint32 w_04;
+//            volatile uint32 w_05;
+//            volatile uint32 ADCxBUF2;
+//            volatile uint32 w_06;
+//            volatile uint32 w_07;
+//            volatile uint32 w_08;
+//            volatile uint32 ADCxBUF3;
+//            volatile uint32 w_09;
+//            volatile uint32 w_0A;
+//            volatile uint32 w_0B;
+//            volatile uint32 ADCxBUF4;
+//            volatile uint32 w_0C;
+//            volatile uint32 w_0D;
+//            volatile uint32 w_0E;
+//            volatile uint32 ADCxBUF5;
+//            volatile uint32 w_0F;
+//            volatile uint32 w_10;
+//            volatile uint32 w_11;
+//            volatile uint32 ADCxBUF6;
+//            volatile uint32 w_12;
+//            volatile uint32 w_13;
+//            volatile uint32 w_14;
+//            volatile uint32 ADCxBUF7;
+//            volatile uint32 w_15;
+//            volatile uint32 w_16;
+//            volatile uint32 w_17;
+//            volatile uint32 ADCxBUF8;
+//            volatile uint32 w_18;
+//            volatile uint32 w_19;
+//            volatile uint32 w_1A;
+//            volatile uint32 ADCxBUF9;
+//            volatile uint32 w_1B;
+//            volatile uint32 w_1C;
+//            volatile uint32 w_1D;
+//            volatile uint32 ADCxBUFA;
+//            volatile uint32 w_1E;
+//            volatile uint32 w_1F;
+//            volatile uint32 w_20;
+//            volatile uint32 ADCxBUFB;
+//            volatile uint32 w_21;
+//            volatile uint32 w_22;
+//            volatile uint32 w_23;
+//            volatile uint32 ADCxBUFC;
+//            volatile uint32 w_24;
+//            volatile uint32 w_25;
+//            volatile uint32 w_26;
+//            volatile uint32 ADCxBUFD;
+//            volatile uint32 w_27;
+//            volatile uint32 w_28;
+//            volatile uint32 w_29;
+//            volatile uint32 ADCxBUFE;
+//            volatile uint32 w_2A;
+//            volatile uint32 w_2B;
+//            volatile uint32 w_2C;
+//            volatile uint32 ADCxBUFF;
+//            volatile uint32 w_2D;
+//            volatile uint32 w_2E;
+//            volatile uint32 w_2F;
+//    };
+//    extern volatile AADC_w ADC_w __asm__("ADC_w") __attribute__((section("sfrs")));
+//    
+//    class ACVRef_w{
+//        public:
+//            volatile uint32 CVRxCON;
+//            volatile uint32 CVRxCON_CLR;
+//            volatile uint32 CVRxCON_SET;
+//            volatile uint32 CVRxCON_INV;
+//    };
+//    extern volatile ACVRef_w CVRef_w __asm__("CVRef_w") __attribute__((section("sfrs")));
+//    
+//    class ACM_w{
+//        public:
+//            volatile uint32 CM1CON;
+//            volatile uint32 CM1CON_CLR;
+//            volatile uint32 CM1CON_SET;
+//            volatile uint32 CM1CON_INV;
+//            volatile uint32 CM2CON;
+//            volatile uint32 CM2CON_CLR;
+//            volatile uint32 CM2CON_SET;
+//            volatile uint32 CM2CON_INV;
+//            volatile uint32 CM3CON;
+//            volatile uint32 CM3CON_CLR;
+//            volatile uint32 CM3CON_SET;
+//            volatile uint32 CM3CON_INV;
+//            volatile uint32 w_00;
+//            volatile uint32 w_01;
+//            volatile uint32 w_02;
+//            volatile uint32 w_03;
+//            volatile uint32 w_04;
+//            volatile uint32 w_05;
+//            volatile uint32 w_06;
+//            volatile uint32 w_07;
+//            volatile uint32 w_08;
+//            volatile uint32 w_09;
+//            volatile uint32 w_0A;
+//            volatile uint32 w_0B;
+//            volatile uint32 CMSTAT;
+//    };
+//    extern volatile ACM_w CM_w __asm__("CM_w") __attribute__((section("sfrs")));
+//    
+//    class ACMTU_w{
+//        public:
+//            volatile uint32 CMTUxCON;
+//            volatile uint32 CMTUxCON_CLR;
+//            volatile uint32 CMTUxCON_SET;
+//            volatile uint32 CMTUxCON_INV;
+//    };
+//    extern volatile ACMTU_w CMTU_w __asm__("CMTU_w") __attribute__((section("sfrs")));
+//    
+//    class AOSC_w{
+//        public:
+//            volatile uint32 OSCCON;
+//            volatile uint32 OSCCON_CLR;
+//            volatile uint32 OSCCON_SET;
+//            volatile uint32 OSCCON_INV;
+//            volatile uint32 OSCTUN;
+//            volatile uint32 OSCTUN_CLR;
+//            volatile uint32 OSCTUN_SET;
+//            volatile uint32 OSCTUN_INV;
+//            volatile uint32 REFOCON;
+//            volatile uint32 REFOCON_CLR;
+//            volatile uint32 REFOCON_SET;
+//            volatile uint32 REFOCON_INV;
+//            volatile uint32 REFOTRIM;
+//            volatile uint32 REFOTRIM_CLR;
+//            volatile uint32 REFOTRIM_SET;
+//            volatile uint32 REFOTRIM_INV;
+//    };
+//    extern volatile AOSC_w OSC_w __asm__("OSC_w") __attribute__((section("sfrs")));
+//    
+//    
+//}
 
 #define _WDTCON_WDTCLR_POSITION                  0x00000000
 #define _WDTCON_WDTCLR_MASK                      0x00000001

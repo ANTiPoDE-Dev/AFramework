@@ -32,20 +32,49 @@
 #include <limits>
 #include <cmath>
 
-#define ON_BIT          0x00008000U
-#define SIDL_BIT        0x00002000U
-#define TWDIS_BIT       0x00001000U
-#define TWIP_BIT        0x00000800U
-#define TGATE_BIT       0x00000080U
-#define T32_BIT         0x00000008U
-#define TSYNC_BIT       0x00000004U
-#define TCS_BIT         0x00000002U
-#define T16_PS_MASK     0x00000030U
-#define T32_PS_MASK     0x00000070U
-#define TxPS_BIT_POS    0x00000004U
-#define ZERO            0x00000000U
+#define _TxCON_ON_POSITION          0x0000000F
+#define _TxCON_ON_MASK              0x00008000
+#define _TxCON_ON_LENGTH            0x00000001
 
-class AFramework::AAbstract16bitTimer::aTMRx_w{
+#define _TxCON_SIDL_POSITION        0x0000000D
+#define _TxCON_SIDL_MASK            0x00002000
+#define _TxCON_SIDL_LENGTH          0x00000001
+
+#define _TxCON_TWDIS_POSITION       0x0000000C
+#define _TxCON_TWDIS_MASK           0x00001000
+#define _TxCON_TWDIS_LENGTH         0x00000001
+
+#define _TxCON_TWIP_POSITION        0x0000000B
+#define _TxCON_TWIP_MASK            0x00000800
+#define _TxCON_TWIP_LENGTH          0x00000001
+
+#define _TxCON_TGATE_POSITION       0x00000007
+#define _TxCON_TGATE_MASK           0x00000080
+#define _TxCON_TGATE_LENGTH         0x00000001
+
+#define _TxCON_16_TCKPS_POSITION    0x00000004
+#define _TxCON_16_TCKPS_MASK        0x00000030
+#define _TxCON_16_TCKPS_LENGTH      0x00000002
+
+#define _TxCON_32_TCKPS_POSITION    0x00000004
+#define _TxCON_32_TCKPS_MASK        0x00000070
+#define _TxCON_32_TCKPS_LENGTH      0x00000003
+
+#define _TxCON_T32_POSITION         0x00000003
+#define _TxCON_T32_MASK             0x00000008
+#define _TxCON_T32_LENGTH           0x00000001
+
+#define _TxCON_TSYNC_POSITION       0x00000002
+#define _TxCON_TSYNC_MASK           0x00000004
+#define _TxCON_TSYNC_LENGTH         0x00000001
+
+#define _TxCON_TCS_POSITION         0x00000001
+#define _TxCON_TCS_MASK             0x00000002
+#define _TxCON_TCS_LENGTH           0x00000001
+
+#define ZERO
+
+class AFramework::AAbstract16bitTimer::ATMR_w{
     public:
         volatile uint32 m_TxCON;
         volatile uint32 m_TxCON_CLR;
@@ -61,11 +90,11 @@ class AFramework::AAbstract16bitTimer::aTMRx_w{
         volatile uint32 m_PRx_INV;
 };
 
-extern volatile AFramework::AAbstract16bitTimer::aTMRx_w TMR1_w __asm__("TMR1_w") __attribute__((section("sfrs")));
-extern volatile AFramework::AAbstract16bitTimer::aTMRx_w TMR2_w __asm__("TMR2_w") __attribute__((section("sfrs")));
-extern volatile AFramework::AAbstract16bitTimer::aTMRx_w TMR3_w __asm__("TMR3_w") __attribute__((section("sfrs")));
-extern volatile AFramework::AAbstract16bitTimer::aTMRx_w TMR4_w __asm__("TMR4_w") __attribute__((section("sfrs")));
-extern volatile AFramework::AAbstract16bitTimer::aTMRx_w TMR5_w __asm__("TMR5_w") __attribute__((section("sfrs")));
+extern volatile AFramework::AAbstract16bitTimer::ATMR_w TMR1_w __asm__("TMR1_w") __attribute__((section("sfrs")));
+extern volatile AFramework::AAbstract16bitTimer::ATMR_w TMR2_w __asm__("TMR2_w") __attribute__((section("sfrs")));
+extern volatile AFramework::AAbstract16bitTimer::ATMR_w TMR3_w __asm__("TMR3_w") __attribute__((section("sfrs")));
+extern volatile AFramework::AAbstract16bitTimer::ATMR_w TMR4_w __asm__("TMR4_w") __attribute__((section("sfrs")));
+extern volatile AFramework::AAbstract16bitTimer::ATMR_w TMR5_w __asm__("TMR5_w") __attribute__((section("sfrs")));
 
 volatile AFramework::ATimer1 AFramework::Timer1(&TMR1_w);
 //    volatile AFramework::ATimer2 AFramework::Timer2;
@@ -74,13 +103,13 @@ volatile AFramework::ATimer1 AFramework::Timer1(&TMR1_w);
 //    volatile AFramework::ATimer5 AFramework::Timer5;
 
 
-AFramework::AAbstract16bitTimer::AAbstract16bitTimer(volatile aTMRx_w * w) : m_treg(w), m_base(0), m_terr(0){
+AFramework::AAbstract16bitTimer::AAbstract16bitTimer(volatile ATMR_w * w) : m_treg(w), m_base(0), m_terr(0){
     close();
 }
 
 double AFramework::AAbstract16bitTimer::setSynchronousInternal16(const double baseTime, const bool idleStop) volatile{
     /*  uso rawcfg con l'eventuale bit di idle                                  */
-    rawcfg((idleStop ? SIDL_BIT : Quick::NoOne));
+    rawcfg((idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  uso la funzione virtuale che setta i parametri e ritorna l'errore       */
     return setpar(baseTime, System::busFrequency());
 }
@@ -92,14 +121,14 @@ bool AFramework::AAbstract16bitTimer::open() volatile{
         return false;
     }
     /*  altrimenti apro il timer tramite il registro set                        */
-    m_treg->m_TxCON_SET = ON_BIT;
+    m_treg->m_TxCON_SET = _TxCON_ON_MASK;
     /*  e verifico che l'operazione sia andata a buon fine                      */
     return isOpen();
 }
 
 void AFramework::AAbstract16bitTimer::close() volatile{
     /*  spengo il timer                                                         */
-    m_treg->m_TxCON_CLR = ON_BIT;
+    m_treg->m_TxCON_CLR = _TxCON_ON_MASK;
 }
 
 void AFramework::AAbstract16bitTimer::clear() volatile{
@@ -118,7 +147,7 @@ void AFramework::AAbstract16bitTimer::reset() volatile{
 
 bool AFramework::AAbstract16bitTimer::isOpen() const volatile{
     /*  ritorno l'and con il bit on                                             */
-    return (m_treg->m_TxCON & ON_BIT);
+    return (m_treg->m_TxCON & _TxCON_ON_MASK);
 }
 
 AFramework::uint32 AFramework::AAbstract16bitTimer::rawTime() const volatile{
@@ -149,25 +178,8 @@ void AFramework::AAbstract16bitTimer::rawcfg(const volatile uint32 b) volatile{
     m_treg->m_TxCON_SET = b;
 }
 
-AFramework::AAbstract32bitTimer::AAbstract32bitTimer(volatile aTMRx_w * w) : AAbstract16bitTimer(w), m_flag(false){
+AFramework::AAbstract32bitTimer::AAbstract32bitTimer(volatile ATMR_w * w) : AAbstract16bitTimer(w), m_flag(false){
     
-}
-
-bool AFramework::AAbstract32bitTimer::isAttached() const volatile{
-    /*  ritorno il flag di concatenazione                                       */
-    return m_flag;
-}
-
-double AFramework::AAbstract32bitTimer::setSynchronousInternal32(const double baseTime, const bool idleStop) volatile{
-    /*  se il timer è master (timer 2 o 4)                                      */
-    if(isMaster()){
-        /*  uso rawcfg con l'eventuale bit di idle                              */
-        rawcfg((idleStop ? SIDL_BIT : Quick::NoOne));
-        /*  uso la funzione virtuale che setta i parametri e ritorna l'errore   */
-        return setpar(baseTime, System::busFrequency(), true);        
-    }
-    /*  altrimenti ritorno errore massimo (timer 3 o 5)                         */
-    return std::numeric_limits<double>::max();
 }
 
 double AFramework::AAbstract32bitTimer::setpar(const double t, const double f, const bool w) volatile{
@@ -207,7 +219,7 @@ double AFramework::AAbstract32bitTimer::setpar(const double t, const double f, c
     /*  setto il registro PR                                                    */
     m_treg->m_PRx_SET = PRv;
     /*  configuro il prescaler                                                  */
-    m_treg->m_TxCON_SET = (PSv << TxPS_BIT_POS);
+    m_treg->m_TxCON_SET = (PSv << _TxCON_32_TCKPS_POSITION);
     /*  imposto il tempo base                                                   */
     m_base = PSn[PSv] / fre;
     /*  salvo l'errore                                                          */
@@ -221,14 +233,14 @@ double AFramework::AAbstract32bitTimer::setpar(const double t, const double f, c
 /*  TIMER 1                                                                                                     */
 /*--------------------------------------------------------------------------------------------------------------*/
 
-AFramework::ATimer1::ATimer1(volatile aTMRx_w * w) : AAbstract16bitTimer(w){
+AFramework::ATimer1::ATimer1(volatile ATMR_w * w) : AAbstract16bitTimer(w){
     /*  Nulla da commentare                                                     */
 }
 
 double AFramework::ATimer1::setSynchronousExternal16(const double extFreq, const double baseTime, const bool idleStop) volatile{
     /*  uso rawcfg impostando la sorgente di clock esterna, il bit di sync e    */
     /*  l'eventuale bit di idle                                                 */
-    rawcfg(TSYNC_BIT | TCS_BIT | (idleStop ? SIDL_BIT : Quick::NoOne));
+    rawcfg(_TxCON_TSYNC_MASK | _TxCON_TCS_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     
     #if defined(ANTIPODE32MR)
 
@@ -318,7 +330,7 @@ double AFramework::ATimer1::setGated16(const double baseTime, bool idleStop) vol
     #endif
     /*  uso rawcfg impostando la modalita' gated, il bit di sync e l'eventuale  */
     /*  bit di idle                                                             */
-    rawcfg(TGATE_BIT | (idleStop ? SIDL_BIT : Quick::NoOne));
+    rawcfg(_TxCON_TGATE_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  setto i parametri e ritorno l'errore                                    */
     return setpar(baseTime, System::busFrequency());
 }
@@ -358,7 +370,7 @@ double AFramework::ATimer1::setpar(const double t, const double f, const bool w)
     /*  setto il registro PR                                                    */
     m_treg->m_PRx_SET = PRv;
     /*  configuro il prescaler                                                  */
-    m_treg->m_TxCON_SET = (PSv << TxPS_BIT_POS);
+    m_treg->m_TxCON_SET = (PSv << _TxCON_16_TCKPS_POSITION);
     /*  imposto il tempo base                                                   */
     m_base = PSn[PSv] / fre;
     /*  salvo l'errore                                                          */
