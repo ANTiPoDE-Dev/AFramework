@@ -30,8 +30,6 @@
 #define APORT_A
 
 #include "ACore.h"
-#include "AIODevice.h"
-#include "AErrorNotifier.h"
 
 namespace AFramework{
 
@@ -125,7 +123,7 @@ namespace AFramework{
             volatile uint32 m_CNSTATx_INV;
     };
 
-    #ifdef ANTIPODE32MR
+    #if defined(ANTIPODE32MR)
 
         extern const volatile uint32 A0;
         extern const volatile uint32 A1;
@@ -165,7 +163,7 @@ namespace AFramework{
         extern volatile AHardwarePort PortB;
         extern volatile AHardwarePort PortC;
         
-    #elif defined PIC32MX270f256B
+    #elif defined(__32MX270F256B__)
 
         extern const volatile uint32 A0;
         extern const volatile uint32 A1;
@@ -190,6 +188,48 @@ namespace AFramework{
         
         extern volatile AHardwarePort PortA;
         extern volatile AHardwarePort PortB;
+        
+    #elif defined(__32MX270F256D__)
+
+        extern const volatile uint32 A0;
+        extern const volatile uint32 A1;
+        extern const volatile uint32 A2;
+        extern const volatile uint32 A3;
+        extern const volatile uint32 A4;
+        extern const volatile uint32 A7;
+        extern const volatile uint32 A8;
+        extern const volatile uint32 A9;
+        extern const volatile uint32 A10;
+
+        extern const volatile uint32 B0;
+        extern const volatile uint32 B1;
+        extern const volatile uint32 B2;
+        extern const volatile uint32 B3;
+        extern const volatile uint32 B4;
+        extern const volatile uint32 B5;
+        extern const volatile uint32 B7;
+        extern const volatile uint32 B8;
+        extern const volatile uint32 B9;
+        extern const volatile uint32 B10;
+        extern const volatile uint32 B11;
+        extern const volatile uint32 B13;
+        extern const volatile uint32 B14;
+        extern const volatile uint32 B15;
+
+        extern const volatile uint32 C0;
+        extern const volatile uint32 C1;
+        extern const volatile uint32 C2;
+        extern const volatile uint32 C3;
+        extern const volatile uint32 C4;
+        extern const volatile uint32 C5;
+        extern const volatile uint32 C6;
+        extern const volatile uint32 C7;
+        extern const volatile uint32 C8;
+        extern const volatile uint32 C9;
+        
+        extern volatile AHardwarePort PortA;
+        extern volatile AHardwarePort PortB;
+        extern volatile AHardwarePort PortC;
         
     #else
 

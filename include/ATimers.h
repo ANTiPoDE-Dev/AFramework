@@ -12,93 +12,68 @@
 
 namespace AFramework{
     
-    class AAbstractTimer{
+    class AAbstract16bitTimer{
         public:
-            AAbstractTimer();
-            virtual bool open(const double period) volatile = 0;
-            virtual void close() volatile;
-            virtual void clear() volatile;
-            virtual bool isOpen() const volatile;
-            virtual uint32 rawTime() const volatile;
-            virtual double elapsedTime() const volatile;
-            virtual double period() const volatile;
-            virtual double frequency() const volatile;
-            virtual uint8 prescaler() const volatile = 0;
+            class aTMRx_w;            
+            
+            AAbstract16bitTimer(volatile aTMRx_w * w);
+            double setSynchronousInternal16(const double baseTime, const bool idleStop = false) volatile;
+            bool open() volatile;
+            void close() volatile;
+            void clear() volatile;
+            void reset() volatile;
+            bool isOpen() const volatile;
+            uint32 rawTime() const volatile;
+            double elapsedTime() const volatile;
+            double error() const volatile;
+            double resolution() const volatile;
         protected:
-            volatile uint32 m_TxCON;
-            volatile uint32 m_TxCON_CLR;
-            volatile uint32 m_TxCON_SET;
-            volatile uint32 m_TxCON_INV;
-            volatile uint32 m_TMRx;
-            volatile uint32 m_TMRx_CLR;
-            volatile uint32 m_TMRx_SET;
-            volatile uint32 m_TMRx_INV;
-            volatile uint32 m_PRx;
-            volatile uint32 m_PRx_CLR;
-            volatile uint32 m_PRx_SET;
-            volatile uint32 m_PRx_INV;
+            virtual double setpar(const double t, const double f, const bool w = false) volatile = 0;
+            void rawcfg(const volatile uint32 b) volatile;
+            volatile aTMRx_w * m_treg;
+            volatile double    m_base;
+            volatile double    m_terr;
     };
     
-    #ifdef ANTIPODE32MR
-    
-    class ATimer1 : public AAbstractTimer{
-        friend class System;
+    class ATimer1 : public AAbstract16bitTimer{
         public:
-            enum Timer1ClockSource{
-                System,
-                A4
-            };
-            ATimer1();
-            bool open(const double period) volatile;
-            bool open(const double period, const Timer1ClockSource src = System, const bool idleStop = false) volatile;
-            uint8 prescaler() const volatile;
+            ATimer1(volatile aTMRx_w * w);
+            double setSynchronousExternal16(const double extFreq, const double baseTime, const bool idleStop = false) volatile;
+            double setAsynchronousExternal16(const double baseTime, const bool idleStop = false) volatile;
+            double setGated16(const double baseTime, bool idleStop = false) volatile;
+        private:
+            double setpar(const double t, const double f, const bool w = false) volatile;
     };
     
-//    class ATimer2 : public AAbstractTimer{
-//        friend class System;
-//        public:
-//            ACascadedTimer();
-//            void open() volatile;
-//            uint8 prescaler() const volatile;
-//    };
-//    
-//    class ATimer3 : public AAbstractTimer{
-//        friend class System;
-//        public:
-//            ACascadedTimer();
-//            void open() volatile;
-//            uint8 prescaler() const volatile;
-//    };
-//    
-//    class ATimer4 : public AAbstractTimer{
-//        friend class System;
-//        public:
-//            ACascadedTimer();
-//            void open() volatile;
-//            uint8 prescaler() const volatile;
-//    };
-//    
-//    class ATimer5 : public AAbstractTimer{
-//        friend class System;
-//        public:
-//            ACascadedTimer();
-//            void open() volatile;
-//            uint8 prescaler() const volatile;
-//    };
+    class AAbstract32bitTimer : public AAbstract16bitTimer{
+        public:
+            AAbstract32bitTimer(volatile aTMRx_w * w);
+            bool isAttached() const volatile;
+            double setSynchronousInternal32(const double baseTime, const bool idleStop = false) volatile;
+            virtual bool isMaster() const volatile = 0;
+        protected:
+            double setpar(const double t, const double f, const bool w = false) volatile;
+            volatile bool m_flag;
+            
+    };
+
+    class ATimer2 : public AAbstract32bitTimer{
+        public:
+            ATimer2(volatile aTMRx_w * w);
+            uint32 pid() const volatile;
+            bool isMaster() const volatile;
+            double setSynchronousExternal16(const RPGroup1 gpio, const double extFreq, const double baseTime, const bool idleStop = false) volatile;
+            double setSynchronousExternal32(const RPGroup1 gpio, const double baseTime, const bool idleStop = false) volatile;
+            double setGated16(const RPGroup1 gpio, const double baseTime, bool idleStop = false);
+            double setGated32(const RPGroup1 gpio, const double baseTime, bool idleStop = false);
+    };
     
-//    extern volatile ATimer1 Timer1;
+      extern volatile ATimer1 Timer1;
 //    extern volatile ATimer2 Timer2;
 //    extern volatile ATimer3 Timer3;
 //    extern volatile ATimer4 Timer4;
 //    extern volatile ATimer5 Timer5;
-    
-    #elif defined PIC32MX270F256B
 
-    #else
-
-        #error UNDEFINED BOARD OR PROCESSOR
-
-    #endif
 }
 #endif	/* ATIMERS_H */
 

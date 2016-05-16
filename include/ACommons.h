@@ -43,6 +43,20 @@ namespace AFramework{
     typedef unsigned long long  uint64;
     typedef signed long long    sint64;
     
+    typedef volatile unsigned char       vuchar;
+    typedef volatile char                vschar;
+    typedef volatile unsigned char       vuint8;
+    typedef volatile signed char         vsint8;
+    typedef volatile unsigned short int  vuint16;
+    typedef volatile signed short int    vsint16;
+    typedef volatile unsigned int        vuint32;
+    typedef volatile signed int          vsint32;
+    typedef volatile unsigned long long  vuint64;
+    typedef volatile signed long long    vsint64;
+    typedef volatile double              vdouble;
+    typedef volatile float               vfloat;
+    typedef volatile bool                vbool;
+    
     namespace Quick{
         const volatile uint32 All   = 0xFFFFFFFFU;
         const volatile uint32 NoOne = 0x00000000U;
@@ -55,7 +69,6 @@ namespace AFramework{
     };
     
     enum Priority{
-        IntOff,
         Ip1,
         Ip2,
         Ip3,
@@ -72,7 +85,7 @@ namespace AFramework{
         Isp3,
     };
     
-    #ifdef ANTIPODE32MR
+    #if defined(ANTIPODE32MR)
     
         enum RPGroup1{
             RPA0  = 0x0000U,
@@ -114,44 +127,90 @@ namespace AFramework{
             RPC4  = 0x0007U        
         };
     
-    #elif defined PIC32MX270F256B
+    #elif defined(__32MX270F256B__)
     
         enum RPGroup1{
-            RPA0  = 0x0000U,
-            RPB3  = 0x0001U,
-            RPB4  = 0x0002U,
-            RPB15 = 0x0003U,
-            RPB7  = 0x0004U
+            RPA0,
+            RPB3,
+            RPB4,
+            RPB15,
+            RPB7
         };
     
         enum RPGroup2{
-            RPA1  = 0x0000U,
-            RPB5  = 0x0001U,
-            RPB1  = 0x0002U,
-            RPB11 = 0x0003U,
-            RPB8  = 0x0004U
+            RPA1,
+            RPB5,
+            RPB1,
+            RPB11,
+            RPB8
         };
     
         enum RPGroup3{
-            RPA2  = 0x0000U,
-            RPB6  = 0x0001U,
-            RP4A  = 0x0002U,
-            RPB13 = 0x0003U,
-            RPB2  = 0x0004U
+            RPA2,
+            RPB6,
+            RP4A,
+            RPB13,
+            RPB2
         };
     
         enum RPGroup4{
-            RPA3  = 0x0000U,
-            RPB14 = 0x0001U,
-            RPB0  = 0x0002U,
-            RPB10 = 0x0003U,
-            RPB9  = 0x0004U        
+            RPA3,
+            RPB14,
+            RPB0,
+            RPB10,
+            RPB9
+        };
+    
+    #elif defined(__32MX270F256D__)
+    
+        enum RPGroup1{
+            RPA0,
+            RPB3,
+            RPB4,
+            RPB15,
+            RPB7,
+            RPC7,
+            RPC0,
+            RPC5
+        };
+    
+        enum RPGroup2{
+            RPA1,
+            RPB5,
+            RPB1,
+            RPB11,
+            RPB8,
+            RPA8,
+            RPC8,
+            RPA9
+        };
+    
+        enum RPGroup3{
+            RPA2,
+            RPB6,
+            RP4A,
+            RPB13,
+            RPB2,
+            RPC6,
+            RPC1,
+            RPC3
+        };
+    
+        enum RPGroup4{
+            RPA3,
+            RPB14,
+            RPB0,
+            RPB10,
+            RPB9,
+            RPC9,
+            RPC2,
+            RPC4
         };
     
     #else
-    
 
-        
+    #error UNDEFINED BOARD OR PROCESSOR
+
     #endif
 }
 #endif // ACOMMONS_H

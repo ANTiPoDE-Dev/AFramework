@@ -46,7 +46,7 @@
 #define _BIT_15_ 0x00008000U
 #define _BIT_MS_ 0x0000FFFFU
 
-#ifdef ANTIPODE32MR
+#if defined(ANTIPODE32MR)
 
     #define _PORTA_ 0x00010000U
     #define _PORTB_ 0x00020000U
@@ -93,7 +93,7 @@
     volatile AFramework::AHardwarePort AFramework::PortB __attribute__((address(PORTBAD)));
     volatile AFramework::AHardwarePort AFramework::PortC __attribute__((address(PORTCAD)));
 
-#elif defined PIC32MX270F256B
+#elif defined(__32MX270F256B__)
     
     #define _PORTA_ 0x00010000U
     #define _PORTB_ 0x00020000U
@@ -123,6 +123,55 @@
     
     volatile AFramework::AHardwarePort AFramework::PortA __attribute__((address(PORTAAD)));
     volatile AFramework::AHardwarePort AFramework::PortB __attribute__((address(PORTBAD)));
+
+#elif defined(__32MX270F256D__)
+    
+    #define _PORTA_ 0x00010000U
+    #define _PORTB_ 0x00020000U
+    #define _PORTC_ 0x00040000U
+    #define PORTAAD 0xBF886000U
+    #define PORTBAD 0xBF886100U
+    #define PORTCAD 0xBF886200U
+
+    const volatile AFramework::uint32 AFramework::A0  = (_PORTA_ | _BIT_00_);
+    const volatile AFramework::uint32 AFramework::A1  = (_PORTA_ | _BIT_01_);
+    const volatile AFramework::uint32 AFramework::A2  = (_PORTA_ | _BIT_02_);
+    const volatile AFramework::uint32 AFramework::A3  = (_PORTA_ | _BIT_03_);    
+    const volatile AFramework::uint32 AFramework::A4  = (_PORTA_ | _BIT_04_);
+    const volatile AFramework::uint32 AFramework::A7  = (_PORTA_ | _BIT_07_);
+    const volatile AFramework::uint32 AFramework::A8  = (_PORTA_ | _BIT_08_);
+    const volatile AFramework::uint32 AFramework::A9  = (_PORTA_ | _BIT_09_);
+    const volatile AFramework::uint32 AFramework::A10 = (_PORTA_ | _BIT_10_);
+
+    const volatile AFramework::uint32 AFramework::B0  = (_PORTB_ | _BIT_00_);
+    const volatile AFramework::uint32 AFramework::B1  = (_PORTB_ | _BIT_01_);
+    const volatile AFramework::uint32 AFramework::B2  = (_PORTB_ | _BIT_02_);
+    const volatile AFramework::uint32 AFramework::B3  = (_PORTB_ | _BIT_03_);
+    const volatile AFramework::uint32 AFramework::B4  = (_PORTB_ | _BIT_04_);
+    const volatile AFramework::uint32 AFramework::B5  = (_PORTB_ | _BIT_05_);
+    const volatile AFramework::uint32 AFramework::B7  = (_PORTB_ | _BIT_07_);
+    const volatile AFramework::uint32 AFramework::B8  = (_PORTB_ | _BIT_08_);
+    const volatile AFramework::uint32 AFramework::B9  = (_PORTB_ | _BIT_09_);
+    const volatile AFramework::uint32 AFramework::B10 = (_PORTB_ | _BIT_10_);
+    const volatile AFramework::uint32 AFramework::B11 = (_PORTB_ | _BIT_11_);
+    const volatile AFramework::uint32 AFramework::B13 = (_PORTB_ | _BIT_13_);
+    const volatile AFramework::uint32 AFramework::B14 = (_PORTB_ | _BIT_14_);
+    const volatile AFramework::uint32 AFramework::B15 = (_PORTB_ | _BIT_15_);
+
+    const volatile AFramework::uint32 AFramework::C0  = (_PORTC_ | _BIT_00_);
+    const volatile AFramework::uint32 AFramework::C1  = (_PORTC_ | _BIT_01_);
+    const volatile AFramework::uint32 AFramework::C2  = (_PORTC_ | _BIT_02_);
+    const volatile AFramework::uint32 AFramework::C3  = (_PORTC_ | _BIT_03_);
+    const volatile AFramework::uint32 AFramework::C4  = (_PORTC_ | _BIT_04_);
+    const volatile AFramework::uint32 AFramework::C5  = (_PORTC_ | _BIT_05_);
+    const volatile AFramework::uint32 AFramework::C6  = (_PORTC_ | _BIT_06_);
+    const volatile AFramework::uint32 AFramework::C7  = (_PORTC_ | _BIT_07_);
+    const volatile AFramework::uint32 AFramework::C8  = (_PORTC_ | _BIT_08_);
+    const volatile AFramework::uint32 AFramework::C9  = (_PORTC_ | _BIT_09_);
+    
+    volatile AFramework::AHardwarePort AFramework::PortA __attribute__((address(PORTAAD)));
+    volatile AFramework::AHardwarePort AFramework::PortB __attribute__((address(PORTBAD)));
+    volatile AFramework::AHardwarePort AFramework::PortC __attribute__((address(PORTCAD)));
     
 #else
     
@@ -356,18 +405,18 @@ bool AFramework::AHardwarePort::isInterrutptEnabled() const volatile{
     
     /*  dovrebbe venire qualcosa tipo l'and con CNCON (bit ON) e l'enable del   */
     /*  controller dell'interrupt                                               */
-    #warning "bool AFramework::AHardwarePort::isInterrutptEnabled() const volatile non ancora implementata"
+    #warning "Check dell'interrupt non ancora implementato"
     return false;
 }
 
 void AFramework::AHardwarePort::enableInterrupt(const uint32 gpio, const Priority pri, const SubPriority, const bool idleStop) volatile{
-    #warning "void AFramework::AHardwarePort::enableInterrupt(const uint32 gpio, const Priority pri, const SubPriority, const bool idleStop) volatile non ancora implementata"
+    #warning "Abilitazione interrupt non ancora implementata"
 }
 
 void AFramework::AHardwarePort::disableInterrupt() volatile{
     /*  utilizzo il registro clr associato                                      */
     m_CNCONx_CLR = Quick::All;
-    #warning "void AFramework::AHardwarePort::disableInterrupt() volatile bisogna ancora disabilitare dal controller dell'interrupt"
+    #warning "Disabilitazione da controller dell'interrupt non ancora implementata"
 }
 
 AFramework::uint32 AFramework::AHardwarePort::changeNoticeStatus() const volatile{
@@ -384,5 +433,5 @@ void AFramework::AHardwarePort::resetInterruptFlag(const uint32 gpio) volatile{
     /*  azzero i flag di change notice sui gpio richiesti (generalmente tutti)  */
     /*  ma non sapendo cosa la gente ha in testa devo dare questa possibilità   */
     m_CNSTATx_CLR = gpio;
-    #warning "void AFramework::AHardwarePort::resetInterruptFlag() A_CONST_COHERENT manca da pulire il flag dal controller dell'interrupt"
+    #warning "Pulizia flag interrupt da controller dell'interrupt non ancora implementata"
 }

@@ -37,9 +37,13 @@ namespace AFramework{
 
     class System{
         public:
+            
+            static const uint32 Freq40MHz;
+            static const uint32 Freq32KHz;
+            
             template <class T>  static bool safeAlloc(T ** ptr, const uint32 & num = 1);
-
-            static bool init(size_t heapSize, const uint32 & systemClock = 40000000U, const uint32 & peripheralClock = 40000000U, const uint32 & secondaryOsc = 0U);
+            
+            static bool init(size_t heapSize, const uint32 & systemClock = Freq40MHz, const uint32 & peripheralClock = Freq40MHz, const uint32 & secondaryOsc = 0U);
             static void kill();
             static size_t memstat();
             static size_t heapSize();
@@ -51,6 +55,8 @@ namespace AFramework{
             static double secPeriod();
             static uint32 busFrequency();
             static double busPeriod();
+            static void enableInterrupt();
+            static void disableInterrupt();
         private:
             static void scsusp();
             static void scwake();

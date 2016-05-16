@@ -13,6 +13,7 @@
       <itemPath>../../include/APorts.h</itemPath>
       <itemPath>../../include/AIODevice.h</itemPath>
       <itemPath>../../include/AErrorNotifier.h</itemPath>
+      <itemPath>../../include/Ap32mx270f256d.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -28,6 +29,9 @@
       <itemPath>../../src/ATimers.cpp</itemPath>
       <itemPath>../../src/AErrorNotifier.cpp</itemPath>
       <itemPath>../../src/AConfigurationBits.cpp</itemPath>
+      <itemPath>ATimersReg.S</itemPath>
+      <itemPath>../../src/ACoreReg.S</itemPath>
+      <itemPath>../../src/Ap32mx270f256dRegDefs.S</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -47,7 +51,7 @@
         <targetDevice>PIC32MX270F256D</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>PICkit3PlatformTool</platformTool>
+        <platformTool>Simulator</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
@@ -143,7 +147,7 @@
         <property key="optimization-level" value=""/>
         <property key="preprocessor-macros" value=""/>
         <property key="remove-unused-sections" value="false"/>
-        <property key="report-memory-usage" value="true"/>
+        <property key="report-memory-usage" value="false"/>
         <property key="stack-size" value=""/>
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>
@@ -341,7 +345,7 @@
         <property key="codecoverage.outputfile" value=""/>
         <property key="oscillator.auxfrequency" value="120"/>
         <property key="oscillator.auxfrequencyunit" value="Mega"/>
-        <property key="oscillator.frequency" value="1"/>
+        <property key="oscillator.frequency" value="40"/>
         <property key="oscillator.frequencyunit" value="Mega"/>
         <property key="oscillator.rcfrequency" value="250"/>
         <property key="oscillator.rcfrequencyunit" value="Kilo"/>
