@@ -9,10 +9,12 @@ int main(){
     
     System::init(16392);
 
-    Timer1.setSynchronousInternal16(0.001);
+    Timer2.setSynchronousInternal32(1000);
+    Timer2.open();
     
     while(1){
-
+        double t = Timer2.elapsedTime();
+        double k = t + 1;
     }
     return 0;
 }

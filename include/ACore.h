@@ -43,17 +43,17 @@ namespace AFramework{
             
             template <class T>  static bool safeAlloc(T ** ptr, const uint32 & num = 1);
             
-            static bool init(size_t heapSize, const uint32 & systemClock = Freq40MHz, const uint32 & peripheralClock = Freq40MHz, const uint32 & secondaryOsc = 0U);
+            static bool init(size_t heapSize, const double & systemClock = Freq40MHz, const double & peripheralClock = Freq40MHz, const double & secondaryOsc = 0U);
             static void kill();
             static size_t memstat();
             static size_t heapSize();
             static void * malloc(size_t size);
             static bool free(void * address);
-            static uint32 priFrequency();
+            static double priFrequency();
             static double priPeriod();
-            static uint32 secFrequency();
+            static double secFrequency();
             static double secPeriod();
-            static uint32 busFrequency();
+            static double busFrequency();
             static double busPeriod();
             static void enableInterrupt();
             static void disableInterrupt();
@@ -68,9 +68,9 @@ namespace AFramework{
             static size_t    m_heap_size;
             static size_t    m_heap_busy;
             static size_t    m_xc32_offs;
-            static uint32    m_pri_clock;
-            static uint32    m_sec_clock;
-            static uint32    m_bus_clock;
+            static double    m_pri_clock;
+            static double    m_sec_clock;
+            static double    m_bus_clock;
             static bool      m_init_flag;
     };
 

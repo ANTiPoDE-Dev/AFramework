@@ -13,7 +13,7 @@
       <itemPath>../../include/APorts.h</itemPath>
       <itemPath>../../include/AIODevice.h</itemPath>
       <itemPath>../../include/AErrorNotifier.h</itemPath>
-      <itemPath>../../include/ABits.h</itemPath>
+      <itemPath>../../include/ARemappablePeripheral.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -29,9 +29,7 @@
       <itemPath>../../src/ATimers.cpp</itemPath>
       <itemPath>../../src/AErrorNotifier.cpp</itemPath>
       <itemPath>../../src/AConfigurationBits.cpp</itemPath>
-      <itemPath>ATimersReg.S</itemPath>
-      <itemPath>../../src/ACoreReg.S</itemPath>
-      <itemPath>../../src/Ap32mx270f256dRegDefs.S</itemPath>
+      <itemPath>../../src/ATimersReg.S</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

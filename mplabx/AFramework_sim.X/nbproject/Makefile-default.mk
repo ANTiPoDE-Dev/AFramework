@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ATimersReg.S ../../src/ACoreReg.S ../../src/Ap32mx270f256dRegDefs.S
+SOURCEFILES_QUOTED_IF_SPACED=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/ATimersReg.S
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/ATimersReg.o ${OBJECTDIR}/_ext/1445274692/ACoreReg.o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/ACore.o.d ${OBJECTDIR}/_ext/1445274692/AString.o.d ${OBJECTDIR}/_ext/1445274692/APorts.o.d ${OBJECTDIR}/_ext/1445274692/ATimers.o.d ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d ${OBJECTDIR}/ATimersReg.o.d ${OBJECTDIR}/_ext/1445274692/ACoreReg.o.d ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/ATimersReg.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/ACore.o.d ${OBJECTDIR}/_ext/1445274692/AString.o.d ${OBJECTDIR}/_ext/1445274692/APorts.o.d ${OBJECTDIR}/_ext/1445274692/ATimers.o.d ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/ATimersReg.o ${OBJECTDIR}/_ext/1445274692/ACoreReg.o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o
+OBJECTFILES=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/ATimersReg.o
 
 # Source Files
-SOURCEFILES=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ATimersReg.S ../../src/ACoreReg.S ../../src/Ap32mx270f256dRegDefs.S
+SOURCEFILES=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/ATimersReg.S
 
 
 CFLAGS=
@@ -88,48 +88,20 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assembleWithPreprocess
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/ATimersReg.o: ATimersReg.S  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/ATimersReg.o.d 
-	@${RM} ${OBJECTDIR}/ATimersReg.o 
-	@${RM} ${OBJECTDIR}/ATimersReg.o.ok ${OBJECTDIR}/ATimersReg.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/ATimersReg.o.d" "${OBJECTDIR}/ATimersReg.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/ATimersReg.o.d"  -o ${OBJECTDIR}/ATimersReg.o ATimersReg.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/ATimersReg.o.asm.d",--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-I"../../include"
-	
-${OBJECTDIR}/_ext/1445274692/ACoreReg.o: ../../src/ACoreReg.S  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/_ext/1445274692/ATimersReg.o: ../../src/ATimersReg.S  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ACoreReg.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ACoreReg.o 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ACoreReg.o.ok ${OBJECTDIR}/_ext/1445274692/ACoreReg.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ACoreReg.o.d" "${OBJECTDIR}/_ext/1445274692/ACoreReg.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/ACoreReg.o.d"  -o ${OBJECTDIR}/_ext/1445274692/ACoreReg.o ../../src/ACoreReg.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/ACoreReg.o.asm.d",--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-I"../../include"
-	
-${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o: ../../src/Ap32mx270f256dRegDefs.S  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.ok ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.d" "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.d"  -o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o ../../src/Ap32mx270f256dRegDefs.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.asm.d",--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-I"../../include"
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.ok ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.err 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d" "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d"  -o ${OBJECTDIR}/_ext/1445274692/ATimersReg.o ../../src/ATimersReg.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/ATimersReg.o.asm.d",--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-I"../../include"
 	
 else
-${OBJECTDIR}/ATimersReg.o: ATimersReg.S  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/ATimersReg.o.d 
-	@${RM} ${OBJECTDIR}/ATimersReg.o 
-	@${RM} ${OBJECTDIR}/ATimersReg.o.ok ${OBJECTDIR}/ATimersReg.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/ATimersReg.o.d" "${OBJECTDIR}/ATimersReg.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/ATimersReg.o.d"  -o ${OBJECTDIR}/ATimersReg.o ATimersReg.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/ATimersReg.o.asm.d",--gdwarf-2,-I"../../include"
-	
-${OBJECTDIR}/_ext/1445274692/ACoreReg.o: ../../src/ACoreReg.S  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/_ext/1445274692/ATimersReg.o: ../../src/ATimersReg.S  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ACoreReg.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ACoreReg.o 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ACoreReg.o.ok ${OBJECTDIR}/_ext/1445274692/ACoreReg.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ACoreReg.o.d" "${OBJECTDIR}/_ext/1445274692/ACoreReg.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/ACoreReg.o.d"  -o ${OBJECTDIR}/_ext/1445274692/ACoreReg.o ../../src/ACoreReg.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/ACoreReg.o.asm.d",--gdwarf-2,-I"../../include"
-	
-${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o: ../../src/Ap32mx270f256dRegDefs.S  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.ok ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.d" "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.d"  -o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o ../../src/Ap32mx270f256dRegDefs.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/Ap32mx270f256dRegDefs.o.asm.d",--gdwarf-2,-I"../../include"
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.ok ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.err 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d" "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d"  -o ${OBJECTDIR}/_ext/1445274692/ATimersReg.o ../../src/ATimersReg.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/ATimersReg.o.asm.d",--gdwarf-2,-I"../../include"
 	
 endif
 

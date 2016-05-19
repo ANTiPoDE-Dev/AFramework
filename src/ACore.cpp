@@ -33,9 +33,9 @@
 const AFramework::uint32      AFramework::System::Freq40MHz(0x02625A00U);
 const AFramework::uint32      AFramework::System::Freq32KHz(0x00008000U);
 AFramework::System::Segment * AFramework::System::m_heap_head(NULL);
-AFramework::uint32            AFramework::System::m_pri_clock(0);
-AFramework::uint32            AFramework::System::m_sec_clock(0);
-AFramework::uint32            AFramework::System::m_bus_clock(0);
+double                        AFramework::System::m_pri_clock(0);
+double                        AFramework::System::m_sec_clock(0);
+double                        AFramework::System::m_bus_clock(0);
 size_t                        AFramework::System::m_heap_size(0);
 size_t                        AFramework::System::m_heap_busy(0);
 size_t                        AFramework::System::m_xc32_offs(8);
@@ -88,7 +88,7 @@ AFramework::System::Segment * AFramework::System::Segment::vNext(){
 //  CLASS System
 /********************************************************************************/
 
-bool AFramework::System::init(size_t heapSize, const uint32 & systemClock, const uint32 & peripheralClock, const uint32 & secondaryOsc){
+bool AFramework::System::init(size_t heapSize, const double & systemClock, const double & peripheralClock, const double & secondaryOsc){
     /*  Controllo che la funzione non sia già stata chiamata                    */
     if(m_init_flag){
         /*  in questo caso restituisco false                                    */
@@ -335,7 +335,7 @@ void * AFramework::System::malloc(size_t size){
     return NULL;
 }
 
-AFramework::uint32 AFramework::System::priFrequency(){
+double AFramework::System::priFrequency(){
     /*  nulla da commentare                                                     */
     return m_pri_clock;
 }
@@ -346,7 +346,7 @@ double AFramework::System::priPeriod(){
     return (m_pri_clock ? (1 / static_cast<double>(m_pri_clock)) : 0);
 }
 
-AFramework::uint32 AFramework::System::secFrequency(){
+double AFramework::System::secFrequency(){
     /*  nulla da commentare                                                     */
     return m_sec_clock;
 }
@@ -357,7 +357,7 @@ double AFramework::System::secPeriod(){
     return (m_sec_clock ? (1 / static_cast<double>(m_sec_clock)) : 0);
 }
 
-AFramework::uint32 AFramework::System::busFrequency(){
+double AFramework::System::busFrequency(){
     /*  nulla da commentare                                                     */
     return m_bus_clock;
 }

@@ -26,16 +26,18 @@
 *
 */
 
-#ifndef APORT_A
-#define APORT_A
+#ifndef APORTS_H
+#define APORTS_H
 
 #include "ACore.h"
 
 namespace AFramework{
-
+    
+    class APORT_w;
+    
     class AHardwarePort{
         public:
-            AHardwarePort();     
+            AHardwarePort(volatile APORT_w * w, const volatile uint32 id);     
             
             uint32 adcStatus() const volatile;
             bool isAnalog(const uint32 gpio) const volatile;
@@ -81,160 +83,529 @@ namespace AFramework{
             bool hasInterruptOccurred(const uint32 gpio) const volatile;
             void resetInterruptFlag(const uint32 gpio = Quick::All) volatile;
         private:
-            volatile uint32 m_ANSELx;
-            volatile uint32 m_ANSELx_CLR;
-            volatile uint32 m_ANSELx_SET;
-            volatile uint32 m_ANSELx_INV;
-            volatile uint32 m_TRISx;
-            volatile uint32 m_TRISx_CLR;
-            volatile uint32 m_TRISx_SET;
-            volatile uint32 m_TRISx_INV;
-            volatile uint32 m_PORTx;
-            volatile uint32 m_PORTx_CLR;
-            volatile uint32 m_PORTx_SET;
-            volatile uint32 m_PORTx_INV;
-            volatile uint32 m_LATx;
-            volatile uint32 m_LATx_CLR;
-            volatile uint32 m_LATx_SET;
-            volatile uint32 m_LATx_INV;
-            volatile uint32 m_ODCx;
-            volatile uint32 m_ODCx_CLR;
-            volatile uint32 m_ODCx_SET;
-            volatile uint32 m_ODCx_INV;
-            volatile uint32 m_CNPUx;
-            volatile uint32 m_CNPUx_CLR;
-            volatile uint32 m_CNPUx_SET;
-            volatile uint32 m_CNPUx_INV;
-            volatile uint32 m_CNPDx;
-            volatile uint32 m_CNPDx_CLR;
-            volatile uint32 m_CNPDx_SET;
-            volatile uint32 m_CNPDx_INV;
-            volatile uint32 m_CNCONx;
-            volatile uint32 m_CNCONx_CLR;
-            volatile uint32 m_CNCONx_SET;
-            volatile uint32 m_CNCONx_INV;
-            volatile uint32 m_CNENx;
-            volatile uint32 m_CNENx_CLR;
-            volatile uint32 m_CNENx_SET;
-            volatile uint32 m_CNENx_INV;
-            volatile uint32 m_CNSTATx;
-            volatile uint32 m_CNSTATx_CLR;
-            volatile uint32 m_CNSTATx_SET;
-            volatile uint32 m_CNSTATx_INV;
+            volatile APORT_w * m_preg;
+            volatile uint32    m_prid;
     };
+    
+#if (__HAS__PORTA__)
+    extern volatile AHardwarePort PortA;
+#   if(__PORTA_BITS__ & __BIT_0__)
+    extern const volatile uint32 A0;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_1__)
+    extern const volatile uint32 A1;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_2__)
+    extern const volatile uint32 A2;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_3__)
+    extern const volatile uint32 A3;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_4__)
+    extern const volatile uint32 A4;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_5__)
+    extern const volatile uint32 A5;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_6__)
+    extern const volatile uint32 A6;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_7__)
+    extern const volatile uint32 A7;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_8__)
+    extern const volatile uint32 A8;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_9__)
+    extern const volatile uint32 A9;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_A__)
+    extern const volatile uint32 A10;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_B__)
+    extern const volatile uint32 A11;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_C__)
+    extern const volatile uint32 A12;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_D__)
+    extern const volatile uint32 A13;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_E__)
+    extern const volatile uint32 A14;
+#   endif
+#   if(__PORTA_BITS__ & __BIT_F__)
+    extern const volatile uint32 A15;
+#   endif
+#endif
+    
+#if (__HAS__PORTB__)
+    extern volatile AHardwarePort PortB;
+#   if(__PORTB_BITS__ & __BIT_0__)
+    extern const volatile uint32 B0;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_1__)
+    extern const volatile uint32 B1;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_2__)
+    extern const volatile uint32 B2;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_3__)
+    extern const volatile uint32 B3;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_4__)
+    extern const volatile uint32 B4;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_5__)
+    extern const volatile uint32 B5;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_6__)
+    extern const volatile uint32 B6;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_7__)
+    extern const volatile uint32 B7;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_8__)
+    extern const volatile uint32 B8;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_9__)
+    extern const volatile uint32 B9;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_A__)
+    extern const volatile uint32 B10;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_B__)
+    extern const volatile uint32 B11;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_C__)
+    extern const volatile uint32 B12;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_D__)
+    extern const volatile uint32 B13;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_E__)
+    extern const volatile uint32 B14;
+#   endif
+#   if(__PORTB_BITS__ & __BIT_F__)
+    extern const volatile uint32 B15;
+#   endif
+#endif
 
-    #if defined(ANTIPODE32MR)
+#if (__HAS__PORTC__)
+    extern volatile AHardwarePort PortC;
+#   if(__PORTC_BITS__ & __BIT_0__)
+    extern const volatile uint32 C0;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_1__)
+    extern const volatile uint32 C1;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_2__)
+    extern const volatile uint32 C2;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_3__)
+    extern const volatile uint32 C3;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_4__)
+    extern const volatile uint32 C4;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_5__)
+    extern const volatile uint32 C5;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_6__)
+    extern const volatile uint32 C6;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_7__)
+    extern const volatile uint32 C7;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_8__)
+    extern const volatile uint32 C8;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_9__)
+    extern const volatile uint32 C9;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_A__)
+    extern const volatile uint32 C10;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_B__)
+    extern const volatile uint32 C11;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_C__)
+    extern const volatile uint32 C12;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_D__)
+    extern const volatile uint32 C13;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_E__)
+    extern const volatile uint32 C14;
+#   endif
+#   if(__PORTC_BITS__ & __BIT_F__)
+    extern const volatile uint32 C15;
+#   endif
+#endif
 
-        extern const volatile uint32 A0;
-        extern const volatile uint32 A1;
-        extern const volatile uint32 A4;
-        extern const volatile uint32 A7;
-        extern const volatile uint32 A8;
-        extern const volatile uint32 A9;
-        extern const volatile uint32 A10;
+#if (__HAS__PORTD__)
+    extern volatile AHardwarePort PortD;
+#   if(__PORTD_BITS__ & __BIT_0__)
+    extern const volatile uint32 D0;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_1__)
+    extern const volatile uint32 D1;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_2__)
+    extern const volatile uint32 D2;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_3__)
+    extern const volatile uint32 D3;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_4__)
+    extern const volatile uint32 D4;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_5__)
+    extern const volatile uint32 D5;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_6__)
+    extern const volatile uint32 D6;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_7__)
+    extern const volatile uint32 D7;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_8__)
+    extern const volatile uint32 D8;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_9__)
+    extern const volatile uint32 D9;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_A__)
+    extern const volatile uint32 D10;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_B__)
+    extern const volatile uint32 D11;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_C__)
+    extern const volatile uint32 D12;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_D__)
+    extern const volatile uint32 D13;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_E__)
+    extern const volatile uint32 D14;
+#   endif
+#   if(__PORTD_BITS__ & __BIT_F__)
+    extern const volatile uint32 D15;
+#   endif
+#endif
 
-        extern const volatile uint32 B0;
-        extern const volatile uint32 B1;
-        extern const volatile uint32 B2;
-        extern const volatile uint32 B3;
-        extern const volatile uint32 B4;    //led sistema
-        extern const volatile uint32 B5;
-        extern const volatile uint32 B7;
-        extern const volatile uint32 B8;
-        extern const volatile uint32 B9;
-        extern const volatile uint32 B10;
-        extern const volatile uint32 B11;
-        extern const volatile uint32 B13;
-        extern const volatile uint32 B14;
-        extern const volatile uint32 B15;
+#if (__HAS__PORTE__)
+    extern volatile AHardwarePort PortE;
+#   if(__PORTE_BITS__ & __BIT_0__)
+    extern const volatile uint32 E0;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_1__)
+    extern const volatile uint32 E1;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_2__)
+    extern const volatile uint32 E2;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_3__)
+    extern const volatile uint32 E3;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_4__)
+    extern const volatile uint32 E4;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_5__)
+    extern const volatile uint32 E5;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_6__)
+    extern const volatile uint32 E6;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_7__)
+    extern const volatile uint32 E7;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_8__)
+    extern const volatile uint32 E8;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_9__)
+    extern const volatile uint32 E9;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_A__)
+    extern const volatile uint32 E10;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_B__)
+    extern const volatile uint32 E11;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_C__)
+    extern const volatile uint32 E12;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_D__)
+    extern const volatile uint32 E13;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_E__)
+    extern const volatile uint32 E14;
+#   endif
+#   if(__PORTE_BITS__ & __BIT_F__)
+    extern const volatile uint32 E15;
+#   endif
+#endif
+    
+#if (__HAS__PORTF__)
+    extern volatile AHardwarePort PortF;
+#   if(__PORTF_BITS__ & __BIT_0__)
+    extern const volatile uint32 F0;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_1__)
+    extern const volatile uint32 F1;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_2__)
+    extern const volatile uint32 F2;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_3__)
+    extern const volatile uint32 F3;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_4__)
+    extern const volatile uint32 F4;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_5__)
+    extern const volatile uint32 F5;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_6__)
+    extern const volatile uint32 F6;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_7__)
+    extern const volatile uint32 F7;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_8__)
+    extern const volatile uint32 F8;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_9__)
+    extern const volatile uint32 F9;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_A__)
+    extern const volatile uint32 F10;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_B__)
+    extern const volatile uint32 F11;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_C__)
+    extern const volatile uint32 F12;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_D__)
+    extern const volatile uint32 F13;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_E__)
+    extern const volatile uint32 F14;
+#   endif
+#   if(__PORTF_BITS__ & __BIT_F__)
+    extern const volatile uint32 F15;
+#   endif
+#endif
+    
+#if (__HAS__PORTG__)
+    extern volatile AHardwarePort PortG;
+#   if(__PORTG_BITS__ & __BIT_0__)
+    extern const volatile uint32 G0;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_1__)
+    extern const volatile uint32 G1;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_2__)
+    extern const volatile uint32 G2;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_3__)
+    extern const volatile uint32 G3;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_4__)
+    extern const volatile uint32 G4;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_5__)
+    extern const volatile uint32 G5;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_6__)
+    extern const volatile uint32 G6;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_7__)
+    extern const volatile uint32 G7;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_8__)
+    extern const volatile uint32 G8;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_9__)
+    extern const volatile uint32 G9;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_A__)
+    extern const volatile uint32 G10;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_B__)
+    extern const volatile uint32 G11;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_C__)
+    extern const volatile uint32 G12;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_D__)
+    extern const volatile uint32 G13;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_E__)
+    extern const volatile uint32 G14;
+#   endif
+#   if(__PORTG_BITS__ & __BIT_F__)
+    extern const volatile uint32 G15;
+#   endif
+#endif
 
-        extern const volatile uint32 C0;
-        extern const volatile uint32 C1;
-        extern const volatile uint32 C2;
-        extern const volatile uint32 C3;
-        extern const volatile uint32 C4;
-        extern const volatile uint32 C5;
-        extern const volatile uint32 C6;
-        extern const volatile uint32 C7;
-        extern const volatile uint32 C8;
-        extern const volatile uint32 C9;
-        
-        extern volatile AHardwarePort PortA;
-        extern volatile AHardwarePort PortB;
-        extern volatile AHardwarePort PortC;
-        
-    #elif defined(__32MX270F256B__)
+#if (__HAS__PORTH__)
+    extern volatile AHardwarePort PortH;
+#   if(__PORTH_BITS__ & __BIT_0__)
+    extern const volatile uint32 H0;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_1__)
+    extern const volatile uint32 H1;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_2__)
+    extern const volatile uint32 H2;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_3__)
+    extern const volatile uint32 H3;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_4__)
+    extern const volatile uint32 H4;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_5__)
+    extern const volatile uint32 H5;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_6__)
+    extern const volatile uint32 H6;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_7__)
+    extern const volatile uint32 H7;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_8__)
+    extern const volatile uint32 H8;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_9__)
+    extern const volatile uint32 H9;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_A__)
+    extern const volatile uint32 H10;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_B__)
+    extern const volatile uint32 H11;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_C__)
+    extern const volatile uint32 H12;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_D__)
+    extern const volatile uint32 H13;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_E__)
+    extern const volatile uint32 H14;
+#   endif
+#   if(__PORTH_BITS__ & __BIT_F__)
+    extern const volatile uint32 H15;
+#   endif
+#endif
+    
+#if (__HAS__PORTJ__)
+    extern volatile AHardwarePort PortJ;
+#   if(__PORTJ_BITS__ & __BIT_0__)
+    extern const volatile uint32 J0;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_1__)
+    extern const volatile uint32 J1;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_2__)
+    extern const volatile uint32 J2;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_3__)
+    extern const volatile uint32 J3;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_4__)
+    extern const volatile uint32 J4;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_5__)
+    extern const volatile uint32 J5;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_6__)
+    extern const volatile uint32 J6;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_7__)
+    extern const volatile uint32 J7;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_8__)
+    extern const volatile uint32 J8;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_9__)
+    extern const volatile uint32 J9;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_A__)
+    extern const volatile uint32 J10;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_B__)
+    extern const volatile uint32 J11;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_C__)
+    extern const volatile uint32 J12;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_D__)
+    extern const volatile uint32 J13;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_E__)
+    extern const volatile uint32 J14;
+#   endif
+#   if(__PORTJ_BITS__ & __BIT_F__)
+    extern const volatile uint32 J15;
+#   endif
+#endif
+    
+#if (__HAS__PORTK__)
+    extern volatile AHardwarePort PortK;
+#   if(__PORTK_BITS__ & __BIT_0__)
+    extern const volatile uint32 K0;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_1__)
+    extern const volatile uint32 K1;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_2__)
+    extern const volatile uint32 K2;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_3__)
+    extern const volatile uint32 K3;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_4__)
+    extern const volatile uint32 K4;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_5__)
+    extern const volatile uint32 K5;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_6__)
+    extern const volatile uint32 K6;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_7__)
+    extern const volatile uint32 K7;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_8__)
+    extern const volatile uint32 K8;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_9__)
+    extern const volatile uint32 K9;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_A__)
+    extern const volatile uint32 K10;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_B__)
+    extern const volatile uint32 K11;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_C__)
+    extern const volatile uint32 K12;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_D__)
+    extern const volatile uint32 K13;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_E__)
+    extern const volatile uint32 K14;
+#   endif
+#   if(__PORTK_BITS__ & __BIT_F__)
+    extern const volatile uint32 K15;
+#   endif
+#endif
 
-        extern const volatile uint32 A0;
-        extern const volatile uint32 A1;
-        extern const volatile uint32 A2;
-        extern const volatile uint32 A3;
-        extern const volatile uint32 A4;
-
-        extern const volatile uint32 B0;
-        extern const volatile uint32 B1;
-        extern const volatile uint32 B2;
-        extern const volatile uint32 B3;
-        extern const volatile uint32 B4;
-        extern const volatile uint32 B5;
-        extern const volatile uint32 B7;
-        extern const volatile uint32 B8;
-        extern const volatile uint32 B9;
-        extern const volatile uint32 B10;
-        extern const volatile uint32 B11;
-        extern const volatile uint32 B13;
-        extern const volatile uint32 B14;
-        extern const volatile uint32 B15;
-        
-        extern volatile AHardwarePort PortA;
-        extern volatile AHardwarePort PortB;
-        
-    #elif defined(__32MX270F256D__)
-
-        extern const volatile uint32 A0;
-        extern const volatile uint32 A1;
-        extern const volatile uint32 A2;
-        extern const volatile uint32 A3;
-        extern const volatile uint32 A4;
-        extern const volatile uint32 A7;
-        extern const volatile uint32 A8;
-        extern const volatile uint32 A9;
-        extern const volatile uint32 A10;
-
-        extern const volatile uint32 B0;
-        extern const volatile uint32 B1;
-        extern const volatile uint32 B2;
-        extern const volatile uint32 B3;
-        extern const volatile uint32 B4;
-        extern const volatile uint32 B5;
-        extern const volatile uint32 B7;
-        extern const volatile uint32 B8;
-        extern const volatile uint32 B9;
-        extern const volatile uint32 B10;
-        extern const volatile uint32 B11;
-        extern const volatile uint32 B13;
-        extern const volatile uint32 B14;
-        extern const volatile uint32 B15;
-
-        extern const volatile uint32 C0;
-        extern const volatile uint32 C1;
-        extern const volatile uint32 C2;
-        extern const volatile uint32 C3;
-        extern const volatile uint32 C4;
-        extern const volatile uint32 C5;
-        extern const volatile uint32 C6;
-        extern const volatile uint32 C7;
-        extern const volatile uint32 C8;
-        extern const volatile uint32 C9;
-        
-        extern volatile AHardwarePort PortA;
-        extern volatile AHardwarePort PortB;
-        extern volatile AHardwarePort PortC;
-        
-    #else
-
-        #error UNDEFINED BOARD OR PROCESSOR
-
-    #endif
 }
-#endif // APORT_A
+#endif // APORTS_H
