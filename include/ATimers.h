@@ -18,6 +18,7 @@ namespace AFramework{
     class AAbstract16bitTimer{
         public:
             AAbstract16bitTimer(volatile ATMR_w * w);
+            void rawConfig(const volatile uint32 b) volatile;
             double setSynchronousInternal16(const double baseTime, const bool idleStop = false) volatile;
             double setSynchronousExternal16(const double extFreq, const double baseTime, const bool idleStop = false) volatile;
             double setGated16(const double baseTime, bool idleStop = false);
@@ -32,7 +33,6 @@ namespace AFramework{
             double resolution() const volatile;
         protected:
             virtual double setpar(const double t, const double f, const bool w = false) volatile = 0;
-            void rawcfg(const volatile uint32 b) volatile;
             volatile ATMR_w * m_treg;
             volatile double   m_base;
             volatile double   m_terr;

@@ -149,8 +149,8 @@ AFramework::AAbstract16bitTimer::AAbstract16bitTimer(volatile ATMR_w * w) : m_tr
 double AFramework::AAbstract16bitTimer::setSynchronousInternal16(const double baseTime, const bool idleStop) volatile{
 #if   defined (__32MX__)
 
-    /*  uso rawcfg con l'eventuale bit di idle                                  */
-    rawcfg((idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
+    /*  uso rawConfig con l'eventuale bit di idle                               */
+    rawConfig((idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri              */
     return setpar(baseTime, System::busFrequency());
 
@@ -168,7 +168,7 @@ double AFramework::AAbstract16bitTimer::setSynchronousExternal16(const double ex
     /*  lo passo ugualmente, alla fine dal datasheet c'e' scritto che nei timer */
     /*  di tipo b questo bit e' non implementato per cui anche se ci scrivo non */
     /*  dovrebbe succedere nulla                                                */
-    rawcfg(_TxCON_TSYNC_MASK | _TxCON_TCS_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
+    rawConfig(_TxCON_TSYNC_MASK | _TxCON_TCS_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri              */
     return setpar(baseTime, extFreq);
 
@@ -182,9 +182,9 @@ double AFramework::AAbstract16bitTimer::setSynchronousExternal16(const double ex
 double AFramework::AAbstract16bitTimer::setGated16(const double baseTime, bool idleStop){
 #if   defined (__32MX__)
     
-    /*  uso rawcfg impostando la modalita' gated, il bit di sync e l'eventuale  */
-    /*  bit di idle                                                             */
-    rawcfg(_TxCON_TGATE_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
+    /*  uso rawConfig impostando la modalita' gated, il bit di sync e           */
+    /*  l'eventuale bit di idle                                                 */
+    rawConfig(_TxCON_TGATE_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  setto i parametri e ritorno l'errore                                    */
     return setpar(baseTime, System::busFrequency());
 
@@ -325,7 +325,7 @@ double AFramework::AAbstract16bitTimer::resolution() const volatile{
 #endif
 }
 
-void AFramework::AAbstract16bitTimer::rawcfg(const volatile uint32 b) volatile{
+void AFramework::AAbstract16bitTimer::rawConfig(const volatile uint32 b) volatile{
 #if   defined (__32MX__)
 
     /*  resetto il timer                                                        */
@@ -546,8 +546,8 @@ double AFramework::A32bitMasterTimer::setSynchronousInternal32(const double base
     
     /*  resetto il timer slave associato                                        */
     m_slave->reset();
-    /*  uso rawcfg con l'eventuale bit di idle                                  */
-    rawcfg(_TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
+    /*  uso rawConfig con l'eventuale bit di idle                               */
+    rawConfig(_TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri in modalità  */
     /*  32-bit                                                                  */
     return setpar(baseTime, System::busFrequency(), true);
@@ -564,8 +564,8 @@ double AFramework::A32bitMasterTimer::setSynchronousExternal32(const double extF
     
     /*  resetto il timer slave associato                                        */
     m_slave->reset();
-    /*  uso rawcfg con l'eventuale bit di idle                                  */
-    rawcfg(_TxCON_TCS_MASK | _TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
+    /*  uso rawConfig con l'eventuale bit di idle                               */
+    rawConfig(_TxCON_TCS_MASK | _TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri in modalità  */
     /*  32-bit                                                                  */
     return setpar(baseTime, System::busFrequency(), true);
@@ -582,8 +582,8 @@ double AFramework::A32bitMasterTimer::setGated32(const double baseTime, bool idl
 
     /*  resetto il timer slave associato                                        */
     m_slave->reset();
-    /*  uso rawcfg con l'eventuale bit di idle                                  */
-    rawcfg(_TxCON_TGATE_MASK | _TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
+    /*  uso rawConfig con l'eventuale bit di idle                               */
+    rawConfig(_TxCON_TGATE_MASK | _TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri in modalità  */
     /*  32-bit                                                                  */
     return setpar(baseTime, System::busFrequency(), true);
