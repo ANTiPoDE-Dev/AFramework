@@ -49,65 +49,128 @@
 #define __BIT_F__ 0x8000
 
 #if   defined (ANTIPODE32MR)
-#   define  __32MX__
-#   define  __HAS_TIMER1__ 1
-#   define  __HAS_TIMER2__ 1
-#   define  __HAS_TIMER3__ 1
-#   define  __HAS_TIMER4__ 1
-#   define  __HAS_TIMER5__ 1
-#   define  __HAS_EXTOSC__ 0
-#   define  __HAS__PORTA__ 1
-#   define  __HAS__PORTB__ 1
-#   define  __HAS__PORTC__ 1
-#   define  __HAS__PORTD__ 0
-#   define  __HAS__PORTE__ 0
-#   define  __HAS__PORTF__ 0
-#   define  __HAS__PORTG__ 0
-#   define  __HAS__PORTH__ 0
-#   define  __HAS__PORTJ__ 0
-#   define  __HAS__PORTK__ 0
-#   define  __PORTA_BITS__ 0x0793   //0000 0111 1001 0011
-#   define  __PORTB_BITS__ 0xEFAF   //1110 1111 1010 1111
-#   define  __PORTC_BITS__ 0x03FF   //0000 0011 1111 1111
+#   define __32MX__
+//  TIMERS
+#   define __HAS_TIMER1__ 1
+#   define __HAS_TIMER2__ 1
+#   define __HAS_TIMER3__ 1
+#   define __HAS_TIMER4__ 1
+#   define __HAS_TIMER5__ 1
+//  INPUT CAPTURE
+#   define __HAS_IC1__ 1
+#   define __HAS_IC2__ 1
+#   define __HAS_IC3__ 1
+#   define __HAS_IC4__ 1
+#   define __HAS_IC5__ 1
+//  OUTPUT COMPARE
+#   define __HAS_OC1__ 1
+#   define __HAS_OC2__ 1
+#   define __HAS_OC3__ 1
+#   define __HAS_OC4__ 1
+#   define __HAS_OC5__ 1
+//  I2C
+#   define __HAS_I2C1__ 1
+#   define __HAS_I2C2__ 1
+#   define __HAS_I2C3__ 0
+#   define __HAS_I2C4__ 0
+#   define __HAS_I2C5__ 0
+#   define __I2C_SDA1__
+#   define __I2C_SCL1__
+#   define __I2C_SDA2__
+#   define __I2C_SCL2__
+//  SPI
+#   define __HAS_SPI1__ 1
+#   define __HAS_SPI2__ 1
+//  UART
+#   define __HAS_UART1__ 1
+#   define __HAS_UART2__ 1
+//  PORTS
+#   define __HAS__PORTA__ 1
+#   define __HAS__PORTB__ 1
+#   define __HAS__PORTC__ 1
+#   define __HAS__PORTD__ 0
+#   define __HAS__PORTE__ 0
+#   define __HAS__PORTF__ 0
+#   define __HAS__PORTG__ 0
+#   define __HAS__PORTH__ 0
+#   define __HAS__PORTJ__ 0
+#   define __HAS__PORTK__ 0
+#   define __PORTA_BITS__ 0x0793   //0000 0111 1001 0011
+#   define __PORTB_BITS__ 0xEFAF   //1110 1111 1010 1111
+#   define __PORTC_BITS__ 0x03FF   //0000 0011 1111 1111
+//  BOARD SPECIFIC SETTINGS
+#   define __HAS_EXTOSC__ 0
 #elif defined (__32MX270F256B__)
-#   define  __32MX__
-#   define  __HAS_TIMER1__ 1
-#   define  __HAS_TIMER2__ 1
-#   define  __HAS_TIMER3__ 1
-#   define  __HAS_TIMER4__ 1
-#   define  __HAS_TIMER5__ 1
-#   define  __HAS__PORTA__ 1
-#   define  __HAS__PORTB__ 1
-#   define  __HAS__PORTC__ 1
-#   define  __HAS__PORTD__ 0
-#   define  __HAS__PORTE__ 0
-#   define  __HAS__PORTF__ 0
-#   define  __HAS__PORTG__ 0
-#   define  __HAS__PORTH__ 0
-#   define  __HAS__PORTJ__ 0
-#   define  __HAS__PORTK__ 0
-#   define  __PORTA_BITS__ 0x001F   //0000 0000 0001 1111
-#   define  __PORTB_BITS__ 0xEFBF   //1110 1111 1011 1111
+#   define __32MX__
+//  INPUT CAPTURE
+#   define __HAS_INCAP1__ 1
+#   define __HAS_INCAP2__ 1
+#   define __HAS_INCAP3__ 1
+#   define __HAS_INCAP4__ 1
+#   define __HAS_INCAP5__ 1
+#   define __HAS_INCAP6__ 0
+#   define __HAS_INCAP7__ 0
+#   define __HAS_INCAP8__ 0
+#   define __HAS_INCAP9__ 0
+//  TIMERS
+#   define __HAS_TIMER1__ 1
+#   define __HAS_TIMER2__ 1
+#   define __HAS_TIMER3__ 1
+#   define __HAS_TIMER4__ 1
+#   define __HAS_TIMER5__ 1
+#   define __HAS_TIMER6__ 0
+#   define __HAS_TIMER7__ 0
+#   define __HAS_TIMER8__ 0
+#   define __HAS_TIMER9__ 0
+//  PORTS
+#   define __HAS__PORTA__ 1
+#   define __HAS__PORTB__ 1
+#   define __HAS__PORTC__ 1
+#   define __HAS__PORTD__ 0
+#   define __HAS__PORTE__ 0
+#   define __HAS__PORTF__ 0
+#   define __HAS__PORTG__ 0
+#   define __HAS__PORTH__ 0
+#   define __HAS__PORTJ__ 0
+#   define __HAS__PORTK__ 0
+#   define __PORTA_BITS__ 0x001F   //0000 0000 0001 1111
+#   define __PORTB_BITS__ 0xEFBF   //1110 1111 1011 1111
 #elif defined (__32MX270F256D__)
-#   define  __32MX__
-#   define  __HAS_TIMER1__ 1
-#   define  __HAS_TIMER2__ 1
-#   define  __HAS_TIMER3__ 1
-#   define  __HAS_TIMER4__ 1
-#   define  __HAS_TIMER5__ 1
-#   define  __HAS__PORTA__ 1
-#   define  __HAS__PORTB__ 1
-#   define  __HAS__PORTC__ 1
-#   define  __HAS__PORTD__ 0
-#   define  __HAS__PORTE__ 0
-#   define  __HAS__PORTF__ 0
-#   define  __HAS__PORTG__ 0
-#   define  __HAS__PORTH__ 0
-#   define  __HAS__PORTJ__ 0
-#   define  __HAS__PORTK__ 0
-#   define  __PORTA_BITS__ 0x079F   //0000 0111 1001 1111
-#   define  __PORTB_BITS__ 0xEFBF   //1110 1111 1011 1111
-#   define  __PORTC_BITS__ 0x03FF   //0000 0011 1111 1111
+#   define __32MX__
+//  INPUT CAPTURE
+#   define __HAS_INCAP1__ 1
+#   define __HAS_INCAP2__ 1
+#   define __HAS_INCAP3__ 1
+#   define __HAS_INCAP4__ 1
+#   define __HAS_INCAP5__ 1
+#   define __HAS_INCAP6__ 0
+#   define __HAS_INCAP7__ 0
+#   define __HAS_INCAP8__ 0
+#   define __HAS_INCAP9__ 0
+//  TIMERS
+#   define __HAS_TIMER1__ 1
+#   define __HAS_TIMER2__ 1
+#   define __HAS_TIMER3__ 1
+#   define __HAS_TIMER4__ 1
+#   define __HAS_TIMER5__ 1
+#   define __HAS_TIMER6__ 0
+#   define __HAS_TIMER7__ 0
+#   define __HAS_TIMER8__ 0
+#   define __HAS_TIMER9__ 0
+//  PORTS
+#   define __HAS__PORTA__ 1
+#   define __HAS__PORTB__ 1
+#   define __HAS__PORTC__ 1
+#   define __HAS__PORTD__ 0
+#   define __HAS__PORTE__ 0
+#   define __HAS__PORTF__ 0
+#   define __HAS__PORTG__ 0
+#   define __HAS__PORTH__ 0
+#   define __HAS__PORTJ__ 0
+#   define __HAS__PORTK__ 0
+#   define __PORTA_BITS__ 0x079F   //0000 0111 1001 1111
+#   define __PORTB_BITS__ 0xEFBF   //1110 1111 1011 1111
+#   define __PORTC_BITS__ 0x03FF   //0000 0011 1111 1111
 #endif
 
 #endif // ASYSTEMCONFIG_H

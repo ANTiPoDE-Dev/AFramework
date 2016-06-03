@@ -31,7 +31,6 @@
 #include <cstdlib>
 
 #include "ACommons.h"
-#include "ASystemConfig.h"
 
 namespace AFramework{
 

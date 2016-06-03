@@ -25,3 +25,13 @@
         .global TMR5_w
 
 #endif
+	
+PORTA_w = 0xBF886000
+	.global PORTA_w
+PORTB_w = 0xBF886100
+	.global PORTB_w
+PORTC_w = 0xBF886200
+	.global PORTC_w
+	
+ADC_w = 0xBF809000
+	.global ADC_w
