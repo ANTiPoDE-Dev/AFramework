@@ -35,3 +35,6 @@ PORTC_w = 0xBF886200
 	
 ADC_w = 0xBF809000
 	.global ADC_w
+	
+INT_w = 0xBF881000
+	.global INT_w

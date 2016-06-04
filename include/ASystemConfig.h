@@ -29,6 +29,13 @@
 #ifndef ASYSTEMCONFIG_H
 #define ASYSTEMCONFIG_H
 
+/*
+ * @important!
+ * DEVICE CLASSES:
+ * __32MX_CLASS_1__ for devices described in datasheet "PIC32MX1XX/2XX 28/36/44-PIN"
+ * __32MX_CLASS_2__ for devices described in datasheet "
+ */
+
 #define ANTIPODE32MR
 
 #define __BIT_0__ 0x0001

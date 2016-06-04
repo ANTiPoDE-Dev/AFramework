@@ -36,6 +36,43 @@
 
 namespace AFramework{
     
+    class ACSIReg{
+        public:
+            volatile uint32 REG;
+            volatile uint32 CLR;
+            volatile uint32 SET;
+            volatile uint32 INV;
+    };
+    
+    class ACxxReg{
+        public:
+            volatile uint32 REG;
+            volatile uint32 CLR;
+            volatile uint32 : 0x20;
+            volatile uint32 : 0x20;
+    };
+    
+    class AxxxReg{
+        public:
+            volatile uint32 REG;
+            volatile uint32 : 0x20;
+            volatile uint32 : 0x20;
+            volatile uint32 : 0x20;
+    };
+    
+    class APad{
+        public:
+            volatile uint32 : 0x20;
+            volatile uint32 : 0x20;
+            volatile uint32 : 0x20;
+            volatile uint32 : 0x20;
+    };
+    
+    class AstdReg{
+        public:
+            volatile uint32 REG;
+    };
+    
     class AWDT_w{
         public:
             volatile uint32 WDTCON;
@@ -424,7 +461,7 @@ namespace AFramework{
             volatile uint32 PMD6_INV;
     };
     
-    class ANVM_w{
+    class ANVM_w{                                                               //  OK
         public:
             volatile uint32 NVMCON;
             volatile uint32 NVMCON_CLR;
@@ -448,7 +485,7 @@ namespace AFramework{
             volatile uint32 : 0x20;
     };
     
-    class ARST_w{
+    class ARST_w{                                                               //  OK
         public:
             volatile uint32 RCON;
             volatile uint32 RCON_CLR;
@@ -551,85 +588,15 @@ namespace AFramework{
     
     class AINT_w{
         public:
-            volatile uint32 INTCON;
-            volatile uint32 INTCON_CLR;
-            volatile uint32 INTCON_SET;
-            volatile uint32 INTCON_INV;
-            volatile uint32 INTSTAT;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 IPTMR;
-            volatile uint32 IPTMR_CLR;
-            volatile uint32 IPTMR_SET;
-            volatile uint32 IPTMR_INV;
-            volatile uint32 IFS0;
-            volatile uint32 IFS0_CLR;
-            volatile uint32 IFS0_SET;
-            volatile uint32 IFS0_INV;
-            volatile uint32 IFS1;
-            volatile uint32 IFS1_CLR;
-            volatile uint32 IFS1_SET;
-            volatile uint32 IFS1_INV;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 IEC0;
-            volatile uint32 IEC0_CLR;
-            volatile uint32 IEC0_SET;
-            volatile uint32 IEC0_INV;
-            volatile uint32 IEC1;
-            volatile uint32 IEC1_CLR;
-            volatile uint32 IEC1_SET;
-            volatile uint32 IEC1_INV;
-            volatile uint32 IPC0;
-            volatile uint32 IPC0_CLR;
-            volatile uint32 IPC0_SET;
-            volatile uint32 IPC0_INV;
-            volatile uint32 IPC1;
-            volatile uint32 IPC1_CLR;
-            volatile uint32 IPC1_SET;
-            volatile uint32 IPC1_INV;
-            volatile uint32 IPC2;
-            volatile uint32 IPC2_CLR;
-            volatile uint32 IPC2_SET;
-            volatile uint32 IPC2_INV;
-            volatile uint32 IPC3;
-            volatile uint32 IPC3_CLR;
-            volatile uint32 IPC3_SET;
-            volatile uint32 IPC3_INV;
-            volatile uint32 IPC4;
-            volatile uint32 IPC4_CLR;
-            volatile uint32 IPC4_SET;
-            volatile uint32 IPC4_INV;
-            volatile uint32 IPC5;
-            volatile uint32 IPC5_CLR;
-            volatile uint32 IPC5_SET;
-            volatile uint32 IPC5_INV;
-            volatile uint32 IPC6;
-            volatile uint32 IPC6_CLR;
-            volatile uint32 IPC6_SET;
-            volatile uint32 IPC6_INV;
-            volatile uint32 IPC7;
-            volatile uint32 IPC7_CLR;
-            volatile uint32 IPC7_SET;
-            volatile uint32 IPC7_INV;
-            volatile uint32 IPC8;
-            volatile uint32 IPC8_CLR;
-            volatile uint32 IPC8_SET;
-            volatile uint32 IPC8_INV;
-            volatile uint32 IPC9;
-            volatile uint32 IPC9_CLR;
-            volatile uint32 IPC9_SET;
-            volatile uint32 IPC9_INV;
-            volatile uint32 IPC10;
-            volatile uint32 IPC10_CLR;
-            volatile uint32 IPC10_SET;
-            volatile uint32 IPC10_INV;
+            volatile ACSIReg INTCON;
+            volatile AxxxReg INTSTAT;
+            volatile ACSIReg IPTMR;
+            volatile ACSIReg IFS[0x03];
+            volatile ACSIReg IEC[0x03];
+            volatile ACSIReg IPC[0x0D];
     };
     
-    class ABMX_w{
+    class ABMX_w{                                                               //  OK
         volatile uint32 BMXCON;
         volatile uint32 BMXCON_CLR;
         volatile uint32 BMXCON_SET;
@@ -668,84 +635,133 @@ namespace AFramework{
             volatile uint32 DMACON_SET;
             volatile uint32 DMACON_INV;
             volatile uint32 DMASTAT;
-            volatile uint32 DMASTAT_;
-            volatile uint32 DMASTAT_;
-            volatile uint32 DMASTAT_;
+            volatile uint32 DMASTAT_CLR;
+            volatile uint32 DMASTAT_SET;
+            volatile uint32 DMASTAT_INV;
             volatile uint32 DMAADDR;
-            volatile uint32 DMAADDR_;
-            volatile uint32 DMAADDR_;
-            volatile uint32 DMAADDR_;
+            volatile uint32 DMAADDR_CLR;
+            volatile uint32 DMAADDR_SET;
+            volatile uint32 DMAADDR_INV;
     };
     
     class ADMACrc_w{
         public:
             volatile uint32 DCRCCON;
-            volatile uint32 DCRCCON_;
-            volatile uint32 DCRCCON_;
-            volatile uint32 DCRCCON_;
+            volatile uint32 DCRCCON_CLR;
+            volatile uint32 DCRCCON_SET;
+            volatile uint32 DCRCCON_INV;
             volatile uint32 DCRCDATA;
-            volatile uint32 DCRCDATA_;
-            volatile uint32 DCRCDATA_;
-            volatile uint32 DCRCDATA_;
+            volatile uint32 DCRCDATA_CLR;
+            volatile uint32 DCRCDATA_SET;
+            volatile uint32 DCRCDATA_INV;
             volatile uint32 DCRCXOR;
-            volatile uint32 DCRCXOR_;
-            volatile uint32 DCRCXOR_;
-            volatile uint32 DCRCXOR_;
+            volatile uint32 DCRCXOR_CLR;
+            volatile uint32 DCRCXOR_SET;
+            volatile uint32 DCRCXOR_INV;
     };
     
     class ADMACh_w{
         public:
             volatile uint32 DCHxCON;
-            volatile uint32 DCHxCON_;
-            volatile uint32 DCHxCON_;
-            volatile uint32 DCHxCON_;
+            volatile uint32 DCHxCON_CLR;
+            volatile uint32 DCHxCON_SET;
+            volatile uint32 DCHxCON_INV;
             volatile uint32 DCHxECON;
-            volatile uint32 DCHxECON_;
-            volatile uint32 DCHxECON_;
-            volatile uint32 DCHxECON_;
+            volatile uint32 DCHxECON_CLR;
+            volatile uint32 DCHxECON_SET;
+            volatile uint32 DCHxECON_INV;
             volatile uint32 DCHxINT;
-            volatile uint32 DCHxINT_;
-            volatile uint32 DCHxINT_;
-            volatile uint32 DCHxINT_;
+            volatile uint32 DCHxINT_CLR;
+            volatile uint32 DCHxINT_SET;
+            volatile uint32 DCHxINT_INV;
             volatile uint32 DCHxSSA;
-            volatile uint32 DCHxSSA_;
-            volatile uint32 DCHxSSA_;
-            volatile uint32 DCHxSSA_;
+            volatile uint32 DCHxSSA_CLR;
+            volatile uint32 DCHxSSA_SET;
+            volatile uint32 DCHxSSA_INV;
             volatile uint32 DCHxDSA;
-            volatile uint32 DCHxDSA_;
-            volatile uint32 DCHxDSA_;
-            volatile uint32 DCHxDSA_;
+            volatile uint32 DCHxDSA_CLR;
+            volatile uint32 DCHxDSA_SET;
+            volatile uint32 DCHxDSA_INV;
             volatile uint32 DCHxSSIZ;
-            volatile uint32 DCHxSSIZ_;
-            volatile uint32 DCHxSSIZ_;
-            volatile uint32 DCHxSSIZ_;
+            volatile uint32 DCHxSSIZ_CLR;
+            volatile uint32 DCHxSSIZ_SET;
+            volatile uint32 DCHxSSIZ_INV;
             volatile uint32 DCHxDSIZ;
-            volatile uint32 DCHxDSIZ_;
-            volatile uint32 DCHxDSIZ_;
-            volatile uint32 DCHxDSIZ_;
+            volatile uint32 DCHxDSIZ_CLR;
+            volatile uint32 DCHxDSIZ_SET;
+            volatile uint32 DCHxDSIZ_INV;
             volatile uint32 DCHxSPTR;
-            volatile uint32 DCHxSPTR_;
-            volatile uint32 DCHxSPTR_;
-            volatile uint32 DCHxSPTR_;
+            volatile uint32 DCHxSPTR_CLR;
+            volatile uint32 DCHxSPTR_SET;
+            volatile uint32 DCHxSPTR_INV;
             volatile uint32 DCHxDPTR;
-            volatile uint32 DCHxDPTR_;
-            volatile uint32 DCHxDPTR_;
-            volatile uint32 DCHxDPTR_;
+            volatile uint32 DCHxDPTR_CLR;
+            volatile uint32 DCHxDPTR_SET;
+            volatile uint32 DCHxDPTR_INV;
             volatile uint32 DCHxCSIZ;
-            volatile uint32 DCHxCSIZ_;
-            volatile uint32 DCHxCSIZ_;
-            volatile uint32 DCHxCSIZ_;
+            volatile uint32 DCHxCSIZ_CLR;
+            volatile uint32 DCHxCSIZ_SET;
+            volatile uint32 DCHxCSIZ_INV;
             volatile uint32 DCHxCPTR;
-            volatile uint32 DCHxCPTR_;
-            volatile uint32 DCHxCPTR_;
-            volatile uint32 DCHxCPTR_;
+            volatile uint32 DCHxCPTR_CLR;
+            volatile uint32 DCHxCPTR_SET;
+            volatile uint32 DCHxCPTR_INV;
             volatile uint32 DCHxDAT;
-            volatile uint32 DCHxDAT_;
-            volatile uint32 DCHxDAT_;
-            volatile uint32 DCHxDAT_;
+            volatile uint32 DCHxDAT_CLR;
+            volatile uint32 DCHxDAT_SET;
+            volatile uint32 DCHxDAT_INV;
     };
+    
+#   warning USB is currently unimplemented
+    
+//    class APORT_w{
+//        public:
+//            volatile uint32 ANSELx;
+//            volatile uint32 ANSELx_CLR;
+//            volatile uint32 ANSELx_SET;
+//            volatile uint32 ANSELx_INV;
+//            volatile uint32 TRISx;
+//            volatile uint32 TRISx_CLR;
+//            volatile uint32 TRISx_SET;
+//            volatile uint32 TRISx_INV;
+//            volatile uint32 PORTx;
+//            volatile uint32 PORTx_CLR;
+//            volatile uint32 PORTx_SET;
+//            volatile uint32 PORTx_INV;
+//            volatile uint32 LATx;
+//            volatile uint32 LATx_CLR;
+//            volatile uint32 LATx_SET;
+//            volatile uint32 LATx_INV;
+//            volatile uint32 ODCx;
+//            volatile uint32 ODCx_CLR;
+//            volatile uint32 ODCx_SET;
+//            volatile uint32 ODCx_INV;
+//            volatile uint32 CNPUx;
+//            volatile uint32 CNPUx_CLR;
+//            volatile uint32 CNPUx_SET;
+//            volatile uint32 CNPUx_INV;
+//            volatile uint32 CNPDx;
+//            volatile uint32 CNPDx_CLR;
+//            volatile uint32 CNPDx_SET;
+//            volatile uint32 CNPDx_INV;
+//            volatile uint32 CNENx_;
+//            volatile uint32 CNENx_CLR;
+//            volatile uint32 CNENx_SET;
+//            volatile uint32 CNENx_INV;
+//            volatile uint32 CNSTATx;
+//            volatile uint32 CNSTATx_CLR;
+//            volatile uint32 CNSTATx_SET;
+//            volatile uint32 CNSTATx_INV;
+//    };
+    
+    class ADEVGFG_w{
+        volatile uint32 DEVCFG3;
+        volatile uint32 DEVCFG2;
+        volatile uint32 DEVCFG1;
+        volatile uint32 DEVCFG0;
+    };
+    
 }
-
 #elif defined (__32MZ__)
 #   error   Unknown register types for MZ family.
 #else
