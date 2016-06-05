@@ -36,237 +36,126 @@
 
 namespace AFramework{
     
-    class ACSIReg{
-        public:
-            volatile uint32 REG;
-            volatile uint32 CLR;
-            volatile uint32 SET;
-            volatile uint32 INV;
-    };
+    namespace ARegTypes{
+        
+        class ACSIReg{
+            public:
+                volatile uint32 REG;
+                volatile uint32 CLR;
+                volatile uint32 SET;
+                volatile uint32 INV;
+        };
     
-    class ACxxReg{
-        public:
-            volatile uint32 REG;
-            volatile uint32 CLR;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-    };
+        class ACxxReg{
+            public:
+                volatile uint32 REG;
+                volatile uint32 CLR;
+                volatile uint32 : 0x20;
+                volatile uint32 : 0x20;
+        };
     
-    class AxxxReg{
-        public:
-            volatile uint32 REG;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-    };
+        class AxxxReg{
+            public:
+                volatile uint32 REG;
+                volatile uint32 : 0x20;
+                volatile uint32 : 0x20;
+                volatile uint32 : 0x20;
+        };
     
-    class APad{
-        public:
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-    };
+        class APad{
+            public:
+                volatile uint32 : 0x20;
+                volatile uint32 : 0x20;
+                volatile uint32 : 0x20;
+                volatile uint32 : 0x20;
+        };
     
-    class AstdReg{
-        public:
-            volatile uint32 REG;
-    };
+        class AStdReg{
+            public:
+                volatile uint32 REG;
+        };
+        
+    }
     
+    /*  OK                                                                      */
     class AWDT_w{
         public:
-            volatile uint32 WDTCON;
-            volatile uint32 WDTCON_CLR;
-            volatile uint32 WDTCON_SET;
-            volatile uint32 WDTCON_INV;
+            volatile ARegTypes::ACSIReg WDTCON;
     };
-    
+    /*  OK                                                                      */
     class ARTCC_w{
         public:
-            volatile uint32 RTCCON;
-            volatile uint32 RTCCON_CLR;
-            volatile uint32 RTCCON_SET;
-            volatile uint32 RTCCON_INV;
-            volatile uint32 RTCALRM;
-            volatile uint32 RTCALRM_CLR;
-            volatile uint32 RTCALRM_SET;
-            volatile uint32 RTCALRM_INV;
-            volatile uint32 RTCTIME;
-            volatile uint32 RTCTIME_CLR;
-            volatile uint32 RTCTIME_SET;
-            volatile uint32 RTCTIME_INV;
-            volatile uint32 RTCDATE;
-            volatile uint32 RTCDATE_CLR;
-            volatile uint32 RTCDATE_SET;
-            volatile uint32 RTCDATE_INV;
-            volatile uint32 ALRMTIME;
-            volatile uint32 ALRMTIME_CLR;
-            volatile uint32 ALRMTIME_SET;
-            volatile uint32 ALRMTIME_INV;
-            volatile uint32 ALRMDATE;
-            volatile uint32 ALRMDATE_CLR;
-            volatile uint32 ALRMDATE_SET;
-            volatile uint32 ALRMDATE_INV;
+            volatile ARegTypes::ACSIReg RTCCON;
+            volatile ARegTypes::ACSIReg RTCALRM;
+            volatile ARegTypes::ACSIReg RTCTIME;
+            volatile ARegTypes::ACSIReg RTCDATE;
+            volatile ARegTypes::ACSIReg ALRMTIME;
+            volatile ARegTypes::ACSIReg ALRMDATE;
     };
     
     class ATMR_w{
         public:
-            volatile uint32 TxCON;
-            volatile uint32 TxCON_CLR;
-            volatile uint32 TxCON_SET;
-            volatile uint32 TxCON_INV;
-            volatile uint32 TMRx;
-            volatile uint32 TMRx_CLR;
-            volatile uint32 TMRx_SET;
-            volatile uint32 TMRx_INV;
-            volatile uint32 PRx;
-            volatile uint32 PRx_CLR;
-            volatile uint32 PRx_SET;
-            volatile uint32 PRx_INV;
+            volatile ARegTypes::ACSIReg TxCON;
+            volatile ARegTypes::ACSIReg TMRx;
+            volatile ARegTypes::ACSIReg PRx;
     };
     
     class AIC_w{
         public:
-            volatile uint32 ICxCON;
-            volatile uint32 ICxCON_CLR;
-            volatile uint32 ICxCON_SET;
-            volatile uint32 ICxCON_INV;
-            volatile uint32 ICxBUF;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
+            volatile ARegTypes::ACSIReg ICxCON;
+            volatile ARegTypes::AxxxReg ICxBUF;
     };
     
     class AOC_w{
         public:
-            volatile uint32 OCxCON;
-            volatile uint32 OCxCON_CLR;
-            volatile uint32 OCxCON_SET;
-            volatile uint32 OCxCON_INV;
-            volatile uint32 OCxR;
-            volatile uint32 OCxR_CLR;
-            volatile uint32 OCxR_SET;
-            volatile uint32 OCxR_INV;
-            volatile uint32 OCxRS;
-            volatile uint32 OCxRS_CLR;
-            volatile uint32 OCxRS_SET;
-            volatile uint32 OCxRS_INV;
+            volatile ARegTypes::ACSIReg OCxCON;
+            volatile ARegTypes::ACSIReg OCxR;
+            volatile ARegTypes::ACSIReg OCxRS;
     };
     
     class AI2C_w{
         public:
-            volatile uint32 I2CxCON;
-            volatile uint32 I2CxCON_CLR;
-            volatile uint32 I2CxCON_SET;
-            volatile uint32 I2CxCON_INV;
-            volatile uint32 I2CxSTAT;
-            volatile uint32 I2CxSTAT_CLR;
-            volatile uint32 I2CxSTAT_SET;
-            volatile uint32 I2CxSTAT_INV;
-            volatile uint32 I2CxADD;
-            volatile uint32 I2CxADD_CLR;
-            volatile uint32 I2CxADD_SET;
-            volatile uint32 I2CxADD_INV;
-            volatile uint32 I2CxMSK;
-            volatile uint32 I2CxMSK_CLR;
-            volatile uint32 I2CxMSK_SET;
-            volatile uint32 I2CxMSK_INV;
-            volatile uint32 I2CxBRG;
-            volatile uint32 I2CxBRG_CLR;
-            volatile uint32 I2CxBRG_SET;
-            volatile uint32 I2CxBRG_INV;
-            volatile uint32 I2CxTRN;
-            volatile uint32 I2CxTRN_CLR;
-            volatile uint32 I2CxTRN_SET;
-            volatile uint32 I2CxTRN_INV;
-            volatile uint32 I2CxRCV;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
+            volatile ARegTypes::ACSIReg I2CxCON;
+            volatile ARegTypes::ACSIReg I2CxSTAT;
+            volatile ARegTypes::ACSIReg I2CxADD;
+            volatile ARegTypes::ACSIReg I2CxMSK;
+            volatile ARegTypes::ACSIReg I2CxBRG;
+            volatile ARegTypes::ACSIReg I2CxTRN;
+            volatile ARegTypes::AxxxReg I2CxRCV;
     };
     
     class ASPI_w{
         public:
-            volatile uint32 SPIxCON;
-            volatile uint32 SPIxCON_CLR;
-            volatile uint32 SPIxCON_SET;
-            volatile uint32 SPIxCON_INV;
-            volatile uint32 SPIxSTAT;
-            volatile uint32 SPIxSTAT_CLR;
-            volatile uint32 SPIxSTAT_SET;
-            volatile uint32 SPIxSTAT_INV;
-            volatile uint32 SPIxBUF;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 SPIxBRG;
-            volatile uint32 SPIxBRG_CLR;
-            volatile uint32 SPIxBRG_SET;
-            volatile uint32 SPIxBRG_INV;
-            volatile uint32 SPIxCON2;
-            volatile uint32 SPIxCON2_CLR;
-            volatile uint32 SPIxCON2_SET;
-            volatile uint32 SPIxCON2_INV;
+            volatile ARegTypes::ACSIReg SPIxCON;
+            volatile ARegTypes::ACSIReg SPIxSTAT;
+            volatile ARegTypes::AxxxReg SPIxBUF;
+            volatile ARegTypes::ACSIReg SPIxBRG;
+            volatile ARegTypes::ACSIReg SPIxCON2;
     };
     
     class AUART_w{
         public:
-            volatile uint32 UxMODE;
-            volatile uint32 UxMODE_CLR;
-            volatile uint32 UxMODE_SET;
-            volatile uint32 UxMODE_INV;
-            volatile uint32 UxSTA;
-            volatile uint32 UxSTA_CLR;
-            volatile uint32 UxSTA_SET;
-            volatile uint32 UxSTA_INV;
-            volatile uint32 UxTXREG;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 UxRXREG;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 : 0x20;
-            volatile uint32 UxBRG;
-            volatile uint32 UxBRG_CLR;
-            volatile uint32 UxBRG_SET;
-            volatile uint32 UxBRG_INV;
+            volatile ARegTypes::ACSIReg UxMODE;
+            volatile ARegTypes::ACSIReg UxSTA;
+            volatile ARegTypes::AxxxReg UxTXREG;
+            volatile ARegTypes::AxxxReg UxRXREG;
+            volatile ARegTypes::ACSIReg UxBRG;
     };
     
     class APMP_w{
         public:
-            volatile uint32 PMCON;
-            volatile uint32 PMCON_CLR;
-            volatile uint32 PMCON_SET;
-            volatile uint32 PMCON_INV;
-            volatile uint32 PMMODE;
-            volatile uint32 PMMODE_CLR;
-            volatile uint32 PMMODE_SET;
-            volatile uint32 PMMODE_INV;
-            volatile uint32 PMADDR;
-            volatile uint32 PMADDR_CLR;
-            volatile uint32 PMADDR_SET;
-            volatile uint32 PMADDR_INV;
-            volatile uint32 PMDOUT;
-            volatile uint32 PMDOUT_CLR;
-            volatile uint32 PMDOUT_SET;
-            volatile uint32 PMDOUT_INV;
-            volatile uint32 PMDIN;
-            volatile uint32 PMDIN_CLR;
-            volatile uint32 PMDIN_SET;
-            volatile uint32 PMDIN_INV;
-            volatile uint32 PMAEN;
-            volatile uint32 PMAEN_CLR;
-            volatile uint32 PMAEN_SET;
-            volatile uint32 PMAEN_INV;
-            volatile uint32 PMSTAT;
-            volatile uint32 PMSTAT_CLR;
-            volatile uint32 PMSTAT_SET;
-            volatile uint32 PMSTAT_INV;
+            volatile ARegTypes::ACSIReg PMCON;
+            volatile ARegTypes::ACSIReg PMMODE;
+            volatile ARegTypes::ACSIReg PMADDR;
+            volatile ARegTypes::ACSIReg PMDOUT;
+            volatile ARegTypes::ACSIReg PMDIN;
+            volatile ARegTypes::ACSIReg PMAEN;
+            volatile ARegTypes::ACSIReg PMSTAT;
     };
     
     class AADC_w{
         public:
+            volatile ARegTypes::ACSIReg AD1CON[0x03];
             volatile uint32 ADxCON1;
             volatile uint32 ADxCON1_CLR;
             volatile uint32 ADxCON1_SET;
@@ -762,6 +651,54 @@ namespace AFramework{
     };
     
 }
+
+#   define _WDTCON_ON_POSITION                      0x0000000F
+#   define _WDTCON_ON_MASK                          0x00008000
+#   define _WDTCON_ON_LENGTH                        0x00000001
+
+#   define _WDTCON_SWDTPS_POSITION                  0x00000002
+#   define _WDTCON_SWDTPS_MASK                      0x0000007C
+#   define _WDTCON_SWDTPS_LENGTH                    0x00000005
+
+#   define _WDTCON_SWDTPS0_POSITION                 0x00000002
+#   define _WDTCON_SWDTPS0_MASK                     0x00000004
+#   define _WDTCON_SWDTPS0_LENGTH                   0x00000001
+
+#   define _WDTCON_SWDTPS1_POSITION                 0x00000003
+#   define _WDTCON_SWDTPS1_MASK                     0x00000008
+#   define _WDTCON_SWDTPS1_LENGTH                   0x00000001
+
+#   define _WDTCON_SWDTPS2_POSITION                 0x00000004
+#   define _WDTCON_SWDTPS2_MASK                     0x00000010
+#   define _WDTCON_SWDTPS2_LENGTH                   0x00000001
+
+#   define _WDTCON_SWDTPS3_POSITION                 0x00000005
+#   define _WDTCON_SWDTPS3_MASK                     0x00000020
+#   define _WDTCON_SWDTPS3_LENGTH                   0x00000001
+
+#   define _WDTCON_SWDTPS4_POSITION                 0x00000006
+#   define _WDTCON_SWDTPS4_MASK                     0x00000040
+#   define _WDTCON_SWDTPS4_LENGTH                   0x00000001
+
+#   if !defined (__DEVCLASS3__)
+#       define _WDTCON_WDTWINEN_POSITION            0x00000001
+#       define _WDTCON_WDTWINEN_MASK                0x00000002
+#       define _WDTCON_WDTWINEN_LENGTH              0x00000001
+#   endif
+
+#   define _WDTCON_WDTCLR_POSITION                  0x00000000
+#   define _WDTCON_WDTCLR_MASK                      0x00000001
+#   define _WDTCON_WDTCLR_LENGTH                    0x00000001
+
+#   define _RTCCON_CAL_POSITION                     0x00000010
+#   define _RTCCON_CAL_MASK                         0x03FF0000
+#   define _RTCCON_CAL_LENGTH                       0x0000000A
+
+
+
+#include <proc/p32mx270f256d.h>
+#include <proc/p32mx460f512l.h>
+
 #elif defined (__32MZ__)
 #   error   Unknown register types for MZ family.
 #else
@@ -770,3 +707,7 @@ namespace AFramework{
 
 
 #endif // AREGISTERDEFS_H
+
+#   define ___POSITION  0x
+#   define ___MASK      0x
+#   define ___LENGTH    0x
