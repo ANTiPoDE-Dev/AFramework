@@ -57,40 +57,13 @@
 
 #if   defined (ANTIPODE32MR)
 #   define __32MX__
+#   define __DEVCLASS1__
 //  TIMERS
 #   define __HAS_TIMER1__ 1
 #   define __HAS_TIMER2__ 1
 #   define __HAS_TIMER3__ 1
 #   define __HAS_TIMER4__ 1
 #   define __HAS_TIMER5__ 1
-//  INPUT CAPTURE
-#   define __HAS_IC1__ 1
-#   define __HAS_IC2__ 1
-#   define __HAS_IC3__ 1
-#   define __HAS_IC4__ 1
-#   define __HAS_IC5__ 1
-//  OUTPUT COMPARE
-#   define __HAS_OC1__ 1
-#   define __HAS_OC2__ 1
-#   define __HAS_OC3__ 1
-#   define __HAS_OC4__ 1
-#   define __HAS_OC5__ 1
-//  I2C
-#   define __HAS_I2C1__ 1
-#   define __HAS_I2C2__ 1
-#   define __HAS_I2C3__ 0
-#   define __HAS_I2C4__ 0
-#   define __HAS_I2C5__ 0
-#   define __I2C_SDA1__
-#   define __I2C_SCL1__
-#   define __I2C_SDA2__
-#   define __I2C_SCL2__
-//  SPI
-#   define __HAS_SPI1__ 1
-#   define __HAS_SPI2__ 1
-//  UART
-#   define __HAS_UART1__ 1
-#   define __HAS_UART2__ 1
 //  PORTS
 #   define __HAS__PORTA__ 1
 #   define __HAS__PORTB__ 1
