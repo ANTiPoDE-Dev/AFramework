@@ -28,225 +28,228 @@
 
 #include "APorts.h"
 
-A_COHERENT AFramework::APort AFramework::PortA __attribute__((address(0xBF886000)));
-A_COHERENT AFramework::APort AFramework::PortB __attribute__((address(0xBF886100)));
-A_COHERENT AFramework::APort AFramework::PortC __attribute__((address(0xBF886200)));
+#   if  (__HAS__PORTA__)
+        extern volatile AFramework::APORT_w PORTA_w __asm__("PORTA_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortA(&PORTA_w);
+#   endif
 
-AFramework::APort::APort() : m_ANSEL_CLR(ALL), 
-                             m_TRIS_SET(ALL), 
-                             m_LAT_CLR(ALL), 
-                             m_ODC_CLR(ALL), 
-                             m_CNPU_CLR(ALL), 
-                             m_CNPD_CLR(ALL), 
-                             m_CNCON_CLR(ALL), 
-                             m_CNEN_CLR(ALL), 
-                             m_CNSTAT_CLR(ALL){
-
-}
-       
-AFramework::uint32 AFramework::APort::adcStatus() A_CONST_COHERENT{
-    /*  ritorno il contenuto del registro ANSEL                                 */
-    return m_ANSEL;
-}
-
-bool AFramework::APort::isAnalog(const uint32 gpio) A_CONST_COHERENT{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_ANSEL & gpio;
-}
-
-void AFramework::APort::setDigital(const uint32 gpio) A_COHERENT{
-    /*  utilizzo il registro clr associato                                      */
-    m_ANSEL_CLR = gpio;
-}
-
-void AFramework::APort::setAnalog(const uint32 gpio) A_COHERENT{
-    /*  utilizzo il registro set associato                                      */
-    m_ANSEL_SET = gpio;
-}
-
-AFramework::uint32 AFramework::APort::ioStatus() A_CONST_COHERENT{
-    /*  ritorno il contenuto del registro TRIS                                  */
-    return m_TRIS;
-}
-
-bool AFramework::APort::isInput(const uint32 gpio) A_CONST_COHERENT{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_TRIS & gpio;
-}
-
-void AFramework::APort::setInput(const uint32 gpio) A_COHERENT{
-    /*  utilizzo il registro set associato                                      */
-    m_TRIS_SET = gpio;
-}
-
-void AFramework::APort::setOutput(const uint32 gpio) A_COHERENT{
-    /*  utilizzo il registro clr associato                                      */
-    m_TRIS_CLR = gpio;
-}
-
-AFramework::uint32 AFramework::APort::portRead() A_CONST_COHERENT{
-    /*  ritorno il contenuto del registro port                                  */
-    return m_PORT;
-}
-
-AFramework::LogicLevel AFramework::APort::portRead(const uint32 gpio) A_CONST_COHERENT{
-    /*  ritorno l'and con il gpio passato                                       */
-    return ((m_PORT & gpio) ? Hi : Lo);
-}
-
-void AFramework::APort::portWrite(const uint32 value) A_COHERENT{
-    /*  utilizzo il registro clr associato per azzerare la il registro PORT     */
-    m_PORT_CLR = ALL;
-    /*  utilizzo il registro set per scrivere il valore                         */
-    m_PORT_SET = value;
-}
-
-void AFramework::APort::portWrite(const uint32 gpios, const LogicLevel value) A_COHERENT{
-    /*  se devo mettere alto                                                    */
-    if(value == Hi){
-        /*  utilizzo il registro set associato                                  */
-        m_PORT_SET = gpios;
-    /*  se invece devo mettere basso                                            */
-    }else if(value == Lo){
-        /*  utilizzo il registro clr associato                                  */
-        m_PORT_CLR = gpios;
-    }
-}
-
-void AFramework::APort::portInvert(const uint32 & gpios) A_COHERENT{
-    /*  utilizzo il registro inv associato                                      */
-    m_PORT_INV = gpios;
-}
-
-AFramework::uint32 AFramework::APort::latchRead() A_CONST_COHERENT{
-    /*  ritorno il contenuto del registro LAT                                   */
-    return m_LAT;
-}
-
-AFramework::LogicLevel AFramework::APort::latchRead(const uint32 gpio) A_CONST_COHERENT{
-    /*  ritorno l'and con il gpio passato                                       */
-    return ((m_LAT & gpio) ? Hi : Lo);
-}
-
-void AFramework::APort::latchWrite(const uint32 value) A_COHERENT{
-    /*  utilizzo il registro clr per azzerare il registro LAT                   */
-    m_LAT_CLR = ALL;
-    /*  utilizzo il registro set per scrivere il valore                         */
-    m_LAT_SET = value;
-}
-
-void AFramework::APort::latchWrite(const uint32 gpios, const LogicLevel value) A_COHERENT{
-    /*  se devo mettere alto                                                    */
-    if(value == Hi){
-        /*  utilizzo il registro set associato                                  */
-        m_LAT_SET = gpios;
-    /*  se invece devo mettere basso                                            */
-    }else if(value == Lo){
-        /*  utilizzo il registro clr associato                                  */
-        m_LAT_CLR = gpios;
-    }
-}
-
-void AFramework::APort::latchInvert(const uint32 gpios) A_COHERENT{
-    /*  utilizzo il registro inv associato                                      */
-    m_LAT_INV = gpios;
-}
-
-AFramework::uint32 AFramework::APort::openDrainStatus() A_CONST_COHERENT{
-    /*  ritorno il contenuto del registro odc                                   */
-    return m_ODC;
-}
-
-bool AFramework::APort::isOpenDrain(const uint32 gpio) A_CONST_COHERENT{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_ODC & gpio;    
-}
-
-void AFramework::APort::setOpenDrain(const uint32 gpio) A_COHERENT{
-    /*  utilizzo il registro set associato                                      */
-    m_ODC_SET = gpio;
-}
-
-void AFramework::APort::setStandard(const uint32 gpio) A_COHERENT{
-    /* utilizzo il registro clr associato                                       */
-    m_ODC_CLR = gpio;
-}
-
-AFramework::uint32 AFramework::APort::pullUpStatus() A_CONST_COHERENT{
-    /*  ritorno il contenuto del registro cnpu                                  */
-    return m_CNPU;
-}
-
-bool AFramework::APort::isPullUpEnabled(const uint32 gpio) A_CONST_COHERENT{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_CNPU & gpio;
-}
-
-void AFramework::APort::enablePullUp(const uint32 gpio) A_COHERENT{
-    /*  disabilito i pull down sui gpio passati                                 */
-    m_CNPD_CLR = gpio;
-    /*  abilito i pull up sui gpio passati                                      */
-    m_CNPU_SET = gpio;
-}
-
-void AFramework::APort::disablePullUp(const uint32 gpio) A_COHERENT{
-    /*  utilizzo il registro clr associato                                      */
-    m_CNPU_CLR = gpio;
-}
-
-AFramework::uint32 AFramework::APort::pullDownStatus() A_CONST_COHERENT{
-    /*  ritorno il contenuto del registro cnpd                                  */
-    return m_CNPD;
-}
-
-bool AFramework::APort::isPullDownEnabled(const uint32 gpio) A_CONST_COHERENT{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_CNPD & gpio;
-}
-
-void AFramework::APort::enablePullDown(const uint32 gpio) A_COHERENT{
-    /*  disabilito i pull up sui gpio passati                                   */
-    m_CNPU_CLR = gpio;
-    /*  abilito i pull down sui gpio passati                                    */
-    m_CNPD_SET = gpio;
-}
-
-void AFramework::APort::disablePullDown(const uint32 gpio) A_COHERENT{
-    /*  utilizzo il registro clr associato                                      */
-    m_CNPD_CLR = gpio;
-}
-
-bool AFramework::APort::isInterrutptEnabled() A_CONST_COHERENT{
+#   if  (__HAS__PORTB__)
+        extern volatile AFramework::APORT_w PORTB_w __asm__("PORTB_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortB(&PORTB_w);
+#   endif
     
-    /*  dovrebbe venire qualcosa tipo l'and con CNCON (bit ON) e l'enable del   */
-    /*  controller dell'interrupt                                               */
-    #warning "bool AFramework::APort::isInterrutptEnabled() A_CONST_COHERENT non ancora implementata"
-    return false;
+#   if  (__HAS__PORTC__)
+        extern volatile AFramework::APORT_w PORTC_w __asm__("PORTC_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortC(&PORTC_w);
+#   endif
+    
+#   if  (__HAS__PORTD__)
+        extern volatile AFramework::APORT_w PORTD_w __asm__("PORTD_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortD(&PORTD_w);
+#   endif
+    
+#   if  (__HAS__PORTE__)
+        extern volatile AFramework::APORT_w PORTE_w __asm__("PORTE_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortE(&PORTE_w);
+#   endif
+    
+#   if  (__HAS__PORTF__)
+        extern volatile AFramework::APORT_w PORTF_w __asm__("PORTF_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortF(&PORTF_w);
+#   endif
+    
+#   if  (__HAS__PORTG__)
+        extern volatile AFramework::APORT_w PORTG_w __asm__("PORTG_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortG(&PORTG_w);
+#   endif
+
+#   if  (__HAS__PORTH__)
+        extern volatile AFramework::APORT_w PORTH_w __asm__("PORTH_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortH(&PORTH_w);
+#   endif
+    
+#   if  (__HAS__PORTJ__)
+        extern volatile AFramework::APORT_w PORTJ_w __asm__("PORTJ_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortJ(&PORTJ_w);
+#   endif
+
+#   if  (__HAS__PORTK__)
+        extern volatile AFramework::APORT_w PORTK_w __asm__("PORTK_w") __attribute__((section("sfrs")));
+        volatile AFramework::AHardwarePort AFramework::PortK(&PORTK_w);
+#   endif
+
+AFramework::AHardwarePort::AHardwarePort(volatile APORT_w * w) : m_reg(w){
+    /*  imposto tutto come ingresso                                             */
+    m_reg->TRISx.SET   = Quick::All;
+    /*  azzero il registro LATx                                                 */
+    m_reg->LATx.CLR    = Quick::All;
+    /*  setto tutto con l'open-drain disattivato                                */
+    m_reg->ODCx.CLR    = Quick::All;
+    /*  disabilito tutti i pull-up                                              */
+    m_reg->CNPUx.CLR   = Quick::All;
+    /*  disabilito tutti i pull-down                                            */
+    m_reg->CNPDx.CLR   = Quick::All;
+    /*  disabilito la periferica change-notice                                  */
+    m_reg->CNCONx.CLR  = Quick::All;
+    /*  azzero il registro dell'enable per la periferica change-notice          */
+    m_reg->CNENx.CLR   = Quick::All;
+    /*  azzero il registro dei flag per la periferica change-notice             */
+    m_reg->CNSTATx.CLR = Quick::All;
 }
 
-void AFramework::APort::enableInterrupt(const uint32 gpios, const Priority pri, const SubPriority, const bool idleStop) A_COHERENT{
-    #warning "void AFramework::APort::enableInterrupt(const uint32 gpios, const Priority pri, const SubPriority, const bool idleStop) A_COHERENT non ancora implementata"
+AFramework::uint32 AFramework::AHardwarePort::adcStatus() const volatile{
+    return m_reg->ANSELx.val();
 }
 
-void AFramework::APort::disableInterrupt() A_COHERENT{
-    /*  utilizzo il registro clr associato                                      */
-    m_CNCON_CLR = ALL;
-    #warning "void AFramework::APort::disableInterrupt() A_COHERENT bisogna ancora disabilitare dal controller dell'interrupt"
+bool AFramework::AHardwarePort::isAnalog(const uint32 gpio) const volatile{
+    return m_reg->ANSELx.isHi(gpio);
 }
 
-AFramework::uint32 AFramework::APort::changeNoticeStatus() A_CONST_COHERENT{
-    /*  ritorno il contenuto del registro cnstat                                */
-    return m_CNSTAT;
+bool AFramework::AHardwarePort::setDigital(const uint32 gpio) volatile{
+    return m_reg->ANSELx.clr(gpio);
 }
 
-bool AFramework::APort::hasInterruptOccurred(const uint32 gpio) A_CONST_COHERENT{
-    /*  ritorno l'and con il gpio passato                                       */
-    return m_CNSTAT & gpio;
+bool AFramework::AHardwarePort::setAnalog(const uint32 gpio) volatile{
+    return m_reg->ANSELx.set(gpio);
+
 }
 
-void AFramework::APort::resetInterruptFlag(const uint32 gpios) A_COHERENT{
-    /*  azzero i flag di change notice sui gpio richiesti (generalmente tutti)  */
-    /*  ma non sapendo cosa la gente ha in testa devo dare questa possibilità   */
-    m_CNSTAT_CLR = gpios;
-    #warning "void AFramework::APort::resetInterruptFlag() A_CONST_COHERENT manca da pulire il flag dal controller dell'interrupt"
+AFramework::uint32 AFramework::AHardwarePort::ioStatus() const volatile{
+    return m_reg->TRISx.val();
+}
+
+bool AFramework::AHardwarePort::isInput(const uint32 gpio) const volatile{
+    return m_reg->TRISx.isHi(gpio);
+}
+
+bool AFramework::AHardwarePort::setInput(const uint32 gpio) volatile{
+    return m_reg->TRISx.set(gpio);
+}
+
+bool AFramework::AHardwarePort::setOutput(const uint32 gpio) volatile{
+    return m_reg->TRISx.clr(gpio);
+}
+
+AFramework::uint32 AFramework::AHardwarePort::read() const volatile{
+    return m_reg->PORTx.REG;
+}
+
+AFramework::LogicLevel AFramework::AHardwarePort::read(const uint32 gpio) const volatile{
+    return (m_reg->PORTx.REG & gpio ? Hi : Lo);
+}
+
+bool AFramework::AHardwarePort::portWrite(const uint32 value) volatile{
+    m_reg->PORTx.CLR = Quick::All;
+    return m_reg->PORTx.set(value);
+}
+
+bool AFramework::AHardwarePort::portWrite(const uint32 gpio, const LogicLevel value) volatile{
+    if(value == Hi){
+        return m_reg->PORTx.set(gpio);
+    }else if(value == Lo){
+        return m_reg->PORTx.clr(gpio);
+    }
+}
+
+bool AFramework::AHardwarePort::portInvert(const uint32 gpio) volatile{
+    return m_reg->PORTx.inv(gpio);
+}
+
+AFramework::uint32 AFramework::AHardwarePort::latchRead() const volatile{
+    return m_reg->LATx.REG;
+}
+
+AFramework::LogicLevel AFramework::AHardwarePort::latchRead(const uint32 gpio) const volatile{
+    return (m_reg->LATx.REG & gpio ? Hi : Lo);
+}
+
+bool AFramework::AHardwarePort::write(const uint32 value) volatile{
+    m_reg->LATx.CLR = Quick::All;
+    return m_reg->LATx.set(value);
+}
+
+bool AFramework::AHardwarePort::write(const uint32 gpio, const LogicLevel value) volatile{
+    if(value == Hi){
+        return m_reg->LATx.set(gpio);
+    }else if(value == Lo){
+        return m_reg->LATx.clr(gpio);
+    }
+}
+
+bool AFramework::AHardwarePort::latchInvert(const uint32 gpio) volatile{
+    return m_reg->LATx.inv(gpio);
+}
+
+AFramework::uint32 AFramework::AHardwarePort::openDrainStatus() const volatile{
+    return m_reg->ODCx.REG;
+}
+
+bool AFramework::AHardwarePort::isOpenDrain(const uint32 gpio) const volatile{
+    return m_reg->ODCx.isHi(gpio);
+}
+
+bool AFramework::AHardwarePort::setOpenDrain(const uint32 gpio) volatile{
+    return m_reg->ODCx.set(gpio);
+}
+
+bool AFramework::AHardwarePort::setStandard(const uint32 gpio) volatile{
+    return m_reg->ODCx.clr(gpio);
+}
+
+AFramework::uint32 AFramework::AHardwarePort::pullUpStatus() const volatile{
+    return m_reg->CNPUx.REG;
+}
+
+bool AFramework::AHardwarePort::isPullUpEnabled(const uint32 gpio) const volatile{
+    return m_reg->CNPUx.isHi(gpio);
+}
+
+bool AFramework::AHardwarePort::enablePullUp(const uint32 gpio) volatile{
+    m_reg->CNPDx.CLR = gpio;
+    return m_reg->CNPUx.set(gpio);
+}
+
+bool AFramework::AHardwarePort::disablePullUp(const uint32 gpio) volatile{
+    return m_reg->CNPUx.clr(gpio);
+}
+
+AFramework::uint32 AFramework::AHardwarePort::pullDownStatus() const volatile{
+    return m_reg->CNPDx.REG;
+}
+
+bool AFramework::AHardwarePort::isPullDownEnabled(const uint32 gpio) const volatile{
+    return m_reg->CNPDx.isHi(gpio);
+}
+
+bool AFramework::AHardwarePort::enablePullDown(const uint32 gpio) volatile{
+    m_reg->CNPUx.CLR = gpio;
+    return m_reg->CNPDx.set(gpio);
+}
+
+bool AFramework::AHardwarePort::disablePullDown(const uint32 gpio) volatile{
+    return m_reg->CNPDx.clr(gpio);
+}
+
+bool AFramework::AHardwarePort::isInterrutptEnabled() const volatile{
+#   warning Change notice is not currently available
+}
+
+void AFramework::AHardwarePort::enableInterrupt(const uint32 gpio, const Priority pri, const SubPriority sub, const bool idleStop) volatile{
+#   warning Change notice is not currently available
+}
+
+void AFramework::AHardwarePort::disableInterrupt() volatile{
+#   warning Change notice is not currently available
+}
+
+AFramework::uint32 AFramework::AHardwarePort::changeNoticeStatus() const volatile{
+#   warning Change notice is not currently available
+}
+
+bool AFramework::AHardwarePort::hasInterruptOccurred(const uint32 gpio) const volatile{
+#   warning Change notice is not currently available
+}
+
+void AFramework::AHardwarePort::resetInterruptFlag(const uint32 gpio) volatile{
+#   warning Change notice is not currently available
 }

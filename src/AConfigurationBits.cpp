@@ -1,3 +1,34 @@
+/*******************************************************************************
+*   @author:    Milazzo Giuseppe
+*               Università KORE Enna
+*   @e-mail:    milazzo.ga@gmail.com
+*               info@antipode-dev.org
+*******************************************************************************
+*   Software Licence:
+*******************************************************************************
+*
+*   This file is part of AFramework.
+*
+*   AFramework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   AFramework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with AFramework. If not, see <http://www.gnu.org/licenses/>.
+*
+*   Copyright 2015, 2016 Milazzo Giuseppe
+*
+*/
+#include "ASystemConfig.h"
+
+#ifdef ANTIPODE32MR
+
     #pragma config PMDL1WAY     = OFF       //Peripheral Module Disable Configuration (Allow multiple reconfigurations)
     #pragma config IOL1WAY      = OFF       //Peripheral Pin Select Configuration (Allow multiple reconfigurations)
     #pragma config FUSBIDIO     = ON        //USB USID Selection (Controlled by the USB Module)
@@ -20,61 +51,12 @@
     #pragma config FWDTWINSZ    = WINSZ_25  //Watchdog Timer Window Size (Window Size is 25%)
     #pragma config JTAGEN       = OFF       //JTAG Enable (JTAG Disabled)
     #pragma config ICESEL       = ICS_PGx1  //ICE/ICD Comm Channel Select (Communicate on PGEC1/PGED1)
-#pragma config PWP          = OFF       //Program Flash Write Protect (Disable)
-#pragma config BWP          = OFF       //Boot Flash Write Protect bit (Protection Disabled)
-#pragma config CP           = OFF       //Code Protect (Protection Disabled)
+    #pragma config PWP          = OFF       //Program Flash Write Protect (Disable)
+    #pragma config BWP          = OFF       //Boot Flash Write Protect bit (Protection Disabled)
+    #pragma config CP           = OFF       //Code Protect (Protection Disabled)
 
-#include "ACore.h"
-#include "AString.h"
-#include <xc.h>
+#else
 
-using namespace AFramework;
+    #error UNDEFINED BOARD OR PROCESSOR
 
-#define BtnLeft     PORTAbits.RA0
-#define BtnRight    PORTAbits.RA1
-#define LedLeft     LATABits.LATA7
-#define LedRight    LATABits.LATA8
-#define LedFault    LATABits.LATA9
-
-int main(int argc, char** argv) {
-
-    TRISA   = 0xFC7F; 0b1111110001111111
-    LATA    = 0x0000;
-    ANSELA  = 0x0000;
-    ODCA    = 0x0000;
-    
-    TRISB   = 0xFFFF;
-    LATB    = 0x0000;
-    ANSELB  = 0x0000;
-    ODCB    = 0x0000;
-    
-    TRISC   = 0xFFFF;
-    LATC    = 0x0000;
-    ANSELC  = 0x0000;
-    ODCB    = 0x0000;
-    
-    if(!System::init(16392)){
-        LedFault = 1;
-    }
-    LedFault = 1;
-    
-    INTCONbits.MVEC = 0x01;
-    __asm__ volatile("ei");
-    
-    while(1){
-    
-        if(BtnLeft == 0){
-            LedLeft = 1;
-        }else{
-            BtnLeft = 0;
-        }
-        if(BtnRight == 0){
-            LedRight = 1;
-        }else{
-            BtnRight = 0;
-        }
-        
-    }
-    return 0;
-}
-
+#endif

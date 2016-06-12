@@ -27,16 +27,103 @@
 */
 
 #include <cstring>
-
 #include "ACore.h"
-#include "APortDefs.h"
 
-AFramework::System::Segment * AFramework::System::m_heap_head(NULL);
-AFramework::uint32            AFramework::System::m_systemclk(0);
-size_t                        AFramework::System::m_heap_size(0);
-size_t                        AFramework::System::m_heap_busy(0);
-size_t                        AFramework::System::m_xc32_offs(8);
-bool                          AFramework::System::m_init_flag(false);
+#define __CORE_TICK_RATE__      0x03E8
+#define __STATUS_LED_H_TIME__   0x0032
+#define __STATUS_LED_L_TIME__   0x03B6
+
+void ctopen(const volatile AFramework::uint32 p);
+void ctsync(const volatile AFramework::uint32 p);
+void ctconf(const volatile AFramework::uint32 p);
+
+volatile  AFramework::uint32 m_ct_rate = 0;
+
+void ctopen(volatile AFramework::uint32 p){
+#if   defined (__32MX__)
+
+	/*  cancello il contenuto del registro count nel coprocessore               */
+    asm volatile("mtc0   $0,$9");
+    /*  setto il periodo nel registro compare del coprocessore                  */
+    asm volatile("mtc0   %0,$11" : "+r"(p));
+
+#elif defined (__32MZ__)
+#   error   Core Timer module is not currently available.
+#else
+#   error   Unknown architecture.
+#endif
+}
+
+void ctsync(volatile AFramework::uint32 p){
+#if   defined (__32MX__)
+
+    volatile AFramework::uint32 o;
+    /*  leggo il vecchio valore del registro compare dal coprocessore           */
+    asm volatile("mfc0   %0, $11" : "=r"(o));
+    /*  aggiorno per il nuovo match                                             */
+    p += o;
+    /*  setto il periodo nel registro compare del coprocessore                  */
+    asm volatile("mtc0   %0,$11" : "+r"(p));
+
+#elif defined (__32MZ__)
+#   error   Core Timer module is not currently available.
+#else
+#   error   Unknown architecture.
+#endif    
+}
+
+void ctconf(volatile AFramework::uint32 p){
+#if   defined (__32MX__)
+
+    volatile AFramework::uint32 t;
+    /*  leggo il valore del registro count dal coprocessore                     */
+    asm volatile("mfc0   %0, $9" : "=r"(t));
+    /*  aggiorno per il nuovo match                                             */
+    t += p;
+    /*  setto il periodo nel registro compare del coprocessore                  */
+    asm volatile("mtc0   %0,$11" : "+r"(t));
+
+#elif defined (__32MZ__)
+#   error   Core Timer module is not currently available.
+#else
+#   error   Unknown architecture.
+#endif
+}
+
+extern volatile AFramework::AINT_w INT_w __asm__("INT_w") __attribute__((section("sfrs")));
+
+extern "C"{
+    
+    void __ISR(_CORE_TIMER_VECTOR, IPL1AUTO) CoreTimerHandler(){
+        
+        /*  Aggiorno il timer della cpu                                         */
+        ctsync(m_ct_rate);
+        /*  Aggiorno il tempo                                                   */
+        AFramework::System::updateTime();
+        /*  Azzero il flag dell'interrupt                                       */
+        INT_w.IFS[_IFSVEC_CTIF_POSITION].CLR = _IFS_CTIF_MASK;
+    }   
+}
+
+const AFramework::uint32 AFramework::System::Freq40MHz(0x02625A00U);
+const AFramework::uint32 AFramework::System::Freq32KHz(0x00008000U);
+
+
+AFramework::System::Segment *        AFramework::System::m_heap_head(NULL);
+AFramework::uint32                   AFramework::System::m_ledGpio(0);
+AFramework::uint32                   AFramework::System::m_toggle_delay(__STATUS_LED_L_TIME__);
+double                               AFramework::System::m_pri_clock(0);
+double                               AFramework::System::m_sec_clock(0);
+double                               AFramework::System::m_bus_clock(0);
+size_t                               AFramework::System::m_heap_size(0);
+size_t                               AFramework::System::m_heap_busy(0);
+size_t                               AFramework::System::m_xc32_offs(8);
+bool                                 AFramework::System::m_init_flag(false);
+bool                                 AFramework::System::m_toggle_flag(true);
+AFramework::ATime                    AFramework::System::m_alive;
+AFramework::ATime                    AFramework::System::m_toggle;
+volatile AFramework::AINT_w *        AFramework::System::m_int_reg(&INT_w);
+volatile AFramework::AHardwarePort * AFramework::System::m_ledPort(NULL);
 
 void * operator new(size_t size){
     return AFramework::System::malloc(size);
@@ -54,6 +141,10 @@ void operator delete[](void* addr){
     AFramework::System::free(addr);
 }
 
+/********************************************************************************/
+//  CLASS Segment
+/********************************************************************************/
+
 class AFramework::System::Segment{
     public:
         void    *   data ();
@@ -62,6 +153,7 @@ class AFramework::System::Segment{
         uint32      m_size : 0x1F;
         Segment *   m_next;
 };
+
 void * AFramework::System::Segment::data(){
     /*  Per evitare di inserire nella classe un altro campo (il puntatore void  */
     /*  data) ho preferito dare direttamente l'indirizzo calcolandolo in fun-   */
@@ -70,6 +162,7 @@ void * AFramework::System::Segment::data(){
     /*  mente restituisco l'indirizzo come void *.                              */
     return (reinterpret_cast<void *>(&m_next + 1));
 }
+
 AFramework::System::Segment * AFramework::System::Segment::vNext(){
     /*  Calcolo l'indirizzo virtuale a cui dovrebbe trovarsi ipoteticamente il  */
     /*  prossimo blocco: partendo da data() che fornisce la memoria utile allo  */
@@ -77,7 +170,11 @@ AFramework::System::Segment * AFramework::System::Segment::vNext(){
     return (reinterpret_cast<Segment *>(reinterpret_cast<uint32>(data()) + m_size));
 }
 
-bool AFramework::System::init(size_t heapSize, const uint32 & systemClock){
+/********************************************************************************/
+//  CLASS System
+/********************************************************************************/
+
+bool AFramework::System::init(size_t heapSize, volatile AHardwarePort * ledPort, const uint32 ledGpio, const double & systemClock, const double & peripheralClock, const double & secondaryOsc){
     /*  Controllo che la funzione non sia già stata chiamata                    */
     if(m_init_flag){
         /*  in questo caso restituisco false                                    */
@@ -87,6 +184,21 @@ bool AFramework::System::init(size_t heapSize, const uint32 & systemClock){
     /*  meno un intero                                                          */
     if(heapSize < m_xc32_offs + sizeof(Segment) + 4){
         /*  ritorno false (pena underflow)                                      */
+        return false;
+    }
+    /*  se il clock di sistema è zero                                           */
+    if(!systemClock){
+        /*  ritorno false                                                       */
+        return false;
+    }
+    /*  se il clock del bus delle periferiche è zero                            */
+    if(!peripheralClock){
+        /*  ritorno false                                                       */
+        return false;
+    }
+    /*  se il bit passato per il led non è valido                               */
+    if((ledGpio == 0) || (ledGpio & (ledGpio - 1)) || ledGpio > bit15){
+        /*  ritorno false                                                       */
         return false;
     }
     /*  Sottraggo alla dimensione dell'heap passata l'overhead del compilatore  */
@@ -111,18 +223,46 @@ bool AFramework::System::init(size_t heapSize, const uint32 & systemClock){
     /*  Imposto il puntatore al blocco successivo a NULL                        */
     m_heap_head->m_next = NULL;
     /*  imposto il clock di sistema                                             */
-    m_systemclk = systemClock;
-    
+    m_pri_clock = systemClock;
+    /*  imposto l'oscillatore secondario (può andarmi bene anche zero che con-  */
+    /*  sidero come non connesso)                                               */
+    m_sec_clock = secondaryOsc;
+    /*  imposto il clock del bus delle periferiche                              */
+    m_bus_clock = peripheralClock;
     /*
         PARTE RELATIVA ALLA CODA DEI THREAD <ANCORA DA PROGETTARE>
         ...
     */
-    #warning "bool AFramework::System::init(size_t heapSize) coda Thread da progettare"
-
+#   warning Thread queue is currently unimplemented
+    /*  assegno il gpio del led                                                 */
+    m_ledGpio = ledGpio;
+    /*  assegno la porta del led                                                */
+    m_ledPort = ledPort;
+    /*  se la porta è valida                                                    */
+    if(m_ledPort){
+        /*  setto il gpio come digitale                                         */
+        m_ledPort->setDigital(m_ledGpio);
+        /*  spengo l'open drain                                                 */
+        m_ledPort->setStandard(m_ledGpio);
+        /*  setto il gpio come uscita                                           */
+        m_ledPort->setOutput(m_ledGpio);
+    }
+    /*  cancello il flag di interrupt sul timer della cpu                       */
+    m_int_reg->IFS[_IFSVEC_CTIF_POSITION].CLR = _IFS_CTIF_MASK;
+    /*  imposto la priorità dell'interrupt del timer della cpu                  */
+    m_int_reg->IPC[_IPCVEC_CTIP_POSITION].SET = (1 << _IPC_CTIP_POSITION);
+    /*  abilito l'interrupt per il timer della cpu                              */
+    m_int_reg->IEC[_IECVEC_CTIE_POSITION].SET = _IEC_CTIE_MASK;
+    /*  imposto il valore da mettere nel timer della cpu per onda quadra a 1KHz */
+    m_ct_rate = static_cast<uint32>(m_pri_clock) / 0x02 / __CORE_TICK_RATE__;
     /*  Imposto il flag di avvenuta inizializzazione                            */
     m_init_flag = true;
     /*  Abilito lo scheduler                                                    */
     scwake();
+    /*  inizializzo il timer della cpu                                          */
+    ctopen(m_ct_rate);
+    /*  abilito gli interrupt                                                   */
+    enableInterrupt();
     /*  e restituisco true                                                      */
     return true;
 }
@@ -310,23 +450,91 @@ void * AFramework::System::malloc(size_t size){
     return NULL;
 }
 
-AFramework::uint32 AFramework::System::frequency(){
+double AFramework::System::priFrequency(){
     /*  nulla da commentare                                                     */
-    return m_systemclk;
+    return m_pri_clock;
 }
 
-double AFramework::System::period(){
+double AFramework::System::priPeriod(){
     /*  per evitare eccezzioni della cpu ritorno il risultato della divisione   */
     /*  se la frequenza è diversa da zero, altrimenti zero.                     */
-    return (m_systemclk ? (1 / static_cast<double>(m_systemclk)) : 0);
+    return (m_pri_clock ? (1 / static_cast<double>(m_pri_clock)) : 0);
+}
+
+double AFramework::System::secFrequency(){
+    /*  nulla da commentare                                                     */
+    return m_sec_clock;
+}
+
+double AFramework::System::secPeriod(){
+    /*  per evitare eccezzioni della cpu ritorno il risultato della divisione   */
+    /*  se la frequenza è diversa da zero, altrimenti zero.                     */
+    return (m_sec_clock ? (1 / static_cast<double>(m_sec_clock)) : 0);
+}
+
+double AFramework::System::busFrequency(){
+    /*  nulla da commentare                                                     */
+    return m_bus_clock;
+}
+
+double AFramework::System::busPeriod(){
+    /*  per evitare eccezzioni della cpu ritorno il risultato della divisione   */
+    /*  se la frequenza è diversa da zero, altrimenti zero.                     */
+    return (m_bus_clock ? (1 / static_cast<double>(m_bus_clock)) : 0);
+}
+
+void AFramework::System::enableInterrupt(){
+#if   defined (__32MX__)
+    
+    m_int_reg->INTCON.SET = _INTCON_MVEC_MASK;
+    asm volatile("ei");
+    
+#elif defined (__32MZ__)
+#   error   Interrupt module is not currently available.
+#else
+#   error   Unknown architecture.
+#endif   
+}
+
+void AFramework::System::disableInterrupt(){
+#if   defined (__32MX__)
+    
+    asm volatile("di");
+    m_int_reg->INTCON.CLR = _INTCON_MVEC_MASK;
+    
+#elif defined (__32MZ__)
+#   error   Interrupt module is not currently available.
+#else
+#   error   Unknown architecture.
+#endif       
+}
+
+void AFramework::System::updateTime(){
+    /*  incremento l'orologio di sistema                                        */
+    m_alive++;
+    if(m_alive - m_toggle >= m_toggle_delay){
+        /*  salvo il tempo                                                      */
+        m_toggle = m_alive;
+        /*  inverto il flag                                                     */
+        m_toggle_flag = !m_toggle_flag;
+        /*  inverto il led se la porta non è null                               */
+        if(m_ledPort){
+            m_ledPort->latchInvert(m_ledGpio);
+        }
+        if(!m_toggle_flag){
+            m_toggle_delay = __STATUS_LED_H_TIME__;
+        }else{
+            m_toggle_delay = __STATUS_LED_L_TIME__;
+        }
+    }
 }
 
 void AFramework::System::scsusp(){
-    #warning "void AFramework::System::scsusp() non ancora implementata"
+#   warning Scheduler suspend is currently unimplemented
 }
 
 void AFramework::System::scwake(){
-    #warning "void AFramework::System::scwake() non ancora implementata"
+#   warning Scheduler wake-up is currently unimplemented
 }
 
 bool AFramework::System::chkspc(size_t size, const bool& autoLock){

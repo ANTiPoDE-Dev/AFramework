@@ -1,20 +1,21 @@
-#define ANTIPODE32MR
 
 #include "ASystemConfig.h"
 #include "ACore.h"
 #include "APorts.h"
-#include "AString.h"
 
 using namespace AFramework;
 
-
 int main(){
     
-    System::init(16392);
+    System::init(16392, &PortB, bit4);
     
-    while(1){
+    int i = 0;
+    
+    for(i = 0; i < 1; i++){
     
     }
-    
+    while(1){
+
+    }
     return 0;
 }
