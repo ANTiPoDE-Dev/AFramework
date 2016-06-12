@@ -34,16 +34,51 @@
 
 #if   defined (__32MX__)
 
-#define __IFSVEC_SIZE__ 0x03
-#define __IECVEC_SIZE__ 0x03
-#define __IPCVEC_SIZE__ 0x0D
-#define __RPnVEC_SIZE__ 
+#define __IFSVEC_MAX__ 0x03
+#define __IECVEC_MAX__ 0x03
+#define __IPCVEC_MAX__ 0x0D
+#define __RPIVEC_MAX__ 0x34
+#define __RPOVEC_MAX__ 0x70
+
 namespace AFramework{
     
     namespace ARegTypes{
         
         class ACSIReg{
             public:
+                bool clr(const uint32 val) volatile{
+                    CLR = val;
+                    return !(REG & val);
+                }
+                
+                bool set(const uint32 val) volatile{
+                    SET = val;
+                    return !(~REG & val);
+                }
+                
+                bool inv(const uint32 val) volatile{
+                    uint32 old = REG;
+                    INV = val;
+                    return !((old ^ REG) ^ val);
+                }
+
+                bool wrt(const uint32 val) volatile{
+                    REG = val;
+                    return !(REG ^ val);
+                }
+                
+                uint32 val() const volatile{
+                    return REG;
+                }
+                
+                bool isHi(const uint32 val) volatile{
+                    return !(~REG & val);
+                }
+                
+                bool isLo(const uint32 val) volatile{
+                    return !(REG & val);
+                }
+
                 volatile uint32 REG;
                 volatile uint32 CLR;
                 volatile uint32 SET;
@@ -52,6 +87,28 @@ namespace AFramework{
     
         class ACxxReg{
             public:
+                bool clr(const uint32 val) volatile{
+                    CLR = val;
+                    return !(REG & val);
+                }
+                
+                bool wrt(const uint32 val) volatile{
+                    REG = val;
+                    return !(REG ^ val);
+                }
+                
+                uint32 val() const volatile{
+                    return REG;
+                }
+                
+                bool isHi(const uint32 val) volatile{
+                    return !(~REG & val);
+                }
+                
+                bool isLo(const uint32 val) volatile{
+                    return !(REG & val);
+                }
+                
                 volatile uint32 REG;
                 volatile uint32 CLR;
                 volatile uint32 : 0x20;
@@ -60,6 +117,24 @@ namespace AFramework{
     
         class AxxxReg{
             public:
+                
+                bool wrt(const uint32 val) volatile{
+                    REG = val;
+                    return !(REG ^ val);
+                }
+                
+                uint32 val() const volatile{
+                    return REG;
+                }
+                
+                bool isHi(const uint32 val) volatile{
+                    return !(~REG & val);
+                }
+                
+                bool isLo(const uint32 val) volatile{
+                    return !(REG & val);
+                }
+                
                 volatile uint32 REG;
                 volatile uint32 : 0x20;
                 volatile uint32 : 0x20;
@@ -76,6 +151,24 @@ namespace AFramework{
     
         class AStdReg{
             public:
+                
+                bool wrt(const uint32 val) volatile{
+                    REG = val;
+                    return !(REG ^ val);
+                }
+                
+                uint32 val() const volatile{
+                    return REG;
+                }
+                
+                bool isHi(const uint32 val) volatile{
+                    return !(~REG & val);
+                }
+                
+                bool isLo(const uint32 val) volatile{
+                    return !(REG & val);
+                }
+                
                 volatile uint32 REG;
         };
         
@@ -171,11 +264,12 @@ namespace AFramework{
 #   if defined (__DEVCLASS1__) || defined (__DEVCLASS2__) || defined (__DEVCLASS4__)
     class ARPI_w{                                                               
         public:
+            volatile ARegTypes::AStdReg RPn[__RPIVEC_MAX__];
     };
     
     class ARPO_w{                                                               
         public:
-            volatile ARegTypes::AStdReg RPn[];
+            volatile ARegTypes::AStdReg RPn[__RPOVEC_MAX__];
     };
 #   endif
     
@@ -184,9 +278,9 @@ namespace AFramework{
             volatile ARegTypes::ACSIReg INTCON;
             volatile ARegTypes::AxxxReg INTSTAT;
             volatile ARegTypes::ACSIReg IPTMR;
-            volatile ARegTypes::ACSIReg IFS[__IFSVEC_SIZE__];
-            volatile ARegTypes::ACSIReg IEC[__IECVEC_SIZE__];
-            volatile ARegTypes::ACSIReg IPC[__IPCVEC_SIZE__];
+            volatile ARegTypes::ACSIReg IFS[__IFSVEC_MAX__];
+            volatile ARegTypes::ACSIReg IEC[__IECVEC_MAX__];
+            volatile ARegTypes::ACSIReg IPC[__IPCVEC_MAX__];
     };
     
 //    class ABMX_w{
@@ -216,6 +310,7 @@ namespace AFramework{
             volatile ARegTypes::ACSIReg ODCx;
             volatile ARegTypes::ACSIReg CNPUx;
             volatile ARegTypes::ACSIReg CNPDx;
+            volatile ARegTypes::ACSIReg CNCONx;
             volatile ARegTypes::ACSIReg CNENx;
             volatile ARegTypes::ACSIReg CNSTATx;
     };
@@ -233,9 +328,6 @@ namespace AFramework{
 //        public:
 //    };
 }
-
-#include <proc/p32mx270f256d.h>
-#include <proc/p32mx460f512l.h>
 
 #elif defined (__32MZ__)
 #   error   Unknown register types for MZ family.

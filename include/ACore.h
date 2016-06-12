@@ -29,8 +29,13 @@
 #define ACORE_H
 
 #include <cstdlib>
+#include <sys/attribs.h>
 
+#include "ATime.h"
+#include "APorts.h"
 #include "ACommons.h"
+#include "ARegisterDefs.h"
+
 
 namespace AFramework{
 
@@ -42,7 +47,7 @@ namespace AFramework{
             
             template <class T>  static bool safeAlloc(T ** ptr, const uint32 & num = 1);
             
-            static bool init(size_t heapSize, const double & systemClock = Freq40MHz, const double & peripheralClock = Freq40MHz, const double & secondaryOsc = 0U);
+            static bool init(size_t heapSize, volatile AHardwarePort * ledPort = NULL, const uint32 ledGpio = 1, const double & systemClock = Freq40MHz, const double & peripheralClock = Freq40MHz, const double & secondaryOsc = 0U);
             static void kill();
             static size_t memstat();
             static size_t heapSize();
@@ -56,6 +61,7 @@ namespace AFramework{
             static double busPeriod();
             static void enableInterrupt();
             static void disableInterrupt();
+            static void updateTime();
         private:
             static void scsusp();
             static void scwake();
@@ -63,14 +69,22 @@ namespace AFramework{
 
             class Segment;
 
-            static Segment * m_heap_head;
-            static size_t    m_heap_size;
-            static size_t    m_heap_busy;
-            static size_t    m_xc32_offs;
-            static double    m_pri_clock;
-            static double    m_sec_clock;
-            static double    m_bus_clock;
-            static bool      m_init_flag;
+            static          Segment *       m_heap_head;
+            static          uint32          m_ledGpio;
+            static          uint32          m_toggle_delay;
+            static          size_t          m_heap_size;
+            static          size_t          m_heap_busy;
+            static          size_t          m_xc32_offs;
+            static          double          m_pri_clock;
+            static          double          m_sec_clock;
+            static          double          m_bus_clock;
+            static          bool            m_init_flag;
+            static          bool            m_toggle_flag;
+            static          ATime           m_alive;
+            static          ATime           m_toggle;
+            static volatile AHardwarePort * m_ledPort;
+            static volatile AINT_w        * m_int_reg;
+            
     };
 
     template <class T> bool System::safeAlloc(T ** ptr, const uint32 & num){

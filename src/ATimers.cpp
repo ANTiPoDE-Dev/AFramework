@@ -31,89 +31,10 @@
 #include <limits>
 #include <cmath>
 
-#if   defined (__32MX__)
-
-#   define _TxCON_ON_POSITION          0x0000000F
-#   define _TxCON_ON_MASK              0x00008000
-#   define _TxCON_ON_LENGTH            0x00000001
-
-#   define _TxCON_SIDL_POSITION        0x0000000D
-#   define _TxCON_SIDL_MASK            0x00002000
-#   define _TxCON_SIDL_LENGTH          0x00000001
-
-#   define _TxCON_TWDIS_POSITION       0x0000000C
-#   define _TxCON_TWDIS_MASK           0x00001000
-#   define _TxCON_TWDIS_LENGTH         0x00000001
-
-#   define _TxCON_TWIP_POSITION        0x0000000B
-#   define _TxCON_TWIP_MASK            0x00000800
-#   define _TxCON_TWIP_LENGTH          0x00000001
-
-#   define _TxCON_TGATE_POSITION       0x00000007
-#   define _TxCON_TGATE_MASK           0x00000080
-#   define _TxCON_TGATE_LENGTH         0x00000001
-
-#   define _TxCON_16_TCKPS_POSITION    0x00000004
-#   define _TxCON_16_TCKPS_MASK        0x00000030
-#   define _TxCON_16_TCKPS_LENGTH      0x00000002
-
-#   define _TxCON_32_TCKPS_POSITION    0x00000004
-#   define _TxCON_32_TCKPS_MASK        0x00000070
-#   define _TxCON_32_TCKPS_LENGTH      0x00000003
-
-#   define _TxCON_T32_POSITION         0x00000003
-#   define _TxCON_T32_MASK             0x00000008
-#   define _TxCON_T32_LENGTH           0x00000001
-
-#   define _TxCON_TSYNC_POSITION       0x00000002
-#   define _TxCON_TSYNC_MASK           0x00000004
-#   define _TxCON_TSYNC_LENGTH         0x00000001
-
-#   define _TxCON_TCS_POSITION         0x00000001
-#   define _TxCON_TCS_MASK             0x00000002
-#   define _TxCON_TCS_LENGTH           0x00000001
-
-    class AFramework::ATMR_w{
-        public:
-            volatile AFramework::uint32 TxCON;
-            volatile AFramework::uint32 TxCON_CLR;
-            volatile AFramework::uint32 TxCON_SET;
-            volatile AFramework::uint32 TxCON_INV;
-            volatile AFramework::uint32 TMRx;
-            volatile AFramework::uint32 TMRx_CLR;
-            volatile AFramework::uint32 TMRx_SET;
-            volatile AFramework::uint32 TMRx_INV;
-            volatile AFramework::uint32 PRx;
-            volatile AFramework::uint32 PRx_CLR;
-            volatile AFramework::uint32 PRx_SET;
-            volatile AFramework::uint32 PRx_INV;
-    };
-
-#elif defined (__32MZ__)
-#   error   This module is not currently available.
-#else
-#   error   Unknown architecture.
-#endif
-
-
 #if (__HAS_TIMER1__)
     
     extern volatile AFramework::ATMR_w TMR1_w __asm__("TMR1_w") __attribute__((section("sfrs")));
-    volatile AFramework::A16bitTimer AFramework::Timer1(&TMR1_w);
-    
-#endif
-   
-#if (__HAS_TIMER3__)
-    
-    extern volatile AFramework::ATMR_w TMR3_w __asm__("TMR3_w") __attribute__((section("sfrs")));
-    volatile AFramework::A32bitSlaveTimer  AFramework::Timer3(&TMR3_w);
-    
-#endif
-    
-#if (__HAS_TIMER5__)
-    
-    extern volatile AFramework::ATMR_w TMR5_w __asm__("TMR5_w") __attribute__((section("sfrs")));
-    volatile AFramework::A32bitSlaveTimer  AFramework::Timer5(&TMR5_w);
+    volatile AFramework::A16bitMasterTimer AFramework::Timer1(&TMR1_w);
     
 #endif
     
@@ -123,6 +44,13 @@
     volatile AFramework::A32bitMasterTimer AFramework::Timer2(&TMR2_w, &AFramework::Timer3);
     
 #endif
+    
+#if (__HAS_TIMER3__)
+    
+    extern volatile AFramework::ATMR_w TMR3_w __asm__("TMR3_w") __attribute__((section("sfrs")));
+    volatile AFramework::A16bitSlaveTimer  AFramework::Timer3(&TMR3_w);
+    
+#endif
 
 #if (__HAS_TIMER4__)
     
@@ -130,38 +58,45 @@
     volatile AFramework::A32bitMasterTimer AFramework::Timer4(&TMR4_w, &AFramework::Timer5);
     
 #endif
+    
+#if (__HAS_TIMER5__)
+    
+    extern volatile AFramework::ATMR_w TMR5_w __asm__("TMR5_w") __attribute__((section("sfrs")));
+    volatile AFramework::A16bitSlaveTimer  AFramework::Timer5(&TMR5_w);
+    
+#endif
 
 /*
  * class AAbstract16bitTimer 
  */
-AFramework::AAbstract16bitTimer::AAbstract16bitTimer(volatile ATMR_w * w) : m_treg(w), m_base(0), m_terr(0){
+AFramework::AAbstract16bitTimer::AAbstract16bitTimer(volatile ATMR_w * w) : m_reg(w), m_res(0), m_err(0){
 #if   defined (__32MX__)
     
     close();
     
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
-double AFramework::AAbstract16bitTimer::setSynchronousInternal16(const double baseTime, const bool idleStop) volatile{
+double AFramework::AAbstract16bitTimer::setSynchronousInternal16(const volatile double period, const volatile bool idleStop) volatile{
 #if   defined (__32MX__)
 
     /*  uso rawConfig con l'eventuale bit di idle                               */
     rawConfig((idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri              */
-    return setpar(baseTime, System::busFrequency());
+    return setpar(period, System::busFrequency());
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
-double AFramework::AAbstract16bitTimer::setSynchronousExternal16(const double extFreq, const double baseTime, const bool idleStop) volatile{
+double AFramework::AAbstract16bitTimer::setSynchronousExternal16(const volatile double extFreq, const volatile double period, const volatile bool idleStop) volatile{
 #if   defined (__32MX__)
 
     /*  anche se il timer di tipo b ha il settaggio automatico del bit TSYNC    */
@@ -170,26 +105,26 @@ double AFramework::AAbstract16bitTimer::setSynchronousExternal16(const double ex
     /*  dovrebbe succedere nulla                                                */
     rawConfig(_TxCON_TSYNC_MASK | _TxCON_TCS_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri              */
-    return setpar(baseTime, extFreq);
+    return setpar(period, extFreq);
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
-double AFramework::AAbstract16bitTimer::setGated16(const double baseTime, bool idleStop){
+double AFramework::AAbstract16bitTimer::setGated16(const volatile double period, bool idleStop) volatile{
 #if   defined (__32MX__)
     
     /*  uso rawConfig impostando la modalita' gated, il bit di sync e           */
     /*  l'eventuale bit di idle                                                 */
     rawConfig(_TxCON_TGATE_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  setto i parametri e ritorno l'errore                                    */
-    return setpar(baseTime, System::busFrequency());
+    return setpar(period, System::busFrequency());
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -204,12 +139,12 @@ bool AFramework::AAbstract16bitTimer::open() volatile{
         return false;
     }
     /*  Altrimenti setto il bit on nel registro                                 */
-    m_treg->TxCON_SET = _TxCON_ON_MASK;
+    m_reg->TxCON.SET = _TxCON_ON_MASK;
     /*  ritorno true                                                            */
     return true;
     
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -220,10 +155,10 @@ void AFramework::AAbstract16bitTimer::close() volatile{
 #if   defined (__32MX__)
 
     /*  spengo il timer                                                         */
-    m_treg->TxCON_CLR = _TxCON_ON_MASK;
+    m_reg->TxCON.CLR = _TxCON_ON_MASK;
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -233,10 +168,10 @@ void AFramework::AAbstract16bitTimer::clear() volatile{
 #if   defined (__32MX__)
 
     /*  azzero il registro TMRx                                                 */
-    m_treg->TMRx_CLR = Quick::All;
+    m_reg->TMRx.CLR = Quick::All;
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -246,14 +181,14 @@ void AFramework::AAbstract16bitTimer::reset() volatile{
 #if   defined (__32MX__)
     
     /*  spengo il timer e cancello tutti i bit                                  */
-    m_treg->TxCON_CLR = Quick::All;
+    m_reg->TxCON.CLR = Quick::All;
     /*  pulisco il registro TMRx                                                */
-    m_treg->TMRx_CLR  = Quick::All;
+    m_reg->TMRx.CLR  = Quick::All;
     /*  pulisco il registro PRx                                                 */
-    m_treg->PRx_CLR   = Quick::All;
+    m_reg->PRx.CLR   = Quick::All;
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -263,10 +198,10 @@ bool AFramework::AAbstract16bitTimer::isOpen() const volatile{
 #if   defined (__32MX__)
 
     /*  ritorno l'and con il bit on                                             */
-    return (m_treg->TxCON & _TxCON_ON_MASK);
+    return (m_reg->TxCON.REG & _TxCON_ON_MASK);
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -276,10 +211,10 @@ AFramework::uint32 AFramework::AAbstract16bitTimer::rawTime() const volatile{
 #if   defined (__32MX__)
 
     /*  ritorno il contenuto del registro TMRx                                  */
-    return m_treg->TMRx;
+    return m_reg->TMRx.REG;
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -288,12 +223,12 @@ AFramework::uint32 AFramework::AAbstract16bitTimer::rawTime() const volatile{
 double AFramework::AAbstract16bitTimer::elapsedTime() const volatile{
 #if   defined (__32MX__)
 
-    /*  ritorno il tempo grezzo (contenuto del registro TMRx) moltiplicato il   */
-    /*  tempo base                                                              */
-    return (m_treg->TMRx * m_base);
+    /*  ritorno il tempo grezzo (contenuto del registro TMRx) moltiplicato la   */
+    /*  risoluzione                                                             */
+    return (m_reg->TMRx.REG * m_res);
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -303,10 +238,10 @@ double AFramework::AAbstract16bitTimer::error() const volatile{
 #if   defined (__32MX__)
 
     /*  ritorno l'errore                                                        */
-    return m_terr;
+    return m_err;
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -315,11 +250,11 @@ double AFramework::AAbstract16bitTimer::error() const volatile{
 double AFramework::AAbstract16bitTimer::resolution() const volatile{
 #if   defined (__32MX__)
 
-    /*  ritorno il tempo base                                                   */
-    return m_base;
+    /*  ritorno la risoluzione                                                  */
+    return m_res;
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -331,55 +266,55 @@ void AFramework::AAbstract16bitTimer::rawConfig(const volatile uint32 b) volatil
     /*  resetto il timer                                                        */
     reset();
     /*  configuro per come mi vengono dati i bit                                */
-    m_treg->TxCON_SET = b;
+    m_reg->TxCON.SET = b;
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
 /*
- * class A16bitTimer 
+ * class A16bitMasterTimer 
  */
-AFramework::A16bitTimer::A16bitTimer(volatile ATMR_w * w) : AAbstract16bitTimer(w){
+AFramework::A16bitMasterTimer::A16bitMasterTimer(volatile ATMR_w * w) : AAbstract16bitTimer(w){
 #if   defined (__32MX__)
     
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
-double AFramework::A16bitTimer::setAsynchronousExternal16(const double baseTime, const bool idleStop) volatile{
+double AFramework::A16bitMasterTimer::setAsynchronousExternal16(const volatile double period, const volatile bool idleStop) volatile{
 #if   defined (__32MX__)
 #   if !(__HAS_EXTOSC__)
 
-#       warning This board not have an external oscillator.
+#   warning This board not have an external oscillator.
     
     return std::numeric_limits<double>::min();
         
 #else
 
-#   warning This function is not fully implemented.
+#   warning Timer function is not fully implemented.
 
     /*  uso rawcfg impostando la sorgente di clock esterna e l'eventuale        */
     /* bit di idle                                                              */
     rawcfg(TCS_BIT | (idleStop ? SIDL_BIT : Quick::NoOne));
     /*  setto i parametri e ritorno l'errore                                    */
-    return setpar(baseTime, System::secFrequency());
+    return setpar(period, System::secFrequency());
         
 #endif
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
-double AFramework::A16bitTimer::setpar(const double t, const double f, const bool w) volatile{
+double AFramework::A16bitMasterTimer::setpar(const volatile double t, const volatile double f, const volatile bool w) volatile{
 #if   defined (__32MX__)
     
     double per   = std::fabs(t);                              //  valore assoluto del periodo (non si sa mai...)
@@ -423,49 +358,49 @@ double AFramework::A16bitTimer::setpar(const double t, const double f, const boo
         }
     }
     /*  setto il registro PR                                                    */
-    m_treg->PRx_SET = PRv;
+    m_reg->PRx.SET = PRv;
     /*  configuro il prescaler                                                  */
-    m_treg->TxCON_SET = (PSv << _TxCON_16_TCKPS_POSITION);
-    /*  imposto il tempo base                                                   */
-    m_base = PSn[PSv] / fre;
+    m_reg->TxCON.SET = (PSv << _TxCON_16_TCKPS_POSITION);
+    /*  imposto la risoluzione                                                  */
+    m_res = PSn[PSv] / fre;
     /*  salvo l'errore                                                          */
-    m_terr = er1;
+    m_err = er1;
     /*  ritorno l'errore                                                        */
     return er1;
     
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
 /*
- * class A32bitSlaveTimer
+ * class A16bitSlaveTimer
  */
-AFramework::A32bitSlaveTimer::A32bitSlaveTimer(volatile ATMR_w * w) : AAbstract16bitTimer(w) {
+AFramework::A16bitSlaveTimer::A16bitSlaveTimer(volatile ATMR_w * w) : AAbstract16bitTimer(w) {
 #if   defined (__32MX__)
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
-bool AFramework::A32bitSlaveTimer::isMaster() const volatile{
+bool AFramework::A16bitSlaveTimer::isBusy() const volatile{
 #if   defined (__32MX__)
     
     return false;
     
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
-double AFramework::A32bitSlaveTimer::setpar(const double t, const double f, const bool w) volatile{
+double AFramework::A16bitSlaveTimer::setpar(const volatile double t, const volatile double f, const volatile bool w) volatile{
 #if   defined (__32MX__)
 
     double per   = std::fabs(t);                              //  valore assoluto del periodo (non si sa mai...)
@@ -511,18 +446,18 @@ double AFramework::A32bitSlaveTimer::setpar(const double t, const double f, cons
         }
     }
     /*  setto il registro PR                                                    */
-    m_treg->PRx_SET = PRv;
+    m_reg->PRx.SET = PRv;
     /*  configuro il prescaler                                                  */
-    m_treg->TxCON_SET = (PSv << _TxCON_32_TCKPS_POSITION);
-    /*  imposto il tempo base                                                   */
-    m_base = PSn[PSv] / fre;
+    m_reg->TxCON.SET = (PSv << _TxCON_32_TCKPS_POSITION);
+    /*  imposto la risoluzione                                                  */
+    m_res = PSn[PSv] / fre;
     /*  salvo l'errore                                                          */
-    m_terr = er1;
+    m_err = er1;
     /*  ritorno l'errore                                                        */
     return er1;
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
@@ -531,17 +466,17 @@ double AFramework::A32bitSlaveTimer::setpar(const double t, const double f, cons
 /*
  * class A32bitMasterTimer
  */
-AFramework::A32bitMasterTimer::A32bitMasterTimer(volatile ATMR_w * w, volatile A32bitSlaveTimer * slave) : A32bitSlaveTimer(w), m_slave(slave){
+AFramework::A32bitMasterTimer::A32bitMasterTimer(volatile ATMR_w * w, volatile A16bitSlaveTimer * slave) : A16bitSlaveTimer(w), m_slave(slave){
 #if   defined (__32MX__)
 
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
-double AFramework::A32bitMasterTimer::setSynchronousInternal32(const double baseTime, const bool idleStop) volatile{
+double AFramework::A32bitMasterTimer::setSynchronousInternal32(const volatile double period, const volatile bool idleStop) volatile{
 #if   defined (__32MX__)
     
     /*  resetto il timer slave associato                                        */
@@ -550,16 +485,16 @@ double AFramework::A32bitMasterTimer::setSynchronousInternal32(const double base
     rawConfig(_TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri in modalità  */
     /*  32-bit                                                                  */
-    return setpar(baseTime, System::busFrequency(), true);
+    return setpar(period, System::busFrequency(), true);
     
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif    
 }
 
-double AFramework::A32bitMasterTimer::setSynchronousExternal32(const double extFreq, const double baseTime, const bool idleStop) volatile{
+double AFramework::A32bitMasterTimer::setSynchronousExternal32(const volatile double extFreq, const volatile double period, const volatile bool idleStop) volatile{
 #if   defined (__32MX__)
     
     /*  resetto il timer slave associato                                        */
@@ -568,16 +503,16 @@ double AFramework::A32bitMasterTimer::setSynchronousExternal32(const double extF
     rawConfig(_TxCON_TCS_MASK | _TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri in modalità  */
     /*  32-bit                                                                  */
-    return setpar(baseTime, System::busFrequency(), true);
+    return setpar(period, System::busFrequency(), true);
     
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif
 }
 
-double AFramework::A32bitMasterTimer::setGated32(const double baseTime, bool idleStop) volatile{
+double AFramework::A32bitMasterTimer::setGated32(const volatile double period, bool idleStop) volatile{
 #if   defined (__32MX__)
 
     /*  resetto il timer slave associato                                        */
@@ -586,23 +521,11 @@ double AFramework::A32bitMasterTimer::setGated32(const double baseTime, bool idl
     rawConfig(_TxCON_TGATE_MASK | _TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri in modalità  */
     /*  32-bit                                                                  */
-    return setpar(baseTime, System::busFrequency(), true);
+    return setpar(period, System::busFrequency(), true);
     
 #elif defined (__32MZ__)
-#   error   This module is not currently available.
+#   error   Timer module is not currently available.
 #else
 #   error   Unknown architecture.
 #endif   
-}
-
-bool AFramework::A32bitMasterTimer::isMaster() const volatile{
-#if   defined (__32MX__)
-
-    return true;
-    
-#elif defined (__32MZ__)
-#   error   This module is not currently available.
-#else
-#   error   Unknown architecture.
-#endif
 }

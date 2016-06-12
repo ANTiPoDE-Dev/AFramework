@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/ATimersReg.S
+SOURCEFILES_QUOTED_IF_SPACED=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/Ap32mx270f256d.S ../../src/ATime.cpp
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/ATimersReg.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/ACore.o.d ${OBJECTDIR}/_ext/1445274692/AString.o.d ${OBJECTDIR}/_ext/1445274692/APorts.o.d ${OBJECTDIR}/_ext/1445274692/ATimers.o.d ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o ${OBJECTDIR}/_ext/1445274692/ATime.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/ACore.o.d ${OBJECTDIR}/_ext/1445274692/AString.o.d ${OBJECTDIR}/_ext/1445274692/APorts.o.d ${OBJECTDIR}/_ext/1445274692/ATimers.o.d ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.d ${OBJECTDIR}/_ext/1445274692/ATime.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/ATimersReg.o
+OBJECTFILES=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o ${OBJECTDIR}/_ext/1445274692/ATime.o
 
 # Source Files
-SOURCEFILES=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/ATimersReg.S
+SOURCEFILES=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/Ap32mx270f256d.S ../../src/ATime.cpp
 
 
 CFLAGS=
@@ -94,20 +94,20 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assembleWithPreprocess
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/_ext/1445274692/ATimersReg.o: ../../src/ATimersReg.S  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o: ../../src/Ap32mx270f256d.S  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.ok ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d" "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d"  -o ${OBJECTDIR}/_ext/1445274692/ATimersReg.o ../../src/ATimersReg.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/ATimersReg.o.asm.d",--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,-I"../../include"
+	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.ok ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.err 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.d" "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.d"  -o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o ../../src/Ap32mx270f256d.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_PK3=1,-I"../../include"
 	
 else
-${OBJECTDIR}/_ext/1445274692/ATimersReg.o: ../../src/ATimersReg.S  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o: ../../src/Ap32mx270f256d.S  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.ok ${OBJECTDIR}/_ext/1445274692/ATimersReg.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d" "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/ATimersReg.o.d"  -o ${OBJECTDIR}/_ext/1445274692/ATimersReg.o ../../src/ATimersReg.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/ATimersReg.o.asm.d",--gdwarf-2,-I"../../include"
+	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.ok ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.err 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.d" "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.asm.d" -t $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.d"  -o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o ../../src/Ap32mx270f256d.S  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.asm.d",--gdwarf-2,-I"../../include"
 	
 endif
 
@@ -124,43 +124,49 @@ ${OBJECTDIR}/_ext/1445274692/main.o: ../../src/main.cpp  nbproject/Makefile-${CN
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/main.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/main.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/main.o.d" -o ${OBJECTDIR}/_ext/1445274692/main.o ../../src/main.cpp   $(COMPARISON_BUILD) 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/main.o.d" -o ${OBJECTDIR}/_ext/1445274692/main.o ../../src/main.cpp   $(COMPARISON_BUILD) 
 	
 ${OBJECTDIR}/_ext/1445274692/ACore.o: ../../src/ACore.cpp  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ACore.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ACore.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ACore.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ACore.o.d" -o ${OBJECTDIR}/_ext/1445274692/ACore.o ../../src/ACore.cpp   $(COMPARISON_BUILD) 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ACore.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ACore.o.d" -o ${OBJECTDIR}/_ext/1445274692/ACore.o ../../src/ACore.cpp   $(COMPARISON_BUILD) 
 	
 ${OBJECTDIR}/_ext/1445274692/AString.o: ../../src/AString.cpp  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AString.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AString.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AString.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AString.o.d" -o ${OBJECTDIR}/_ext/1445274692/AString.o ../../src/AString.cpp   $(COMPARISON_BUILD) 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AString.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AString.o.d" -o ${OBJECTDIR}/_ext/1445274692/AString.o ../../src/AString.cpp   $(COMPARISON_BUILD) 
 	
 ${OBJECTDIR}/_ext/1445274692/APorts.o: ../../src/APorts.cpp  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/APorts.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/APorts.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/APorts.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/APorts.o.d" -o ${OBJECTDIR}/_ext/1445274692/APorts.o ../../src/APorts.cpp   $(COMPARISON_BUILD) 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/APorts.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/APorts.o.d" -o ${OBJECTDIR}/_ext/1445274692/APorts.o ../../src/APorts.cpp   $(COMPARISON_BUILD) 
 	
 ${OBJECTDIR}/_ext/1445274692/ATimers.o: ../../src/ATimers.cpp  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimers.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ATimers.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ATimers.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ATimers.o.d" -o ${OBJECTDIR}/_ext/1445274692/ATimers.o ../../src/ATimers.cpp   $(COMPARISON_BUILD) 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ATimers.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ATimers.o.d" -o ${OBJECTDIR}/_ext/1445274692/ATimers.o ../../src/ATimers.cpp   $(COMPARISON_BUILD) 
 	
 ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o: ../../src/AErrorNotifier.cpp  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d" -o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ../../src/AErrorNotifier.cpp   $(COMPARISON_BUILD) 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d" -o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ../../src/AErrorNotifier.cpp   $(COMPARISON_BUILD) 
 	
 ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o: ../../src/AConfigurationBits.cpp  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d" -o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ../../src/AConfigurationBits.cpp   $(COMPARISON_BUILD) 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d" -o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ../../src/AConfigurationBits.cpp   $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/_ext/1445274692/ATime.o: ../../src/ATime.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATime.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATime.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ATime.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ATime.o.d" -o ${OBJECTDIR}/_ext/1445274692/ATime.o ../../src/ATime.cpp   $(COMPARISON_BUILD) 
 	
 else
 ${OBJECTDIR}/_ext/1445274692/main.o: ../../src/main.cpp  nbproject/Makefile-${CND_CONF}.mk
@@ -205,6 +211,12 @@ ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o: ../../src/AConfigurationBits.
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d" -o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ../../src/AConfigurationBits.cpp   $(COMPARISON_BUILD) 
 	
+${OBJECTDIR}/_ext/1445274692/ATime.o: ../../src/ATime.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATime.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ATime.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ATime.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ATime.o.d" -o ${OBJECTDIR}/_ext/1445274692/ATime.o ../../src/ATime.cpp   $(COMPARISON_BUILD) 
+	
 endif
 
 # ------------------------------------------------------------------------------------
@@ -212,7 +224,7 @@ endif
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
 dist/${CND_CONF}/${IMAGE_TYPE}/AFramework_sim.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk    
 	@${MKDIR} dist/${CND_CONF}/${IMAGE_TYPE} 
-	${MP_CPPC} $(MP_EXTRA_LD_PRE)  -mdebugger -D__MPLAB_DEBUGGER_SIMULATOR=1 -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/AFramework_sim.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          $(COMPARISON_BUILD)      -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_SIMULATOR=1,--defsym=_min_heap_size=16392,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--memorysummary,dist/${CND_CONF}/${IMAGE_TYPE}/memoryfile.xml
+	${MP_CPPC} $(MP_EXTRA_LD_PRE)  -mdebugger -D__MPLAB_DEBUGGER_PK3=1 -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/AFramework_sim.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          $(COMPARISON_BUILD)    -mreserve=boot@0x1FC00490:0x1FC00BEF  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_PK3=1,--defsym=_min_heap_size=16392,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--memorysummary,dist/${CND_CONF}/${IMAGE_TYPE}/memoryfile.xml
 	
 else
 dist/${CND_CONF}/${IMAGE_TYPE}/AFramework_sim.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk   

@@ -13,15 +13,13 @@
 
 namespace AFramework{
     
-    class ATMR_w;
-    
     class AAbstract16bitTimer{
         public:
             AAbstract16bitTimer(volatile ATMR_w * w);
             void rawConfig(const volatile uint32 b) volatile;
-            double setSynchronousInternal16(const double baseTime, const bool idleStop = false) volatile;
-            double setSynchronousExternal16(const double extFreq, const double baseTime, const bool idleStop = false) volatile;
-            double setGated16(const double baseTime, bool idleStop = false);
+            double setSynchronousInternal16(const volatile double period, const volatile bool idleStop = false) volatile;
+            double setSynchronousExternal16(const volatile double extFreq, const volatile double period, const volatile bool idleStop = false) volatile;
+            double setGated16(const volatile double period, const volatile bool idleStop = false) volatile;
             bool open() volatile;
             void close() volatile;
             void clear() volatile;
@@ -32,69 +30,54 @@ namespace AFramework{
             double error() const volatile;
             double resolution() const volatile;
         protected:
-            virtual double setpar(const double t, const double f, const bool w = false) volatile = 0;
-            volatile ATMR_w * m_treg;
-            volatile double   m_base;
-            volatile double   m_terr;
+            virtual double setpar(const volatile double t, const volatile double f, const volatile bool w = false) volatile = 0;
+            volatile ATMR_w * m_reg;
+            volatile double   m_res;
+            volatile double   m_err;
     };
     
-    class A16bitTimer : public AAbstract16bitTimer{
+    class A16bitMasterTimer : public AAbstract16bitTimer{
         public:
-            A16bitTimer(volatile ATMR_w * w);
-            double setAsynchronousExternal16(const double baseTime, const bool idleStop = false) volatile;
+            A16bitMasterTimer(volatile ATMR_w * w);
+            double setAsynchronousExternal16(const volatile double period, const volatile bool idleStop = false) volatile;
         private:
-            double setpar(const double t, const double f, const bool w = false) volatile;
+            double setpar(const volatile double t, const volatile double f, const volatile bool w = false) volatile;
     };
     
-    class A32bitSlaveTimer : public AAbstract16bitTimer, public ARemappablePeripheral{
+    class A16bitSlaveTimer : public AAbstract16bitTimer, public ARemappablePeripheral{
         public:
-            A32bitSlaveTimer(volatile ATMR_w * w);
-            virtual bool isMaster() const volatile;
+            A16bitSlaveTimer(volatile ATMR_w * w);
+            bool isBusy() const volatile;
         protected:
-            double setpar(const double t, const double f, const bool w = false) volatile;
+            double setpar(const volatile double t, const volatile double f, const volatile bool w = false) volatile;
+            volatile bool m_flg;
     };
     
-    class A32bitMasterTimer : public A32bitSlaveTimer{
+    class A32bitMasterTimer : public A16bitSlaveTimer{
         public:
-            A32bitMasterTimer(volatile ATMR_w * w, volatile A32bitSlaveTimer * slave);
-            double setSynchronousInternal32(const double baseTime, const bool idleStop = false) volatile;
-            double setSynchronousExternal32(const double extFreq, const double baseTime, const bool idleStop = false) volatile;
-            double setGated32(const double baseTime, bool idleStop = false) volatile;
-            bool isMaster() const volatile;
+            A32bitMasterTimer(volatile ATMR_w * w, volatile A16bitSlaveTimer * slave);
+            double setSynchronousInternal32(const volatile double period, const volatile bool idleStop = false) volatile;
+            double setSynchronousExternal32(const volatile double extFreq, const volatile double period, const volatile bool idleStop = false) volatile;
+            double setGated32(const volatile double period, const volatile bool idleStop = false) volatile;
         private:
-            volatile A32bitSlaveTimer * m_slave;
+            volatile A16bitSlaveTimer * m_slave;
     };
     
-#if (__HAS_TIMER1__)
-    
-    extern volatile A16bitTimer       Timer1;
-    
+#if (__HAS_TIMER1__)    
+    extern volatile A16bitMasterTimer Timer1;
 #endif
-    
 #if (__HAS_TIMER2__)
-    
     extern volatile A32bitMasterTimer Timer2;
-    
 #endif
-    
 #if (__HAS_TIMER3__)
-    
-    extern volatile A32bitSlaveTimer  Timer3;
-    
+    extern volatile A16bitSlaveTimer  Timer3;
 #endif
-    
 #if (__HAS_TIMER4__)
-    
     extern volatile A32bitMasterTimer Timer4;
-    
 #endif
-    
 #if (__HAS_TIMER5__)
-    
-    extern volatile A32bitSlaveTimer  Timer5;
-    
+    extern volatile A16bitSlaveTimer  Timer5;
 #endif
-    
 }
 #endif	/* ATIMERS_H */
 
