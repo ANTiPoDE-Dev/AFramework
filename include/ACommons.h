@@ -73,7 +73,7 @@ namespace AFramework{
     };
     
     enum Priority{
-        Ip1,
+        Ip1 = 1,
         Ip2,
         Ip3,
         Ip4,

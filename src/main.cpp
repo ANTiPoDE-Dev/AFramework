@@ -7,7 +7,7 @@ using namespace AFramework;
 
 int main(){
     
-    System::init(16392, &PortB, bit4);
+    System::init(16392, &PortB, bit15);
     
     int i = 0;
     

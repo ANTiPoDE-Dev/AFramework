@@ -28,18 +28,46 @@
 
 #include <cstring>
 #include "ACore.h"
+#include "AInterruptSource.h"
 
 #define __CORE_TICK_RATE__      0x03E8
 #define __STATUS_LED_H_TIME__   0x0032
 #define __STATUS_LED_L_TIME__   0x03B6
 
-void ctopen(const volatile AFramework::uint32 p);
-void ctsync(const volatile AFramework::uint32 p);
-void ctconf(const volatile AFramework::uint32 p);
+/********************************************************************************/
+//  CLASS ACoreTimer
+/********************************************************************************/
 
-volatile  AFramework::uint32 m_ct_rate = 0;
+class AFramework::System::ACoreTimer : public AFramework::AInterruptSource{
+    public:
+        ACoreTimer(const uint8  IFSVec, 
+                   const uint8  IECVec, 
+                   const uint8  IPCVec, 
+                   const uint32 IFSMask, 
+                   const uint32 IECMask, 
+                   const uint32 IPPos, 
+                   const uint32 ISPos);
+        void ctopen(const volatile AFramework::uint32 p);
+        void ctsync(const volatile AFramework::uint32 p);
+        void ctconf(const volatile AFramework::uint32 p);
+};
 
-void ctopen(volatile AFramework::uint32 p){
+AFramework::System::ACoreTimer::ACoreTimer(const uint8  IFSVec, 
+                                           const uint8  IECVec, 
+                                           const uint8  IPCVec, 
+                                           const uint32 IFSMask, 
+                                           const uint32 IECMask, 
+                                           const uint32 IPPos, 
+                                           const uint32 ISPos) : AInterruptSource(IFSVec, 
+                                                                                  IECVec,
+                                                                                  IPCVec,
+                                                                                  IFSMask,
+                                                                                  IECMask,
+                                                                                  IPPos,
+                                                                                  ISPos){
+}
+
+void AFramework::System::ACoreTimer::ctopen(volatile AFramework::uint32 p){
 #if   defined (__32MX__)
 
 	/*  cancello il contenuto del registro count nel coprocessore               */
@@ -54,7 +82,7 @@ void ctopen(volatile AFramework::uint32 p){
 #endif
 }
 
-void ctsync(volatile AFramework::uint32 p){
+void AFramework::System::ACoreTimer::ctsync(volatile AFramework::uint32 p){
 #if   defined (__32MX__)
 
     volatile AFramework::uint32 o;
@@ -72,7 +100,7 @@ void ctsync(volatile AFramework::uint32 p){
 #endif    
 }
 
-void ctconf(volatile AFramework::uint32 p){
+void AFramework::System::ACoreTimer::ctconf(volatile AFramework::uint32 p){
 #if   defined (__32MX__)
 
     volatile AFramework::uint32 t;
@@ -90,28 +118,25 @@ void ctconf(volatile AFramework::uint32 p){
 #endif
 }
 
-extern volatile AFramework::AINT_w INT_w __asm__("INT_w") __attribute__((section("sfrs")));
-
 extern "C"{
     
     void __ISR(_CORE_TIMER_VECTOR, IPL1AUTO) CoreTimerHandler(){
-        
-        /*  Aggiorno il timer della cpu                                         */
-        ctsync(m_ct_rate);
         /*  Aggiorno il tempo                                                   */
         AFramework::System::updateTime();
-        /*  Azzero il flag dell'interrupt                                       */
-        INT_w.IFS[_IFSVEC_CTIF_POSITION].CLR = _IFS_CTIF_MASK;
     }   
 }
+
+extern volatile AFramework::AINT_w INT_w __asm__("INT_w") __attribute__((section("sfrs")));
 
 const AFramework::uint32 AFramework::System::Freq40MHz(0x02625A00U);
 const AFramework::uint32 AFramework::System::Freq32KHz(0x00008000U);
 
 
 AFramework::System::Segment *        AFramework::System::m_heap_head(NULL);
+AFramework::System::ACoreTimer       AFramework::System::m_coreTimer(_IFSVEC_CTIF_POSITION, _IECVEC_CTIE_POSITION, _IPCVEC_CTIP_POSITION, _IFS_CTIF_MASK, _IEC_CTIE_MASK, _IPC_CTIP_POSITION, _IPC_CTIS_POSITION);
 AFramework::uint32                   AFramework::System::m_ledGpio(0);
 AFramework::uint32                   AFramework::System::m_toggle_delay(__STATUS_LED_L_TIME__);
+AFramework::uint32                   AFramework::System::m_ct_rate(0);
 double                               AFramework::System::m_pri_clock(0);
 double                               AFramework::System::m_sec_clock(0);
 double                               AFramework::System::m_bus_clock(0);
@@ -122,8 +147,12 @@ bool                                 AFramework::System::m_init_flag(false);
 bool                                 AFramework::System::m_toggle_flag(true);
 AFramework::ATime                    AFramework::System::m_alive;
 AFramework::ATime                    AFramework::System::m_toggle;
-volatile AFramework::AINT_w *        AFramework::System::m_int_reg(&INT_w);
 volatile AFramework::AHardwarePort * AFramework::System::m_ledPort(NULL);
+volatile AFramework::AINT_w *        AFramework::System::m_int_reg(&INT_w);
+
+/********************************************************************************/
+//  Global Operators
+/********************************************************************************/
 
 void * operator new(size_t size){
     return AFramework::System::malloc(size);
@@ -247,12 +276,8 @@ bool AFramework::System::init(size_t heapSize, volatile AHardwarePort * ledPort,
         /*  setto il gpio come uscita                                           */
         m_ledPort->setOutput(m_ledGpio);
     }
-    /*  cancello il flag di interrupt sul timer della cpu                       */
-    m_int_reg->IFS[_IFSVEC_CTIF_POSITION].CLR = _IFS_CTIF_MASK;
-    /*  imposto la priorità dell'interrupt del timer della cpu                  */
-    m_int_reg->IPC[_IPCVEC_CTIP_POSITION].SET = (1 << _IPC_CTIP_POSITION);
-    /*  abilito l'interrupt per il timer della cpu                              */
-    m_int_reg->IEC[_IECVEC_CTIE_POSITION].SET = _IEC_CTIE_MASK;
+    /*  abilito l'interrupt sul timer della cpu                                 */
+    m_coreTimer.enableInterrupt(Ip1);
     /*  imposto il valore da mettere nel timer della cpu per onda quadra a 1KHz */
     m_ct_rate = static_cast<uint32>(m_pri_clock) / 0x02 / __CORE_TICK_RATE__;
     /*  Imposto il flag di avvenuta inizializzazione                            */
@@ -260,7 +285,7 @@ bool AFramework::System::init(size_t heapSize, volatile AHardwarePort * ledPort,
     /*  Abilito lo scheduler                                                    */
     scwake();
     /*  inizializzo il timer della cpu                                          */
-    ctopen(m_ct_rate);
+    m_coreTimer.ctopen(m_ct_rate);
     /*  abilito gli interrupt                                                   */
     enableInterrupt();
     /*  e restituisco true                                                      */
@@ -510,6 +535,8 @@ void AFramework::System::disableInterrupt(){
 }
 
 void AFramework::System::updateTime(){
+    /*  aggiorno il timer della cpu                                             */
+    m_coreTimer.ctsync(m_ct_rate);
     /*  incremento l'orologio di sistema                                        */
     m_alive++;
     if(m_alive - m_toggle >= m_toggle_delay){
@@ -526,6 +553,16 @@ void AFramework::System::updateTime(){
         }else{
             m_toggle_delay = __STATUS_LED_L_TIME__;
         }
+    }
+    m_coreTimer.clearFlag();
+}
+
+void AFramework::System::delay(const uint32 ms){
+    
+    ATime t = m_alive;
+    
+    while(m_alive - t < ms){
+        asm volatile("nop");
     }
 }
 

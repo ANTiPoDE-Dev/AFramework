@@ -1,7 +1,7 @@
 setlocal enabledelayedexpansion
 
 set major=0
-set minor=2
+set minor=3
 set buildnum=
 
 for /f "delims=;" %%i in (build_number.txt) do set buildnum=%%i

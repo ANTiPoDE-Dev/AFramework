@@ -69,7 +69,7 @@
 /*
  * class AAbstract16bitTimer 
  */
-AFramework::AAbstract16bitTimer::AAbstract16bitTimer(volatile ATMR_w * w) : m_reg(w), m_res(0), m_err(0){
+AFramework::AAbstract16bitTimer::AAbstract16bitTimer(volatile ATMR_w * w) : m_reg(w){
 #if   defined (__32MX__)
     
     close();
