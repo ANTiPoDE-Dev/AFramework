@@ -39,7 +39,7 @@ FINAL_IMAGE=dist/${CND_CONF}/${IMAGE_TYPE}/AFramework_sim.X.${IMAGE_TYPE}.${OUTP
 endif
 
 ifeq ($(COMPARE_BUILD), true)
-COMPARISON_BUILD=
+COMPARISON_BUILD=-mafrlcsj
 else
 COMPARISON_BUILD=
 endif
@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/Ap32mx270f256d.S ../../src/ATime.cpp ../../src/AInterruptSource.cpp
+SOURCEFILES_QUOTED_IF_SPACED=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/Ap32mx270f256d.S ../../src/ATime.cpp ../../src/AInterruptSource.cpp ../../src/ALcd.cpp ../../src/APCF8563.cpp ../../src/AI2CDriver.cpp ../../src/ADateTime.cpp
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o ${OBJECTDIR}/_ext/1445274692/ATime.o ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/ACore.o.d ${OBJECTDIR}/_ext/1445274692/AString.o.d ${OBJECTDIR}/_ext/1445274692/APorts.o.d ${OBJECTDIR}/_ext/1445274692/ATimers.o.d ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.d ${OBJECTDIR}/_ext/1445274692/ATime.o.d ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o ${OBJECTDIR}/_ext/1445274692/ATime.o ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o ${OBJECTDIR}/_ext/1445274692/ALcd.o ${OBJECTDIR}/_ext/1445274692/APCF8563.o ${OBJECTDIR}/_ext/1445274692/AI2CDriver.o ${OBJECTDIR}/_ext/1445274692/ADateTime.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/ACore.o.d ${OBJECTDIR}/_ext/1445274692/AString.o.d ${OBJECTDIR}/_ext/1445274692/APorts.o.d ${OBJECTDIR}/_ext/1445274692/ATimers.o.d ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o.d ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o.d ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o.d ${OBJECTDIR}/_ext/1445274692/ATime.o.d ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o.d ${OBJECTDIR}/_ext/1445274692/ALcd.o.d ${OBJECTDIR}/_ext/1445274692/APCF8563.o.d ${OBJECTDIR}/_ext/1445274692/AI2CDriver.o.d ${OBJECTDIR}/_ext/1445274692/ADateTime.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o ${OBJECTDIR}/_ext/1445274692/ATime.o ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o
+OBJECTFILES=${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/ACore.o ${OBJECTDIR}/_ext/1445274692/AString.o ${OBJECTDIR}/_ext/1445274692/APorts.o ${OBJECTDIR}/_ext/1445274692/ATimers.o ${OBJECTDIR}/_ext/1445274692/AErrorNotifier.o ${OBJECTDIR}/_ext/1445274692/AConfigurationBits.o ${OBJECTDIR}/_ext/1445274692/Ap32mx270f256d.o ${OBJECTDIR}/_ext/1445274692/ATime.o ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o ${OBJECTDIR}/_ext/1445274692/ALcd.o ${OBJECTDIR}/_ext/1445274692/APCF8563.o ${OBJECTDIR}/_ext/1445274692/AI2CDriver.o ${OBJECTDIR}/_ext/1445274692/ADateTime.o
 
 # Source Files
-SOURCEFILES=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/Ap32mx270f256d.S ../../src/ATime.cpp ../../src/AInterruptSource.cpp
+SOURCEFILES=../../src/main.cpp ../../src/ACore.cpp ../../src/AString.cpp ../../src/APorts.cpp ../../src/ATimers.cpp ../../src/AErrorNotifier.cpp ../../src/AConfigurationBits.cpp ../../src/Ap32mx270f256d.S ../../src/ATime.cpp ../../src/AInterruptSource.cpp ../../src/ALcd.cpp ../../src/APCF8563.cpp ../../src/AI2CDriver.cpp ../../src/ADateTime.cpp
 
 
 CFLAGS=
@@ -174,6 +174,30 @@ ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o: ../../src/AInterruptSource.cpp 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AInterruptSource.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AInterruptSource.o.d" -o ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o ../../src/AInterruptSource.cpp   $(COMPARISON_BUILD) 
 	
+${OBJECTDIR}/_ext/1445274692/ALcd.o: ../../src/ALcd.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ALcd.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ALcd.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ALcd.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ALcd.o.d" -o ${OBJECTDIR}/_ext/1445274692/ALcd.o ../../src/ALcd.cpp   $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/_ext/1445274692/APCF8563.o: ../../src/APCF8563.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/APCF8563.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/APCF8563.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/APCF8563.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/APCF8563.o.d" -o ${OBJECTDIR}/_ext/1445274692/APCF8563.o ../../src/APCF8563.cpp   $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/_ext/1445274692/AI2CDriver.o: ../../src/AI2CDriver.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/AI2CDriver.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/AI2CDriver.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AI2CDriver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AI2CDriver.o.d" -o ${OBJECTDIR}/_ext/1445274692/AI2CDriver.o ../../src/AI2CDriver.cpp   $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/_ext/1445274692/ADateTime.o: ../../src/ADateTime.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ADateTime.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ADateTime.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ADateTime.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ADateTime.o.d" -o ${OBJECTDIR}/_ext/1445274692/ADateTime.o ../../src/ADateTime.cpp   $(COMPARISON_BUILD) 
+	
 else
 ${OBJECTDIR}/_ext/1445274692/main.o: ../../src/main.cpp  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
@@ -228,6 +252,30 @@ ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o: ../../src/AInterruptSource.cpp 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AInterruptSource.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AInterruptSource.o.d" -o ${OBJECTDIR}/_ext/1445274692/AInterruptSource.o ../../src/AInterruptSource.cpp   $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/_ext/1445274692/ALcd.o: ../../src/ALcd.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ALcd.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ALcd.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ALcd.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ALcd.o.d" -o ${OBJECTDIR}/_ext/1445274692/ALcd.o ../../src/ALcd.cpp   $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/_ext/1445274692/APCF8563.o: ../../src/APCF8563.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/APCF8563.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/APCF8563.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/APCF8563.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/APCF8563.o.d" -o ${OBJECTDIR}/_ext/1445274692/APCF8563.o ../../src/APCF8563.cpp   $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/_ext/1445274692/AI2CDriver.o: ../../src/AI2CDriver.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/AI2CDriver.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/AI2CDriver.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/AI2CDriver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/AI2CDriver.o.d" -o ${OBJECTDIR}/_ext/1445274692/AI2CDriver.o ../../src/AI2CDriver.cpp   $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/_ext/1445274692/ADateTime.o: ../../src/ADateTime.cpp  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/1445274692" 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ADateTime.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/ADateTime.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ADateTime.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CPPC} $(MP_EXTRA_CC_PRE)  -g -x c++ -c -mprocessor=$(MP_PROCESSOR_OPTION)  -frtti -fexceptions -fno-check-new -fenforce-eh-specs -I"../../include" -MMD -MF "${OBJECTDIR}/_ext/1445274692/ADateTime.o.d" -o ${OBJECTDIR}/_ext/1445274692/ADateTime.o ../../src/ADateTime.cpp   $(COMPARISON_BUILD) 
 	
 endif
 

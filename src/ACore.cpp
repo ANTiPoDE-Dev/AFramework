@@ -566,6 +566,11 @@ void AFramework::System::delay(const uint32 ms){
     }
 }
 
+AFramework::uint32 AFramework::System::currentCentury(){
+    
+    return 0x15;
+}
+
 void AFramework::System::scsusp(){
 #   warning Scheduler suspend is currently unimplemented
 }

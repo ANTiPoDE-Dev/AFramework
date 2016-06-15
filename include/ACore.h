@@ -25,6 +25,7 @@
 *   Copyright 2015, 2016 Milazzo Giuseppe
 *
 */
+
 #ifndef ACORE_H
 #define ACORE_H
 
@@ -63,6 +64,7 @@ namespace AFramework{
             static void disableInterrupt();
             static void updateTime();
             static void delay(const uint32 ms);
+            static uint32 currentCentury();
         private:
             static void scsusp();
             static void scwake();

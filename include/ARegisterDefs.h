@@ -205,9 +205,16 @@ namespace AFramework{
 //        public:
 //    };
     
-//    class AI2C_w{
-//        public:
-//    };
+    class AI2C_w{
+        public:
+            volatile ARegTypes::ACSIReg I2CxCON;
+            volatile ARegTypes::ACSIReg I2CxSTAT;
+            volatile ARegTypes::ACSIReg I2CxADD;
+            volatile ARegTypes::ACSIReg I2CxMSK;
+            volatile ARegTypes::ACSIReg I2CxBRG;
+            volatile ARegTypes::ACSIReg I2CxTRN;
+            volatile ARegTypes::AxxxReg I2CxRCV;
+    };
     
 //    class ASPI_w{
 //        public:

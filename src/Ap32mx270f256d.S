@@ -31,3 +31,10 @@ PORTB_w = 0xBF886100
 //  Port C
 PORTC_w = 0xBF886200
     .global PORTC_w
+    
+//  Inter-Integrated Circuit 1
+I2C1_w = 0xBF805000
+    .global I2C1_w
+//  Inter-Integrated Circuit 2
+I2C2_w = 0xBF805100
+    .global I2C2_w

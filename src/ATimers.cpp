@@ -466,7 +466,8 @@ double AFramework::A16bitSlaveTimer::setpar(const volatile double t, const volat
 /*
  * class A32bitMasterTimer
  */
-AFramework::A32bitMasterTimer::A32bitMasterTimer(volatile ATMR_w * w, volatile A16bitSlaveTimer * slave) : A16bitSlaveTimer(w), m_slave(slave){
+AFramework::A32bitMasterTimer::A32bitMasterTimer(volatile ATMR_w * w, 
+                                                 volatile A16bitSlaveTimer * slave) : A16bitSlaveTimer(w), m_slave(slave){
 #if   defined (__32MX__)
 
 #elif defined (__32MZ__)
@@ -503,7 +504,7 @@ double AFramework::A32bitMasterTimer::setSynchronousExternal32(const volatile do
     rawConfig(_TxCON_TCS_MASK | _TxCON_T32_MASK | (idleStop ? _TxCON_SIDL_MASK : Quick::NoOne));
     /*  richiamo setpar che calcola il valore ottimo dei parametri in modalità  */
     /*  32-bit                                                                  */
-    return setpar(period, System::busFrequency(), true);
+    return setpar(period, extFreq, true);
     
 #elif defined (__32MZ__)
 #   error   Timer module is not currently available.

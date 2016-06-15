@@ -28,6 +28,8 @@
 
 #include "AString.h"
 
+const char * AFramework::endl = "\n";
+
 AFramework::uint32 AFramework::AString::strlen(const char * val){
     uint32 res = 0;
     /*  se la stringa non è vuota                                               */
@@ -702,6 +704,11 @@ double AFramework::AString::toDouble(bool & ok) const{
     }
     /*  ritorno il valore                                                       */
     return sig * res;
+}
+
+char * AFramework::AString::c_str() const{
+    /*  nulla da commentare                                                     */
+    return m_str;
 }
 
 AFramework::AStringList * AFramework::AString::split(const char & sep, const bool &keepEmpty, const bool & cs) const{

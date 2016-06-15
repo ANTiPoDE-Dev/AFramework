@@ -81,6 +81,7 @@ namespace AFramework{
             sint32 toInt32(bool & ok) const;
             float toFloat(bool & ok) const;
             double toDouble(bool & ok) const;
+            char * c_str() const;
             AStringList * split(const char & sep, const bool & keepEmpty = false, const bool & cs = false) const;
             char operator[](const uint32 & index) const;
             bool operator==(const AString & str) const;
@@ -171,5 +172,7 @@ namespace AFramework{
         /*  alla fine restituisco il risultato (che può anche essere NULL)      */
         return res;
     }
+    
+    extern const char * endl;
 }
 #endif /* ASTRING_H */

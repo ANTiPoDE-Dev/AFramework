@@ -30,7 +30,7 @@
 #define	ATIMERS_H
 
 #include "ACore.h"
-#include "ARemappablePeripheral.h"
+#include "AInterruptSource.h"
 
 namespace AFramework{
     
@@ -70,7 +70,7 @@ namespace AFramework{
             double setpar(const volatile double t, const volatile double f, const volatile bool w = false) volatile;
     };
     
-    class A16bitSlaveTimer : public AAbstract16bitTimer, public ARemappablePeripheral{
+    class A16bitSlaveTimer : public AAbstract16bitTimer{
         public:
             A16bitSlaveTimer(volatile ATMR_w * w);
             bool isBusy() const volatile;

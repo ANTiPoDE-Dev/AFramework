@@ -50,6 +50,18 @@
 #define __HAS__PORTK__                              0x00000000
 #define __HAS_EXTOSC__                              0x00000000
 
+#define __HAS_I2C_1__                               0x00000001
+#define __SDA1_PORT__                               PortB
+#define __SDA1_GPIO__                               bit9
+#define __SCL1_PORT__                               PortB
+#define __SCL1_GPIO__                               bit8
+
+#define __HAS_I2C_2__                               0x00000001
+#define __SDA2_PORT__                               PortB
+#define __SDA2_GPIO__                               bit2
+#define __SCL2_PORT__                               PortB
+#define __SCL2_GPIO__                               bit3
+
 /**
  * Timers
  */
@@ -1395,5 +1407,145 @@
 #define _SS2OUTR_VALUE                              (_GROUP_FOUR    | 0x00000004)
 #define _OC3R_VALUE                                 (_GROUP_FOUR    | 0x00000005)
 #define _C1OUTR_VALUE                               (_GROUP_FOUR    | 0x00000007)
+
+/**
+ * Inter Integrated Circuit
+ */
+
+#define _I2CxCON_SEN_POSITION                    0x00000000
+#define _I2CxCON_SEN_MASK                        0x00000001
+#define _I2CxCON_SEN_LENGTH                      0x00000001
+
+#define _I2CxCON_RSEN_POSITION                   0x00000001
+#define _I2CxCON_RSEN_MASK                       0x00000002
+#define _I2CxCON_RSEN_LENGTH                     0x00000001
+
+#define _I2CxCON_PEN_POSITION                    0x00000002
+#define _I2CxCON_PEN_MASK                        0x00000004
+#define _I2CxCON_PEN_LENGTH                      0x00000001
+
+#define _I2CxCON_RCEN_POSITION                   0x00000003
+#define _I2CxCON_RCEN_MASK                       0x00000008
+#define _I2CxCON_RCEN_LENGTH                     0x00000001
+
+#define _I2CxCON_ACKEN_POSITION                  0x00000004
+#define _I2CxCON_ACKEN_MASK                      0x00000010
+#define _I2CxCON_ACKEN_LENGTH                    0x00000001
+
+#define _I2CxCON_ACKDT_POSITION                  0x00000005
+#define _I2CxCON_ACKDT_MASK                      0x00000020
+#define _I2CxCON_ACKDT_LENGTH                    0x00000001
+
+#define _I2CxCON_STREN_POSITION                  0x00000006
+#define _I2CxCON_STREN_MASK                      0x00000040
+#define _I2CxCON_STREN_LENGTH                    0x00000001
+
+#define _I2CxCON_GCEN_POSITION                   0x00000007
+#define _I2CxCON_GCEN_MASK                       0x00000080
+#define _I2CxCON_GCEN_LENGTH                     0x00000001
+
+#define _I2CxCON_SMEN_POSITION                   0x00000008
+#define _I2CxCON_SMEN_MASK                       0x00000100
+#define _I2CxCON_SMEN_LENGTH                     0x00000001
+
+#define _I2CxCON_DISSLW_POSITION                 0x00000009
+#define _I2CxCON_DISSLW_MASK                     0x00000200
+#define _I2CxCON_DISSLW_LENGTH                   0x00000001
+
+#define _I2CxCON_A10M_POSITION                   0x0000000A
+#define _I2CxCON_A10M_MASK                       0x00000400
+#define _I2CxCON_A10M_LENGTH                     0x00000001
+
+#define _I2CxCON_STRICT_POSITION                 0x0000000B
+#define _I2CxCON_STRICT_MASK                     0x00000800
+#define _I2CxCON_STRICT_LENGTH                   0x00000001
+
+#define _I2CxCON_SCLREL_POSITION                 0x0000000C
+#define _I2CxCON_SCLREL_MASK                     0x00001000
+#define _I2CxCON_SCLREL_LENGTH                   0x00000001
+
+#define _I2CxCON_SIDL_POSITION                   0x0000000D
+#define _I2CxCON_SIDL_MASK                       0x00002000
+#define _I2CxCON_SIDL_LENGTH                     0x00000001
+
+#define _I2CxCON_ON_POSITION                     0x0000000F
+#define _I2CxCON_ON_MASK                         0x00008000
+#define _I2CxCON_ON_LENGTH                       0x00000001
+
+#define _I2CxCON_IPMIEN_POSITION                 0x0000000B
+#define _I2CxCON_IPMIEN_MASK                     0x00000800
+#define _I2CxCON_IPMIEN_LENGTH                   0x00000001
+
+#define _I2CxCON_I2CSIDL_POSITION                0x0000000D
+#define _I2CxCON_I2CSIDL_MASK                    0x00002000
+#define _I2CxCON_I2CSIDL_LENGTH                  0x00000001
+
+#define _I2CxCON_I2CEN_POSITION                  0x0000000F
+#define _I2CxCON_I2CEN_MASK                      0x00008000
+#define _I2CxCON_I2CEN_LENGTH                    0x00000001
+
+#define _I2CxCON_w_POSITION                      0x00000000
+#define _I2CxCON_w_MASK                          0xFFFFFFFF
+#define _I2CxCON_w_LENGTH                        0x00000020
+
+#define _I2CxSTAT_TBF_POSITION                   0x00000000
+#define _I2CxSTAT_TBF_MASK                       0x00000001
+#define _I2CxSTAT_TBF_LENGTH                     0x00000001
+
+#define _I2CxSTAT_RBF_POSITION                   0x00000001
+#define _I2CxSTAT_RBF_MASK                       0x00000002
+#define _I2CxSTAT_RBF_LENGTH                     0x00000001
+
+#define _I2CxSTAT_R_W_POSITION                   0x00000002
+#define _I2CxSTAT_R_W_MASK                       0x00000004
+#define _I2CxSTAT_R_W_LENGTH                     0x00000001
+
+#define _I2CxSTAT_S_POSITION                     0x00000003
+#define _I2CxSTAT_S_MASK                         0x00000008
+#define _I2CxSTAT_S_LENGTH                       0x00000001
+
+#define _I2CxSTAT_P_POSITION                     0x00000004
+#define _I2CxSTAT_P_MASK                         0x00000010
+#define _I2CxSTAT_P_LENGTH                       0x00000001
+
+#define _I2CxSTAT_D_A_POSITION                   0x00000005
+#define _I2CxSTAT_D_A_MASK                       0x00000020
+#define _I2CxSTAT_D_A_LENGTH                     0x00000001
+
+#define _I2CxSTAT_I2COV_POSITION                 0x00000006
+#define _I2CxSTAT_I2COV_MASK                     0x00000040
+#define _I2CxSTAT_I2COV_LENGTH                   0x00000001
+
+#define _I2CxSTAT_IWCOL_POSITION                 0x00000007
+#define _I2CxSTAT_IWCOL_MASK                     0x00000080
+#define _I2CxSTAT_IWCOL_LENGTH                   0x00000001
+
+#define _I2CxSTAT_ADD10_POSITION                 0x00000008
+#define _I2CxSTAT_ADD10_MASK                     0x00000100
+#define _I2CxSTAT_ADD10_LENGTH                   0x00000001
+
+#define _I2CxSTAT_GCSTAT_POSITION                0x00000009
+#define _I2CxSTAT_GCSTAT_MASK                    0x00000200
+#define _I2CxSTAT_GCSTAT_LENGTH                  0x00000001
+
+#define _I2CxSTAT_BCL_POSITION                   0x0000000A
+#define _I2CxSTAT_BCL_MASK                       0x00000400
+#define _I2CxSTAT_BCL_LENGTH                     0x00000001
+
+#define _I2CxSTAT_TRSTAT_POSITION                0x0000000E
+#define _I2CxSTAT_TRSTAT_MASK                    0x00004000
+#define _I2CxSTAT_TRSTAT_LENGTH                  0x00000001
+
+#define _I2CxSTAT_ACKSTAT_POSITION               0x0000000F
+#define _I2CxSTAT_ACKSTAT_MASK                   0x00008000
+#define _I2CxSTAT_ACKSTAT_LENGTH                 0x00000001
+
+#define _I2CxSTAT_I2CPOV_POSITION                0x00000006
+#define _I2CxSTAT_I2CPOV_MASK                    0x00000040
+#define _I2CxSTAT_I2CPOV_LENGTH                  0x00000001
+
+#define _I2CxSTAT_w_POSITION                     0x00000000
+#define _I2CxSTAT_w_MASK                         0xFFFFFFFF
+#define _I2CxSTAT_w_LENGTH                       0x00000020
 
 #endif // AP32MX270F256D_H
