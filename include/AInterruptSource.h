@@ -40,7 +40,7 @@ namespace AFramework{
             bool enableInterrupt(const Priority p, const SubPriority s = Isp0) volatile;
             bool disableInterrupt() volatile;
             bool hasInterruptOccurred() volatile;
-            bool clearFlag();
+            bool clearFlag() volatile;
         private:
             static volatile AINT_w * m_int_reg;
             uint8  m_ifsvec;
@@ -51,6 +51,7 @@ namespace AFramework{
             uint32 m_ippos;
             uint32 m_ispos;
     };
+
 }
 
 #endif // AINTERRUPTSOURCE_H

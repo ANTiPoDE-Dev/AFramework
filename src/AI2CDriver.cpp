@@ -31,17 +31,11 @@ AFramework::AI2CDriver::AI2CDriver(volatile AI2C_w * w,
     close();
 }
 
-//                                const I2CAddressLength addressing,  
 bool AFramework::AI2CDriver::open(const I2CFreq freq, const bool idleStop) volatile{
     uint32 baud = 0;
     uint32 conf = _I2CxCON_ON_MASK;
     /*  Imposto il baudrate (vedi datasheet)                                    */
     baud = std::round((((1.0 / (2 * (freq == Freq100KHz ? __I2C_FREQ_100KHz__ : __I2C_FREQ_400KHz__))) - __I2C_PGD_DELAY__) * System::busFrequency()) - 2);
-//    /*  Se l'indirizzamento è a 10 bit                                          */
-//    if(addressing == Address10bit){
-//        /*  imposto il bit                                                      */
-//        conf |= _I2CxCON_A10M_MASK;
-//    }
     /*  se la frequenza di clock e' 100KHz                                      */
     if(freq == Freq100KHz){
         /*  abilito il controllo sullo slew-rate                                */
@@ -61,8 +55,8 @@ bool AFramework::AI2CDriver::open(const I2CFreq freq, const bool idleStop) volat
     m_SDAPort->write(m_SDA, Lo);
     /*  Metto basso SCL                                                         */
     m_SCLPort->write(m_SCL, Lo);
-//    /*  Pulisco il registro I2CxCON                                             */
-//    m_reg->I2CxCON.CLR = Quick::All;
+    /*  Pulisco il registro I2CxCON                                             */
+    m_reg->I2CxCON.CLR = Quick::All;
     /*  Pulisco il registro I2CxBRG                                             */
     m_reg->I2CxBRG.CLR = Quick::All;
     /*  Imposto il baudrate                                                     */

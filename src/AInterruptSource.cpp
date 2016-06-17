@@ -59,6 +59,6 @@ bool AFramework::AInterruptSource::hasInterruptOccurred() volatile{
     return m_int_reg->IFS[m_ifsvec].isHi(m_ifsmask);
 }
 
-bool AFramework::AInterruptSource::clearFlag(){
+bool AFramework::AInterruptSource::clearFlag() volatile{
     m_int_reg->IFS[m_ifsvec].CLR = m_ifsmask;
 }

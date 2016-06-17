@@ -22,6 +22,8 @@
       <itemPath>../../include/AI2CDriver.h</itemPath>
       <itemPath>../../include/APCF8563.h</itemPath>
       <itemPath>../../include/ADateTime.h</itemPath>
+      <itemPath>../../include/A24LC512.h</itemPath>
+      <itemPath>../../include/AUARTDriver.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -44,6 +46,8 @@
       <itemPath>../../src/APCF8563.cpp</itemPath>
       <itemPath>../../src/AI2CDriver.cpp</itemPath>
       <itemPath>../../src/ADateTime.cpp</itemPath>
+      <itemPath>../../src/A24LC512.cpp</itemPath>
+      <itemPath>../../src/AUARTDriver.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -238,6 +242,7 @@
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
         <property key="USB" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

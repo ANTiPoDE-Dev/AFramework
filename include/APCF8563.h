@@ -38,16 +38,28 @@ namespace AFramework{
 
     class APCF8563{
         public:
+            enum ClockOut{
+                Clock32KHz,
+                Clock1KHz,
+                Clock32Hz,
+                Clock1Hz
+            };
+            
             APCF8563(volatile AI2CDriver * driver);
+            bool isGood() const;
             uint8 seconds() const;
             uint8 minutes() const;
             uint8 hours() const;
             uint8 days() const;
-            uint8 weekday() const;
-            uint8 month() const;
+            ADateTime::Weekdays weekday() const;
+            ADateTime::Months month() const;
             uint8 years() const;
             bool setTime(ADateTime tm) const;
             ADateTime currentTime() const;
+            bool setAlarm(const uint8 hours, const uint8 minutes, const ADateTime::Weekdays weekday = ADateTime::NoWeekday) const;
+            bool stopAlarm() const;
+            bool setClockOut(const ClockOut clock);
+            
             
         private:
             uint8 bcddec(const uint8 val) const;

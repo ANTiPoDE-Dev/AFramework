@@ -46,13 +46,7 @@ namespace AFramework{
                 Freq400KHz
             };
             
-//            enum I2CAddressLength{
-//                Address7bit,
-//                Address10bit,
-//            };
-            
             AI2CDriver(volatile AI2C_w * w, volatile AHardwarePort * SDAPort, const uint32 SDA, volatile AHardwarePort * SCLPort, const uint32 SCL);
-//                    const I2CAddressLength addressing, 
             bool open(const I2CFreq freq, const bool idleStop = false) volatile;
             bool isOpen() volatile;
             void close() volatile;

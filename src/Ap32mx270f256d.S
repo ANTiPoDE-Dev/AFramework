@@ -38,3 +38,10 @@ I2C1_w = 0xBF805000
 //  Inter-Integrated Circuit 2
 I2C2_w = 0xBF805100
     .global I2C2_w
+    
+//  UART1
+UART1_w = 0xBF806000
+    .global UART1_w
+//  UART2
+UART2_w = 0xBF806200
+    .global UART2_w

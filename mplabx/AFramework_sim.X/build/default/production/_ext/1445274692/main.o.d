@@ -16,4 +16,6 @@ build/default/production/_ext/1445274692/main.o:  \
 ../../include/APCF8563.h  \
  ../../include/AI2CDriver.h  \
 ../../include/ADateTime.h  \
- ../../include/ADateTime.h 
+ ../../include/ADateTime.h  \
+../../include/A24LC512.h  \
+ ../../include/AString.h 

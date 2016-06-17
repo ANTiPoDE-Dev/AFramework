@@ -10,13 +10,13 @@ namespace AFramework{
         public:
             enum Weekdays{
                 NoWeekday,
+                Sunday,
                 Monday,
                 Tuesday,
                 Wednesday,
                 Thursday,
                 Friday,
                 Saturday,
-                Sunday
             };
             
             enum Months{

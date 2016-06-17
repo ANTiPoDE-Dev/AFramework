@@ -220,9 +220,14 @@ namespace AFramework{
 //        public:
 //    };
     
-//    class AUART_w{
-//        public:
-//    };
+    class AUART_w{
+        public:
+            volatile ARegTypes::ACSIReg UxMODE;
+            volatile ARegTypes::ACSIReg UxSTA;
+            volatile ARegTypes::AxxxReg UxTXREG;
+            volatile ARegTypes::AxxxReg UxRXREG;
+            volatile ARegTypes::ACSIReg UxBRG;
+    };
     
 //    class APMP_w{
 //        public:
