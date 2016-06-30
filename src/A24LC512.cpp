@@ -79,7 +79,6 @@ bool AFramework::A24LC512::read(const uint16 address, AString & str){
     while((res = m_driver->read()) != '\0'){
         /*  accodo il carattere                                                 */
         str += res;
-//        System::delay(10);
         /*  mando la sequenza di ack                                            */
         m_driver->ack();
     }
@@ -127,7 +126,7 @@ bool AFramework::A24LC512::write(uint16 address, const AString & str){
         write(address++, static_cast<uint8>(str[i]));
     }
     /*  scrivo la terminazione                                                  */
-    write(address, 0x00);
+    write(address, '\0');
     /*  ritorno true                                                            */
     return true;
 }
