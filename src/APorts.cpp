@@ -79,6 +79,8 @@
 #   endif
 
 AFramework::AHardwarePort::AHardwarePort(volatile APORT_w * w) : m_reg(w){
+    /*  imposto tutto come digitale                                             */
+    m_reg->ANSELx.SET   = Quick::All;
     /*  imposto tutto come ingresso                                             */
     m_reg->TRISx.SET   = Quick::All;
     /*  azzero il registro LATx                                                 */
@@ -231,25 +233,37 @@ bool AFramework::AHardwarePort::disablePullDown(const uint32 gpio) volatile{
 }
 
 bool AFramework::AHardwarePort::isInterrutptEnabled() const volatile{
-#   warning Change notice is not currently available
+/*
+    @todo: Change notice is not currently available
+ */
 }
 
 void AFramework::AHardwarePort::enableInterrupt(const uint32 gpio, const Priority pri, const SubPriority sub, const bool idleStop) volatile{
-#   warning Change notice is not currently available
+/*
+    @todo: Change notice is not currently available
+ */
 }
 
 void AFramework::AHardwarePort::disableInterrupt() volatile{
-#   warning Change notice is not currently available
+/*
+    @todo: Change notice is not currently available
+ */
 }
 
 AFramework::uint32 AFramework::AHardwarePort::changeNoticeStatus() const volatile{
-#   warning Change notice is not currently available
+/*
+    @todo: Change notice is not currently available
+ */
 }
 
 bool AFramework::AHardwarePort::hasInterruptOccurred(const uint32 gpio) const volatile{
-#   warning Change notice is not currently available
+/*
+    @todo: Change notice is not currently available
+ */
 }
 
 void AFramework::AHardwarePort::resetInterruptFlag(const uint32 gpio) volatile{
-#   warning Change notice is not currently available
+/*
+    @todo: Change notice is not currently available
+ */
 }

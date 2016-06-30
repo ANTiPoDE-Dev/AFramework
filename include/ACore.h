@@ -25,6 +25,7 @@
 *   Copyright 2015, 2016 Milazzo Giuseppe
 *
 */
+
 #ifndef ACORE_H
 #define ACORE_H
 
@@ -62,16 +63,24 @@ namespace AFramework{
             static void enableInterrupt();
             static void disableInterrupt();
             static void updateTime();
+            static void delay(const uint32 ms);
+            static uint32 currentCentury();
+            static bool outputMap(const uint32 gpio, const uint32 output);
+            static bool inputMap(const uint32 gpio, const uint32 output);
+            static ATime aliveTime();
         private:
             static void scsusp();
             static void scwake();
             static bool chkspc(size_t size, const bool & autoLock = true);
 
             class Segment;
+            class ACoreTimer;
 
             static          Segment *       m_heap_head;
+            static          ACoreTimer      m_coreTimer;
             static          uint32          m_ledGpio;
             static          uint32          m_toggle_delay;
+            static          uint32          m_ct_rate;
             static          size_t          m_heap_size;
             static          size_t          m_heap_busy;
             static          size_t          m_xc32_offs;
@@ -83,8 +92,10 @@ namespace AFramework{
             static          ATime           m_alive;
             static          ATime           m_toggle;
             static volatile AHardwarePort * m_ledPort;
-            static volatile AINT_w        * m_int_reg;
-            
+            static volatile AINT_w *        m_int_reg;
+            static volatile ADEVSPEC_w *    m_dev;
+            static volatile ARPI_w *        m_rpi;      
+            static volatile ARPO_w *        m_rpo;
     };
 
     template <class T> bool System::safeAlloc(T ** ptr, const uint32 & num){

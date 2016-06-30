@@ -28,6 +28,8 @@
 
 #include "AString.h"
 
+const char * AFramework::endl = "\n";
+
 AFramework::uint32 AFramework::AString::strlen(const char * val){
     uint32 res = 0;
     /*  se la stringa non è vuota                                               */
@@ -73,19 +75,31 @@ AFramework::AString::AString(const char * str) : AString(){
     }
 }
 
-AFramework::AString::AString(const sint32 & val) : AString(numToASCII(val, 0)){
+AFramework::AString::AString(const sint32 & val) : AString(){
+    /*  assegno il puntatore dato da numToASCII                                 */
+    m_str = numToASCII(val, 0);
+    /*  imposto la dimensione con strlen                                        */
+    m_dim = strlen(m_str);
     /*  setto l'errore a NoError se la stringa non è null, altrimenti vuol dire */
     /*  che l'allocazione interna a numToASCII è fallita percui metto NoMemory  */
     errset(m_str ? NoError : NoMemory);
 }
 
-AFramework::AString::AString(const float & val, const uint8 & prec) : AString(numToASCII(val, prec)){
+AFramework::AString::AString(const float & val, const uint8 & prec) : AString(){
+    /*  assegno il puntatore dato da numToASCII                                 */
+    m_str = numToASCII(val, prec);
+    /*  imposto la dimensione con strlen                                        */
+    m_dim = strlen(m_str);
     /*  setto l'errore a NoError se la stringa non è null, altrimenti vuol dire */
     /*  che l'allocazione interna a numToASCII è fallita percui metto NoMemory  */
     errset(m_str ? NoError : NoMemory);
 }
 
-AFramework::AString::AString(const double & val, const uint8 & prec) : AString(numToASCII(val, prec)){
+AFramework::AString::AString(const double & val, const uint8 & prec) : AString(){
+    /*  assegno il puntatore dato da numToASCII                                 */
+    m_str = numToASCII(val, prec);
+    /*  imposto la dimensione con strlen                                        */
+    m_dim = strlen(m_str);
     /*  setto l'errore a NoError se la stringa non è null, altrimenti vuol dire */
     /*  che l'allocazione interna a numToASCII è fallita percui metto NoMemory  */
     errset(m_str ? NoError : NoMemory);
@@ -335,6 +349,67 @@ AFramework::sint32 AFramework::AString::indexOf(const char & chr, const uint32 &
     return -1;
 }
 
+AFramework::AString AFramework::AString::right(const uint32 index) const{
+    AString str;
+    char * newStr = NULL;
+    uint32 newSize = m_dim - index + 1;
+    uint32 tmpIndex = 0;
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  se l'indice è fuori range                                               */
+    if(index >= m_dim){
+        /*  setto l'errore ad out of range                                      */
+        errset(OutOfRange);
+        /*  ritorno un oggetto al volo                                          */
+        return str;
+    }
+    /*  provo ad allocare il nuovo vettore                                      */
+    if(!System::safeAlloc(&newStr, newSize)){
+      
+        errset(NoMemory); 
+    }
+    
+    for(uint32 i = index; i < m_dim; i++){
+        
+        newStr[tmpIndex++] = m_str[i];
+    }
+    
+    newStr[newSize - 1] = 0x00;
+    str.ptrswp(newStr, --newSize);
+    return str;
+}
+
+AFramework::AString AFramework::AString::left(const uint32 index) const{
+ 
+    AString str;
+    char * newStr = NULL;
+    uint32 newSize = index + 1;
+    uint32 tmpIndex = 0;
+    /*  resetto la variabile d'errore                                           */
+    errset();
+    /*  se l'indice è fuori range                                               */
+    if(index >= m_dim){
+        /*  setto l'errore ad out of range                                      */
+        errset(OutOfRange);
+        /*  ritorno un oggetto al volo                                          */
+        return str;
+    }
+    /*  provo ad allocare il nuovo vettore                                      */
+    if(!System::safeAlloc(&newStr, newSize)){
+      
+        errset(NoMemory); 
+    }
+    
+    for(uint32 i = 0; i <= index; i++){
+        
+        newStr[tmpIndex++] = m_str[i];
+    }
+    
+    newStr[newSize - 1] = 0x00;
+    str.ptrswp(newStr, --newSize);
+    return str;
+}
+
 bool AFramework::AString::insert(const AString & str, const uint32 & index){
     uint32  indOne = 0;
     uint32  indTwo = 0;
@@ -512,6 +587,8 @@ bool AFramework::AString::clear(){
     }
     /*  libero la memoria                                                       */
     delete [] m_str;
+    /*  imposto a NULL                                                          */
+    m_str = NULL;
     /*  azzero la dimensione                                                    */
     m_dim = 0;
     /*  ritorno true                                                            */
@@ -702,6 +779,11 @@ double AFramework::AString::toDouble(bool & ok) const{
     }
     /*  ritorno il valore                                                       */
     return sig * res;
+}
+
+char * AFramework::AString::c_str() const{
+    /*  nulla da commentare                                                     */
+    return m_str;
 }
 
 AFramework::AStringList * AFramework::AString::split(const char & sep, const bool &keepEmpty, const bool & cs) const{

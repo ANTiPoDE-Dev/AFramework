@@ -25,10 +25,11 @@
 *   Copyright 2015, 2016 Milazzo Giuseppe
 *
 */
+
 #ifndef ACONTAINERS_H
 #define ACONTAINERS_H
 
-#include "ACommons.h"
+#include "ACore.h"
 #include "AErrorNotifier.h"
 
 namespace AFramework{

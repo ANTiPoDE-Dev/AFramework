@@ -8,4 +8,14 @@ build/default/production/_ext/1445274692/main.o:  \
  ../../include/ASystemConfig.h  \
 ../../include/APorts.h  \
  ../../include/ARegisterDefs.h  \
-../../include/APorts.h 
+../../include/ALcd.h  \
+../../include/ACore.h  \
+ ../../include/AString.h  \
+../../include/AErrorNotifier.h  \
+ ../../include/AContainers.h  \
+../../include/APCF8563.h  \
+ ../../include/AI2CDriver.h  \
+../../include/ADateTime.h  \
+ ../../include/ADateTime.h  \
+../../include/A24LC512.h  \
+ ../../include/AString.h 

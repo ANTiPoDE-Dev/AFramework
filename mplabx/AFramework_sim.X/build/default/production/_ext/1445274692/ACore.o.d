@@ -6,4 +6,5 @@ build/default/production/_ext/1445274692/ACore.o:  \
  ../../include/ASystemConfig.h  \
 ../../include/Ap32mx270f256d.h  \
  ../../include/APorts.h  \
-../../include/ARegisterDefs.h 
+../../include/ARegisterDefs.h  \
+ ../../include/AInterruptSource.h 

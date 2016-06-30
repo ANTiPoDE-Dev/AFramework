@@ -59,6 +59,8 @@ namespace AFramework{
             bool replace(const char    & before, const char    & after, const bool & cs = false);
             sint32 indexOf(const AString & str, const uint32 & index = 0, const bool & cs = false) const;
             sint32 indexOf(const char    & chr, const uint32 & index = 0, const bool & cs = false) const;
+            AString right(const uint32 index) const;
+            AString left(const uint32 index) const;
             bool insert(const AString & str, const uint32  & index);
             bool insert(const AString & str, const AString & after, const bool & cs = false);
             bool insert(const char & chr, const uint32 & index);
@@ -81,6 +83,7 @@ namespace AFramework{
             sint32 toInt32(bool & ok) const;
             float toFloat(bool & ok) const;
             double toDouble(bool & ok) const;
+            char * c_str() const;
             AStringList * split(const char & sep, const bool & keepEmpty = false, const bool & cs = false) const;
             char operator[](const uint32 & index) const;
             bool operator==(const AString & str) const;
@@ -171,5 +174,7 @@ namespace AFramework{
         /*  alla fine restituisco il risultato (che può anche essere NULL)      */
         return res;
     }
+    
+    extern const char * endl;
 }
 #endif /* ASTRING_H */

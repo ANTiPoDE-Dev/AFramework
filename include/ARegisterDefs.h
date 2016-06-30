@@ -205,17 +205,29 @@ namespace AFramework{
 //        public:
 //    };
     
-//    class AI2C_w{
-//        public:
-//    };
+    class AI2C_w{
+        public:
+            volatile ARegTypes::ACSIReg I2CxCON;
+            volatile ARegTypes::ACSIReg I2CxSTAT;
+            volatile ARegTypes::ACSIReg I2CxADD;
+            volatile ARegTypes::ACSIReg I2CxMSK;
+            volatile ARegTypes::ACSIReg I2CxBRG;
+            volatile ARegTypes::ACSIReg I2CxTRN;
+            volatile ARegTypes::AxxxReg I2CxRCV;
+    };
     
 //    class ASPI_w{
 //        public:
 //    };
     
-//    class AUART_w{
-//        public:
-//    };
+    class AUART_w{
+        public:
+            volatile ARegTypes::ACSIReg UxMODE;
+            volatile ARegTypes::ACSIReg UxSTA;
+            volatile ARegTypes::AxxxReg UxTXREG;
+            volatile ARegTypes::AxxxReg UxRXREG;
+            volatile ARegTypes::ACSIReg UxBRG;
+    };
     
 //    class APMP_w{
 //        public:
@@ -245,9 +257,15 @@ namespace AFramework{
 //        public:
 //    };
     
-//    class ADEVSPEC_w{
-//        public:
-//    };
+    class ADEVSPEC_w{
+        public:
+            volatile ARegTypes::AxxxReg CFGCON;
+            volatile ARegTypes::APad    pad;
+            volatile ARegTypes::AxxxReg DEVID;
+            volatile ARegTypes::ACSIReg SYSKEY;
+    };
+    
+
     
 //    class APMD_w{
 //        public:
@@ -297,8 +315,6 @@ namespace AFramework{
 //    class ADMACh_w{
 //        public:
 //    };
-    
-#   warning USB is currently unimplemented
     
 #   if defined (__DEVCLASS1__) || defined (__DEVCLASS2__) || defined (__DEVCLASS4__)
     class APORT_w{
