@@ -24,6 +24,9 @@
       <itemPath>../../include/ADateTime.h</itemPath>
       <itemPath>../../include/A24LC512.h</itemPath>
       <itemPath>../../include/AUARTDriver.h</itemPath>
+      <itemPath>../../include/ADht22.h</itemPath>
+      <itemPath>../../include/AESP8266.h</itemPath>
+      <itemPath>../../include/AESP07.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -48,6 +51,8 @@
       <itemPath>../../src/ADateTime.cpp</itemPath>
       <itemPath>../../src/A24LC512.cpp</itemPath>
       <itemPath>../../src/AUARTDriver.cpp</itemPath>
+      <itemPath>../../src/AESP8266.cpp</itemPath>
+      <itemPath>../../src/AESP07.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

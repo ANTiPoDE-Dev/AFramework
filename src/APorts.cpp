@@ -80,7 +80,7 @@
 
 AFramework::AHardwarePort::AHardwarePort(volatile APORT_w * w) : m_reg(w){
     /*  imposto tutto come digitale                                             */
-    m_reg->ANSELx.SET   = Quick::All;
+    m_reg->ANSELx.CLR   = Quick::All;
     /*  imposto tutto come ingresso                                             */
     m_reg->TRISx.SET   = Quick::All;
     /*  azzero il registro LATx                                                 */

@@ -1,11 +1,15 @@
 build/default/production/_ext/1445274692/AUARTDriver.o:  \
  ../../src/AUARTDriver.cpp  \
-../../include/AUARTDriver.h  \
+../../include/ACore.h  \
+../../include/ATime.h  \
  ../../include/ACommons.h  \
 ../../include/ASystemConfig.h  \
  ../../include/Ap32mx270f256d.h  \
-../../include/ARegisterDefs.h  \
- ../../include/AInterruptSource.h  \
+../../include/APorts.h  \
+ ../../include/ARegisterDefs.h  \
+../../include/AUARTDriver.h  \
+ ../../include/AString.h  \
 ../../include/ACore.h  \
- ../../include/ATime.h  \
-../../include/APorts.h 
+ ../../include/AErrorNotifier.h  \
+../../include/AContainers.h  \
+ ../../include/AInterruptSource.h 

@@ -12,4 +12,6 @@ build/default/production/_ext/1445274692/A24LC512.o:  \
 ../../include/ACore.h  \
 ../../include/AString.h  \
  ../../include/AErrorNotifier.h  \
-../../include/AContainers.h 
+../../include/AContainers.h  \
+ ../../include/AUARTDriver.h  \
+../../include/AInterruptSource.h 

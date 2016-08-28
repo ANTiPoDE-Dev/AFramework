@@ -40,6 +40,8 @@
 #define __RPIVEC_MAX__ 0x34
 #define __RPOVEC_MAX__ 0x70
 
+#define __ADCBUF_MAX__ 0x10
+
 namespace AFramework{
     
     namespace ARegTypes{
@@ -233,9 +235,15 @@ namespace AFramework{
 //        public:
 //    };
     
-//    class AADC_w{
-//        public:
-//    };
+    class AADC_w{
+        public:
+            volatile ARegTypes::ACSIReg AD1CON1;
+            volatile ARegTypes::ACSIReg AD1CON2;
+            volatile ARegTypes::ACSIReg AD1CON3;
+            volatile ARegTypes::ACSIReg AD1CHS;
+            volatile ARegTypes::ACSIReg AD1CSSL;
+            volatile ARegTypes::AxxxReg ADCxBUF[__ADCBUF_MAX__];
+    };
     
 //    class ACVRef_w{
 //        public:

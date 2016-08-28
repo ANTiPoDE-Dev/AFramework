@@ -56,3 +56,7 @@ RPI_w = 0xBF80FA04
 //  RPO
 RPO_w = 0xBF80FB00
     .global RPO_w
+    
+//  ADC
+ADC_w = 0xBF809000
+    .global ADC_w

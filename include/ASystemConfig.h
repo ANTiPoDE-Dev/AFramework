@@ -31,7 +31,7 @@
 
 #define ANTIPODE32MR
 
-#define __UART_BUFFER_SIZE__     0x00000400 
+#define __UART_BUFFER_SIZE__     0x00001000 
 
 #if   defined (ANTIPODE32MR)
 #   include "Ap32mx270f256d.h"

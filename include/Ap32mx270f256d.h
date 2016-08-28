@@ -1769,4 +1769,328 @@
 #define _DEVID_DEVID_MASK                        0x0FFFFFFF
 #define _DEVID_DEVID_LENGTH                      0x0000001C
 
+/**
+ *  10-bit Analog To Digital Converter
+ */
+
+#define _ADxCON1_DONE_POSITION                   0x00000000
+#define _ADxCON1_DONE_MASK                       0x00000001
+#define _ADxCON1_DONE_LENGTH                     0x00000001
+
+#define _ADxCON1_SAMP_POSITION                   0x00000001
+#define _ADxCON1_SAMP_MASK                       0x00000002
+#define _ADxCON1_SAMP_LENGTH                     0x00000001
+
+#define _ADxCON1_ASAM_POSITION                   0x00000002
+#define _ADxCON1_ASAM_MASK                       0x00000004
+#define _ADxCON1_ASAM_LENGTH                     0x00000001
+
+#define _ADxCON1_CLRASAM_POSITION                0x00000004
+#define _ADxCON1_CLRASAM_MASK                    0x00000010
+#define _ADxCON1_CLRASAM_LENGTH                  0x00000001
+
+#define _ADxCON1_SSRC_POSITION                   0x00000005
+#define _ADxCON1_SSRC_MASK                       0x000000E0
+#define _ADxCON1_SSRC_LENGTH                     0x00000003
+
+#define _ADxCON1_FORM_POSITION                   0x00000008
+#define _ADxCON1_FORM_MASK                       0x00000700
+#define _ADxCON1_FORM_LENGTH                     0x00000003
+
+#define _ADxCON1_SIDL_POSITION                   0x0000000D
+#define _ADxCON1_SIDL_MASK                       0x00002000
+#define _ADxCON1_SIDL_LENGTH                     0x00000001
+
+#define _ADxCON1_ON_POSITION                     0x0000000F
+#define _ADxCON1_ON_MASK                         0x00008000
+#define _ADxCON1_ON_LENGTH                       0x00000001
+
+#define _ADxCON1_SSRC0_POSITION                  0x00000005
+#define _ADxCON1_SSRC0_MASK                      0x00000020
+#define _ADxCON1_SSRC0_LENGTH                    0x00000001
+
+#define _ADxCON1_SSRC1_POSITION                  0x00000006
+#define _ADxCON1_SSRC1_MASK                      0x00000040
+#define _ADxCON1_SSRC1_LENGTH                    0x00000001
+
+#define _ADxCON1_SSRC2_POSITION                  0x00000007
+#define _ADxCON1_SSRC2_MASK                      0x00000080
+#define _ADxCON1_SSRC2_LENGTH                    0x00000001
+
+#define _ADxCON1_FORM0_POSITION                  0x00000008
+#define _ADxCON1_FORM0_MASK                      0x00000100
+#define _ADxCON1_FORM0_LENGTH                    0x00000001
+
+#define _ADxCON1_FORM1_POSITION                  0x00000009
+#define _ADxCON1_FORM1_MASK                      0x00000200
+#define _ADxCON1_FORM1_LENGTH                    0x00000001
+
+#define _ADxCON1_FORM2_POSITION                  0x0000000A
+#define _ADxCON1_FORM2_MASK                      0x00000400
+#define _ADxCON1_FORM2_LENGTH                    0x00000001
+
+#define _ADxCON1_ADSIDL_POSITION                 0x0000000D
+#define _ADxCON1_ADSIDL_MASK                     0x00002000
+#define _ADxCON1_ADSIDL_LENGTH                   0x00000001
+
+#define _ADxCON1_ADON_POSITION                   0x0000000F
+#define _ADxCON1_ADON_MASK                       0x00008000
+#define _ADxCON1_ADON_LENGTH                     0x00000001
+
+#define _ADxCON1_w_POSITION                      0x00000000
+#define _ADxCON1_w_MASK                          0xFFFFFFFF
+#define _ADxCON1_w_LENGTH                        0x00000020
+
+#define _ADxCON2_ALTS_POSITION                   0x00000000
+#define _ADxCON2_ALTS_MASK                       0x00000001
+#define _ADxCON2_ALTS_LENGTH                     0x00000001
+
+#define _ADxCON2_BUFM_POSITION                   0x00000001
+#define _ADxCON2_BUFM_MASK                       0x00000002
+#define _ADxCON2_BUFM_LENGTH                     0x00000001
+
+#define _ADxCON2_SMPI_POSITION                   0x00000002
+#define _ADxCON2_SMPI_MASK                       0x0000003C
+#define _ADxCON2_SMPI_LENGTH                     0x00000004
+
+#define _ADxCON2_BUFS_POSITION                   0x00000007
+#define _ADxCON2_BUFS_MASK                       0x00000080
+#define _ADxCON2_BUFS_LENGTH                     0x00000001
+
+#define _ADxCON2_CSCNA_POSITION                  0x0000000A
+#define _ADxCON2_CSCNA_MASK                      0x00000400
+#define _ADxCON2_CSCNA_LENGTH                    0x00000001
+
+#define _ADxCON2_OFFCAL_POSITION                 0x0000000C
+#define _ADxCON2_OFFCAL_MASK                     0x00001000
+#define _ADxCON2_OFFCAL_LENGTH                   0x00000001
+
+#define _ADxCON2_VCFG_POSITION                   0x0000000D
+#define _ADxCON2_VCFG_MASK                       0x0000E000
+#define _ADxCON2_VCFG_LENGTH                     0x00000003
+
+#define _ADxCON2_SMPI0_POSITION                  0x00000002
+#define _ADxCON2_SMPI0_MASK                      0x00000004
+#define _ADxCON2_SMPI0_LENGTH                    0x00000001
+
+#define _ADxCON2_SMPI1_POSITION                  0x00000003
+#define _ADxCON2_SMPI1_MASK                      0x00000008
+#define _ADxCON2_SMPI1_LENGTH                    0x00000001
+
+#define _ADxCON2_SMPI2_POSITION                  0x00000004
+#define _ADxCON2_SMPI2_MASK                      0x00000010
+#define _ADxCON2_SMPI2_LENGTH                    0x00000001
+
+#define _ADxCON2_SMPI3_POSITION                  0x00000005
+#define _ADxCON2_SMPI3_MASK                      0x00000020
+#define _ADxCON2_SMPI3_LENGTH                    0x00000001
+
+#define _ADxCON2_VCFG0_POSITION                  0x0000000D
+#define _ADxCON2_VCFG0_MASK                      0x00002000
+#define _ADxCON2_VCFG0_LENGTH                    0x00000001
+
+#define _ADxCON2_VCFG1_POSITION                  0x0000000E
+#define _ADxCON2_VCFG1_MASK                      0x00004000
+#define _ADxCON2_VCFG1_LENGTH                    0x00000001
+
+#define _ADxCON2_VCFG2_POSITION                  0x0000000F
+#define _ADxCON2_VCFG2_MASK                      0x00008000
+#define _ADxCON2_VCFG2_LENGTH                    0x00000001
+
+#define _ADxCON2_w_POSITION                      0x00000000
+#define _ADxCON2_w_MASK                          0xFFFFFFFF
+#define _ADxCON2_w_LENGTH                        0x00000020
+
+#define _ADxCON3_ADCS_POSITION                   0x00000000
+#define _ADxCON3_ADCS_MASK                       0x000000FF
+#define _ADxCON3_ADCS_LENGTH                     0x00000008
+
+#define _ADxCON3_SAMC_POSITION                   0x00000008
+#define _ADxCON3_SAMC_MASK                       0x00001F00
+#define _ADxCON3_SAMC_LENGTH                     0x00000005
+
+#define _ADxCON3_ADRC_POSITION                   0x0000000F
+#define _ADxCON3_ADRC_MASK                       0x00008000
+#define _ADxCON3_ADRC_LENGTH                     0x00000001
+
+#define _ADxCON3_ADCS0_POSITION                  0x00000000
+#define _ADxCON3_ADCS0_MASK                      0x00000001
+#define _ADxCON3_ADCS0_LENGTH                    0x00000001
+
+#define _ADxCON3_ADCS1_POSITION                  0x00000001
+#define _ADxCON3_ADCS1_MASK                      0x00000002
+#define _ADxCON3_ADCS1_LENGTH                    0x00000001
+
+#define _ADxCON3_ADCS2_POSITION                  0x00000002
+#define _ADxCON3_ADCS2_MASK                      0x00000004
+#define _ADxCON3_ADCS2_LENGTH                    0x00000001
+
+#define _ADxCON3_ADCS3_POSITION                  0x00000003
+#define _ADxCON3_ADCS3_MASK                      0x00000008
+#define _ADxCON3_ADCS3_LENGTH                    0x00000001
+
+#define _ADxCON3_ADCS4_POSITION                  0x00000004
+#define _ADxCON3_ADCS4_MASK                      0x00000010
+#define _ADxCON3_ADCS4_LENGTH                    0x00000001
+
+#define _ADxCON3_ADCS5_POSITION                  0x00000005
+#define _ADxCON3_ADCS5_MASK                      0x00000020
+#define _ADxCON3_ADCS5_LENGTH                    0x00000001
+
+#define _ADxCON3_ADCS6_POSITION                  0x00000006
+#define _ADxCON3_ADCS6_MASK                      0x00000040
+#define _ADxCON3_ADCS6_LENGTH                    0x00000001
+
+#define _ADxCON3_ADCS7_POSITION                  0x00000007
+#define _ADxCON3_ADCS7_MASK                      0x00000080
+#define _ADxCON3_ADCS7_LENGTH                    0x00000001
+
+#define _ADxCON3_SAMC0_POSITION                  0x00000008
+#define _ADxCON3_SAMC0_MASK                      0x00000100
+#define _ADxCON3_SAMC0_LENGTH                    0x00000001
+
+#define _ADxCON3_SAMC1_POSITION                  0x00000009
+#define _ADxCON3_SAMC1_MASK                      0x00000200
+#define _ADxCON3_SAMC1_LENGTH                    0x00000001
+
+#define _ADxCON3_SAMC2_POSITION                  0x0000000A
+#define _ADxCON3_SAMC2_MASK                      0x00000400
+#define _ADxCON3_SAMC2_LENGTH                    0x00000001
+
+#define _ADxCON3_SAMC3_POSITION                  0x0000000B
+#define _ADxCON3_SAMC3_MASK                      0x00000800
+#define _ADxCON3_SAMC3_LENGTH                    0x00000001
+
+#define _ADxCON3_SAMC4_POSITION                  0x0000000C
+#define _ADxCON3_SAMC4_MASK                      0x00001000
+#define _ADxCON3_SAMC4_LENGTH                    0x00000001
+
+#define _ADxCON3_w_POSITION                      0x00000000
+#define _ADxCON3_w_MASK                          0xFFFFFFFF
+#define _ADxCON3_w_LENGTH                        0x00000020
+
+#define _ADxCHS_CH0SA_POSITION                   0x00000010
+#define _ADxCHS_CH0SA_MASK                       0x000F0000
+#define _ADxCHS_CH0SA_LENGTH                     0x00000004
+
+#define _ADxCHS_CH0NA_POSITION                   0x00000017
+#define _ADxCHS_CH0NA_MASK                       0x00800000
+#define _ADxCHS_CH0NA_LENGTH                     0x00000001
+
+#define _ADxCHS_CH0SB_POSITION                   0x00000018
+#define _ADxCHS_CH0SB_MASK                       0x0F000000
+#define _ADxCHS_CH0SB_LENGTH                     0x00000004
+
+#define _ADxCHS_CH0NB_POSITION                   0x0000001F
+#define _ADxCHS_CH0NB_MASK                       0x80000000
+#define _ADxCHS_CH0NB_LENGTH                     0x00000001
+
+#define _ADxCHS_CH0SA0_POSITION                  0x00000010
+#define _ADxCHS_CH0SA0_MASK                      0x00010000
+#define _ADxCHS_CH0SA0_LENGTH                    0x00000001
+
+#define _ADxCHS_CH0SA1_POSITION                  0x00000011
+#define _ADxCHS_CH0SA1_MASK                      0x00020000
+#define _ADxCHS_CH0SA1_LENGTH                    0x00000001
+
+#define _ADxCHS_CH0SA2_POSITION                  0x00000012
+#define _ADxCHS_CH0SA2_MASK                      0x00040000
+#define _ADxCHS_CH0SA2_LENGTH                    0x00000001
+
+#define _ADxCHS_CH0SA3_POSITION                  0x00000013
+#define _ADxCHS_CH0SA3_MASK                      0x00080000
+#define _ADxCHS_CH0SA3_LENGTH                    0x00000001
+
+#define _ADxCHS_CH0SB0_POSITION                  0x00000018
+#define _ADxCHS_CH0SB0_MASK                      0x01000000
+#define _ADxCHS_CH0SB0_LENGTH                    0x00000001
+
+#define _ADxCHS_CH0SB1_POSITION                  0x00000019
+#define _ADxCHS_CH0SB1_MASK                      0x02000000
+#define _ADxCHS_CH0SB1_LENGTH                    0x00000001
+
+#define _ADxCHS_CH0SB2_POSITION                  0x0000001A
+#define _ADxCHS_CH0SB2_MASK                      0x04000000
+#define _ADxCHS_CH0SB2_LENGTH                    0x00000001
+
+#define _ADxCHS_CH0SB3_POSITION                  0x0000001B
+#define _ADxCHS_CH0SB3_MASK                      0x08000000
+#define _ADxCHS_CH0SB3_LENGTH                    0x00000001
+
+#define _ADxCHS_w_POSITION                       0x00000000
+#define _ADxCHS_w_MASK                           0xFFFFFFFF
+#define _ADxCHS_w_LENGTH                         0x00000020
+
+#define _ADxCSSL_CSSL_POSITION                   0x00000000
+#define _ADxCSSL_CSSL_MASK                       0x0000FFFF
+#define _ADxCSSL_CSSL_LENGTH                     0x00000010
+
+#define _ADxCSSL_CSSL0_POSITION                  0x00000000
+#define _ADxCSSL_CSSL0_MASK                      0x00000001
+#define _ADxCSSL_CSSL0_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL1_POSITION                  0x00000001
+#define _ADxCSSL_CSSL1_MASK                      0x00000002
+#define _ADxCSSL_CSSL1_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL2_POSITION                  0x00000002
+#define _ADxCSSL_CSSL2_MASK                      0x00000004
+#define _ADxCSSL_CSSL2_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL3_POSITION                  0x00000003
+#define _ADxCSSL_CSSL3_MASK                      0x00000008
+#define _ADxCSSL_CSSL3_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL4_POSITION                  0x00000004
+#define _ADxCSSL_CSSL4_MASK                      0x00000010
+#define _ADxCSSL_CSSL4_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL5_POSITION                  0x00000005
+#define _ADxCSSL_CSSL5_MASK                      0x00000020
+#define _ADxCSSL_CSSL5_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL6_POSITION                  0x00000006
+#define _ADxCSSL_CSSL6_MASK                      0x00000040
+#define _ADxCSSL_CSSL6_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL7_POSITION                  0x00000007
+#define _ADxCSSL_CSSL7_MASK                      0x00000080
+#define _ADxCSSL_CSSL7_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL8_POSITION                  0x00000008
+#define _ADxCSSL_CSSL8_MASK                      0x00000100
+#define _ADxCSSL_CSSL8_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL9_POSITION                  0x00000009
+#define _ADxCSSL_CSSL9_MASK                      0x00000200
+#define _ADxCSSL_CSSL9_LENGTH                    0x00000001
+
+#define _ADxCSSL_CSSL10_POSITION                 0x0000000A
+#define _ADxCSSL_CSSL10_MASK                     0x00000400
+#define _ADxCSSL_CSSL10_LENGTH                   0x00000001
+
+#define _ADxCSSL_CSSL11_POSITION                 0x0000000B
+#define _ADxCSSL_CSSL11_MASK                     0x00000800
+#define _ADxCSSL_CSSL11_LENGTH                   0x00000001
+
+#define _ADxCSSL_CSSL12_POSITION                 0x0000000C
+#define _ADxCSSL_CSSL12_MASK                     0x00001000
+#define _ADxCSSL_CSSL12_LENGTH                   0x00000001
+
+#define _ADxCSSL_CSSL13_POSITION                 0x0000000D
+#define _ADxCSSL_CSSL13_MASK                     0x00002000
+#define _ADxCSSL_CSSL13_LENGTH                   0x00000001
+
+#define _ADxCSSL_CSSL14_POSITION                 0x0000000E
+#define _ADxCSSL_CSSL14_MASK                     0x00004000
+#define _ADxCSSL_CSSL14_LENGTH                   0x00000001
+
+#define _ADxCSSL_CSSL15_POSITION                 0x0000000F
+#define _ADxCSSL_CSSL15_MASK                     0x00008000
+#define _ADxCSSL_CSSL15_LENGTH                   0x00000001
+
+#define _ADxCSSL_w_POSITION                      0x00000000
+#define _ADxCSSL_w_MASK                          0xFFFFFFFF
+#define _ADxCSSL_w_LENGTH                        0x00000020
+
 #endif // AP32MX270F256D_H
