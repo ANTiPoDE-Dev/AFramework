@@ -65,6 +65,24 @@
 #define __HAS_UART1__                               0x00000001
 #define __HAS_UART2__                               0x00000001
 
+#define __HAS__ADC1__                               0x00000001
+
+#define __HAS__ADCCH0__                             0x00000001
+#define __HAS__ADCCH1__                             0x00000001
+#define __HAS__ADCCH2__                             0x00000001
+#define __HAS__ADCCH3__                             0x00000001
+#define __HAS__ADCCH4__                             0x00000001
+#define __HAS__ADCCH5__                             0x00000001
+#define __HAS__ADCCH6__                             0x00000001
+#define __HAS__ADCCH7__                             0x00000001
+#define __HAS__ADCCH8__                             0x00000001
+#define __HAS__ADCCH9__                             0x00000001
+#define __HAS__ADCCHA__                             0x00000001
+#define __HAS__ADCCHB__                             0x00000001
+#define __HAS__ADCCHC__                             0x00000001
+
+
+
 
 /**
  * Timers
@@ -1263,8 +1281,6 @@
  * Peripheral Pin Select
  */
 
-
-
 #define _PPS_V_POS_MASK                             0x000000FF
 
 #define _PPS_GROUP_MASK                             0x00000F00
@@ -2092,5 +2108,406 @@
 #define _ADxCSSL_w_POSITION                      0x00000000
 #define _ADxCSSL_w_MASK                          0xFFFFFFFF
 #define _ADxCSSL_w_LENGTH                        0x00000020
+
+/**
+ *  Oscillator
+ */
+
+#define _OSCCON_OSWEN_POSITION                   0x00000000
+#define _OSCCON_OSWEN_MASK                       0x00000001
+#define _OSCCON_OSWEN_LENGTH                     0x00000001
+
+#define _OSCCON_SOSCEN_POSITION                  0x00000001
+#define _OSCCON_SOSCEN_MASK                      0x00000002
+#define _OSCCON_SOSCEN_LENGTH                    0x00000001
+
+#define _OSCCON_UFRCEN_POSITION                  0x00000002
+#define _OSCCON_UFRCEN_MASK                      0x00000004
+#define _OSCCON_UFRCEN_LENGTH                    0x00000001
+
+#define _OSCCON_CF_POSITION                      0x00000003
+#define _OSCCON_CF_MASK                          0x00000008
+#define _OSCCON_CF_LENGTH                        0x00000001
+
+#define _OSCCON_SLPEN_POSITION                   0x00000004
+#define _OSCCON_SLPEN_MASK                       0x00000010
+#define _OSCCON_SLPEN_LENGTH                     0x00000001
+
+#define _OSCCON_SLOCK_POSITION                   0x00000005
+#define _OSCCON_SLOCK_MASK                       0x00000020
+#define _OSCCON_SLOCK_LENGTH                     0x00000001
+
+#define _OSCCON_ULOCK_POSITION                   0x00000006
+#define _OSCCON_ULOCK_MASK                       0x00000040
+#define _OSCCON_ULOCK_LENGTH                     0x00000001
+
+#define _OSCCON_CLKLOCK_POSITION                 0x00000007
+#define _OSCCON_CLKLOCK_MASK                     0x00000080
+#define _OSCCON_CLKLOCK_LENGTH                   0x00000001
+
+#define _OSCCON_NOSC_POSITION                    0x00000008
+#define _OSCCON_NOSC_MASK                        0x00000700
+#define _OSCCON_NOSC_LENGTH                      0x00000003
+
+#define _OSCCON_COSC_POSITION                    0x0000000C
+#define _OSCCON_COSC_MASK                        0x00007000
+#define _OSCCON_COSC_LENGTH                      0x00000003
+
+#define _OSCCON_PLLMULT_POSITION                 0x00000010
+#define _OSCCON_PLLMULT_MASK                     0x00070000
+#define _OSCCON_PLLMULT_LENGTH                   0x00000003
+
+#define _OSCCON_PBDIV_POSITION                   0x00000013
+#define _OSCCON_PBDIV_MASK                       0x00180000
+#define _OSCCON_PBDIV_LENGTH                     0x00000002
+
+#define _OSCCON_PBDIVRDY_POSITION                0x00000015
+#define _OSCCON_PBDIVRDY_MASK                    0x00200000
+#define _OSCCON_PBDIVRDY_LENGTH                  0x00000001
+
+#define _OSCCON_SOSCRDY_POSITION                 0x00000016
+#define _OSCCON_SOSCRDY_MASK                     0x00400000
+#define _OSCCON_SOSCRDY_LENGTH                   0x00000001
+
+#define _OSCCON_FRCDIV_POSITION                  0x00000018
+#define _OSCCON_FRCDIV_MASK                      0x07000000
+#define _OSCCON_FRCDIV_LENGTH                    0x00000003
+
+#define _OSCCON_PLLODIV_POSITION                 0x0000001B
+#define _OSCCON_PLLODIV_MASK                     0x38000000
+#define _OSCCON_PLLODIV_LENGTH                   0x00000003
+
+#define _OSCCON_NOSC0_POSITION                   0x00000008
+#define _OSCCON_NOSC0_MASK                       0x00000100
+#define _OSCCON_NOSC0_LENGTH                     0x00000001
+
+#define _OSCCON_NOSC1_POSITION                   0x00000009
+#define _OSCCON_NOSC1_MASK                       0x00000200
+#define _OSCCON_NOSC1_LENGTH                     0x00000001
+
+#define _OSCCON_NOSC2_POSITION                   0x0000000A
+#define _OSCCON_NOSC2_MASK                       0x00000400
+#define _OSCCON_NOSC2_LENGTH                     0x00000001
+
+#define _OSCCON_COSC0_POSITION                   0x0000000C
+#define _OSCCON_COSC0_MASK                       0x00001000
+#define _OSCCON_COSC0_LENGTH                     0x00000001
+
+#define _OSCCON_COSC1_POSITION                   0x0000000D
+#define _OSCCON_COSC1_MASK                       0x00002000
+#define _OSCCON_COSC1_LENGTH                     0x00000001
+
+#define _OSCCON_COSC2_POSITION                   0x0000000E
+#define _OSCCON_COSC2_MASK                       0x00004000
+#define _OSCCON_COSC2_LENGTH                     0x00000001
+
+#define _OSCCON_PLLMULT0_POSITION                0x00000010
+#define _OSCCON_PLLMULT0_MASK                    0x00010000
+#define _OSCCON_PLLMULT0_LENGTH                  0x00000001
+
+#define _OSCCON_PLLMULT1_POSITION                0x00000011
+#define _OSCCON_PLLMULT1_MASK                    0x00020000
+#define _OSCCON_PLLMULT1_LENGTH                  0x00000001
+
+#define _OSCCON_PLLMULT2_POSITION                0x00000012
+#define _OSCCON_PLLMULT2_MASK                    0x00040000
+#define _OSCCON_PLLMULT2_LENGTH                  0x00000001
+
+#define _OSCCON_PBDIV0_POSITION                  0x00000013
+#define _OSCCON_PBDIV0_MASK                      0x00080000
+#define _OSCCON_PBDIV0_LENGTH                    0x00000001
+
+#define _OSCCON_PBDIV1_POSITION                  0x00000014
+#define _OSCCON_PBDIV1_MASK                      0x00100000
+#define _OSCCON_PBDIV1_LENGTH                    0x00000001
+
+#define _OSCCON_FRCDIV0_POSITION                 0x00000018
+#define _OSCCON_FRCDIV0_MASK                     0x01000000
+#define _OSCCON_FRCDIV0_LENGTH                   0x00000001
+
+#define _OSCCON_FRCDIV1_POSITION                 0x00000019
+#define _OSCCON_FRCDIV1_MASK                     0x02000000
+#define _OSCCON_FRCDIV1_LENGTH                   0x00000001
+
+#define _OSCCON_FRCDIV2_POSITION                 0x0000001A
+#define _OSCCON_FRCDIV2_MASK                     0x04000000
+#define _OSCCON_FRCDIV2_LENGTH                   0x00000001
+
+#define _OSCCON_PLLODIV0_POSITION                0x0000001B
+#define _OSCCON_PLLODIV0_MASK                    0x08000000
+#define _OSCCON_PLLODIV0_LENGTH                  0x00000001
+
+#define _OSCCON_PLLODIV1_POSITION                0x0000001C
+#define _OSCCON_PLLODIV1_MASK                    0x10000000
+#define _OSCCON_PLLODIV1_LENGTH                  0x00000001
+
+#define _OSCCON_PLLODIV2_POSITION                0x0000001D
+#define _OSCCON_PLLODIV2_MASK                    0x20000000
+#define _OSCCON_PLLODIV2_LENGTH                  0x00000001
+
+#define _OSCCON_w_POSITION                       0x00000000
+#define _OSCCON_w_MASK                           0xFFFFFFFF
+#define _OSCCON_w_LENGTH                         0x00000020
+
+#define _OSCTUN_TUN_POSITION                     0x00000000
+#define _OSCTUN_TUN_MASK                         0x0000003F
+#define _OSCTUN_TUN_LENGTH                       0x00000006
+
+#define _OSCTUN_TUN0_POSITION                    0x00000000
+#define _OSCTUN_TUN0_MASK                        0x00000001
+#define _OSCTUN_TUN0_LENGTH                      0x00000001
+
+#define _OSCTUN_TUN1_POSITION                    0x00000001
+#define _OSCTUN_TUN1_MASK                        0x00000002
+#define _OSCTUN_TUN1_LENGTH                      0x00000001
+
+#define _OSCTUN_TUN2_POSITION                    0x00000002
+#define _OSCTUN_TUN2_MASK                        0x00000004
+#define _OSCTUN_TUN2_LENGTH                      0x00000001
+
+#define _OSCTUN_TUN3_POSITION                    0x00000003
+#define _OSCTUN_TUN3_MASK                        0x00000008
+#define _OSCTUN_TUN3_LENGTH                      0x00000001
+
+#define _OSCTUN_TUN4_POSITION                    0x00000004
+#define _OSCTUN_TUN4_MASK                        0x00000010
+#define _OSCTUN_TUN4_LENGTH                      0x00000001
+
+#define _OSCTUN_TUN5_POSITION                    0x00000005
+#define _OSCTUN_TUN5_MASK                        0x00000020
+#define _OSCTUN_TUN5_LENGTH                      0x00000001
+
+#define _OSCTUN_w_POSITION                       0x00000000
+#define _OSCTUN_w_MASK                           0xFFFFFFFF
+#define _OSCTUN_w_LENGTH                         0x00000020
+
+#define _REFOCON_ROSEL_POSITION                  0x00000000
+#define _REFOCON_ROSEL_MASK                      0x0000000F
+#define _REFOCON_ROSEL_LENGTH                    0x00000004
+
+#define _REFOCON_ACTIVE_POSITION                 0x00000008
+#define _REFOCON_ACTIVE_MASK                     0x00000100
+#define _REFOCON_ACTIVE_LENGTH                   0x00000001
+
+#define _REFOCON_DIVSWEN_POSITION                0x00000009
+#define _REFOCON_DIVSWEN_MASK                    0x00000200
+#define _REFOCON_DIVSWEN_LENGTH                  0x00000001
+
+#define _REFOCON_RSLP_POSITION                   0x0000000B
+#define _REFOCON_RSLP_MASK                       0x00000800
+#define _REFOCON_RSLP_LENGTH                     0x00000001
+
+#define _REFOCON_OE_POSITION                     0x0000000C
+#define _REFOCON_OE_MASK                         0x00001000
+#define _REFOCON_OE_LENGTH                       0x00000001
+
+#define _REFOCON_SIDL_POSITION                   0x0000000D
+#define _REFOCON_SIDL_MASK                       0x00002000
+#define _REFOCON_SIDL_LENGTH                     0x00000001
+
+#define _REFOCON_ON_POSITION                     0x0000000F
+#define _REFOCON_ON_MASK                         0x00008000
+#define _REFOCON_ON_LENGTH                       0x00000001
+
+#define _REFOCON_RODIV_POSITION                  0x00000010
+#define _REFOCON_RODIV_MASK                      0x7FFF0000
+#define _REFOCON_RODIV_LENGTH                    0x0000000F
+
+#define _REFOCON_w_POSITION                      0x00000000
+#define _REFOCON_w_MASK                          0xFFFFFFFF
+#define _REFOCON_w_LENGTH                        0x00000020
+
+#define _REFOTRIM_ROTRIM_POSITION                0x00000017
+#define _REFOTRIM_ROTRIM_MASK                    0xFF800000
+#define _REFOTRIM_ROTRIM_LENGTH                  0x00000009
+
+#define _REFOTRIM_w_POSITION                     0x00000000
+#define _REFOTRIM_w_MASK                         0xFFFFFFFF
+#define _REFOTRIM_w_LENGTH                       0x00000020
+
+/**
+ *  Real Time Clock Calendar
+ */
+
+#define _RTCCON_RTCOE_POSITION                   0x00000000
+#define _RTCCON_RTCOE_MASK                       0x00000001
+#define _RTCCON_RTCOE_LENGTH                     0x00000001
+
+#define _RTCCON_HALFSEC_POSITION                 0x00000001
+#define _RTCCON_HALFSEC_MASK                     0x00000002
+#define _RTCCON_HALFSEC_LENGTH                   0x00000001
+
+#define _RTCCON_RTCSYNC_POSITION                 0x00000002
+#define _RTCCON_RTCSYNC_MASK                     0x00000004
+#define _RTCCON_RTCSYNC_LENGTH                   0x00000001
+
+#define _RTCCON_RTCWREN_POSITION                 0x00000003
+#define _RTCCON_RTCWREN_MASK                     0x00000008
+#define _RTCCON_RTCWREN_LENGTH                   0x00000001
+
+#define _RTCCON_RTCCLKON_POSITION                0x00000006
+#define _RTCCON_RTCCLKON_MASK                    0x00000040
+#define _RTCCON_RTCCLKON_LENGTH                  0x00000001
+
+#define _RTCCON_RTSECSEL_POSITION                0x00000007
+#define _RTCCON_RTSECSEL_MASK                    0x00000080
+#define _RTCCON_RTSECSEL_LENGTH                  0x00000001
+
+#define _RTCCON_SIDL_POSITION                    0x0000000D
+#define _RTCCON_SIDL_MASK                        0x00002000
+#define _RTCCON_SIDL_LENGTH                      0x00000001
+
+#define _RTCCON_ON_POSITION                      0x0000000F
+#define _RTCCON_ON_MASK                          0x00008000
+#define _RTCCON_ON_LENGTH                        0x00000001
+
+#define _RTCCON_CAL_POSITION                     0x00000010
+#define _RTCCON_CAL_MASK                         0x03FF0000
+#define _RTCCON_CAL_LENGTH                       0x0000000A
+
+#define _RTCCON_w_POSITION                       0x00000000
+#define _RTCCON_w_MASK                           0xFFFFFFFF
+#define _RTCCON_w_LENGTH                         0x00000020
+
+#define _RTCALRM_ARPT_POSITION                   0x00000000
+#define _RTCALRM_ARPT_MASK                       0x000000FF
+#define _RTCALRM_ARPT_LENGTH                     0x00000008
+
+#define _RTCALRM_AMASK_POSITION                  0x00000008
+#define _RTCALRM_AMASK_MASK                      0x00000F00
+#define _RTCALRM_AMASK_LENGTH                    0x00000004
+
+#define _RTCALRM_ALRMSYNC_POSITION               0x0000000C
+#define _RTCALRM_ALRMSYNC_MASK                   0x00001000
+#define _RTCALRM_ALRMSYNC_LENGTH                 0x00000001
+
+#define _RTCALRM_PIV_POSITION                    0x0000000D
+#define _RTCALRM_PIV_MASK                        0x00002000
+#define _RTCALRM_PIV_LENGTH                      0x00000001
+
+#define _RTCALRM_CHIME_POSITION                  0x0000000E
+#define _RTCALRM_CHIME_MASK                      0x00004000
+#define _RTCALRM_CHIME_LENGTH                    0x00000001
+
+#define _RTCALRM_ALRMEN_POSITION                 0x0000000F
+#define _RTCALRM_ALRMEN_MASK                     0x00008000
+#define _RTCALRM_ALRMEN_LENGTH                   0x00000001
+
+#define _RTCALRM_w_POSITION                      0x00000000
+#define _RTCALRM_w_MASK                          0xFFFFFFFF
+#define _RTCALRM_w_LENGTH                        0x00000020
+
+#define _RTCTIME_SEC01_POSITION                  0x00000008
+#define _RTCTIME_SEC01_MASK                      0x00000F00
+#define _RTCTIME_SEC01_LENGTH                    0x00000004
+
+#define _RTCTIME_SEC10_POSITION                  0x0000000C
+#define _RTCTIME_SEC10_MASK                      0x0000F000
+#define _RTCTIME_SEC10_LENGTH                    0x00000004
+
+#define _RTCTIME_MIN01_POSITION                  0x00000010
+#define _RTCTIME_MIN01_MASK                      0x000F0000
+#define _RTCTIME_MIN01_LENGTH                    0x00000004
+
+#define _RTCTIME_MIN10_POSITION                  0x00000014
+#define _RTCTIME_MIN10_MASK                      0x00F00000
+#define _RTCTIME_MIN10_LENGTH                    0x00000004
+
+#define _RTCTIME_HR01_POSITION                   0x00000018
+#define _RTCTIME_HR01_MASK                       0x0F000000
+#define _RTCTIME_HR01_LENGTH                     0x00000004
+
+#define _RTCTIME_HR10_POSITION                   0x0000001C
+#define _RTCTIME_HR10_MASK                       0xF0000000
+#define _RTCTIME_HR10_LENGTH                     0x00000004
+
+#define _RTCTIME_w_POSITION                      0x00000000
+#define _RTCTIME_w_MASK                          0xFFFFFFFF
+#define _RTCTIME_w_LENGTH                        0x00000020
+
+#define _RTCDATE_WDAY01_POSITION                 0x00000000
+#define _RTCDATE_WDAY01_MASK                     0x0000000F
+#define _RTCDATE_WDAY01_LENGTH                   0x00000004
+
+#define _RTCDATE_DAY01_POSITION                  0x00000008
+#define _RTCDATE_DAY01_MASK                      0x00000F00
+#define _RTCDATE_DAY01_LENGTH                    0x00000004
+
+#define _RTCDATE_DAY10_POSITION                  0x0000000C
+#define _RTCDATE_DAY10_MASK                      0x0000F000
+#define _RTCDATE_DAY10_LENGTH                    0x00000004
+
+#define _RTCDATE_MONTH01_POSITION                0x00000010
+#define _RTCDATE_MONTH01_MASK                    0x000F0000
+#define _RTCDATE_MONTH01_LENGTH                  0x00000004
+
+#define _RTCDATE_MONTH10_POSITION                0x00000014
+#define _RTCDATE_MONTH10_MASK                    0x00F00000
+#define _RTCDATE_MONTH10_LENGTH                  0x00000004
+
+#define _RTCDATE_YEAR01_POSITION                 0x00000018
+#define _RTCDATE_YEAR01_MASK                     0x0F000000
+#define _RTCDATE_YEAR01_LENGTH                   0x00000004
+
+#define _RTCDATE_YEAR10_POSITION                 0x0000001C
+#define _RTCDATE_YEAR10_MASK                     0xF0000000
+#define _RTCDATE_YEAR10_LENGTH                   0x00000004
+
+#define _RTCDATE_w_POSITION                      0x00000000
+#define _RTCDATE_w_MASK                          0xFFFFFFFF
+#define _RTCDATE_w_LENGTH                        0x00000020
+
+#define _ALRMTIME_SEC01_POSITION                 0x00000008
+#define _ALRMTIME_SEC01_MASK                     0x00000F00
+#define _ALRMTIME_SEC01_LENGTH                   0x00000004
+
+#define _ALRMTIME_SEC10_POSITION                 0x0000000C
+#define _ALRMTIME_SEC10_MASK                     0x0000F000
+#define _ALRMTIME_SEC10_LENGTH                   0x00000004
+
+#define _ALRMTIME_MIN01_POSITION                 0x00000010
+#define _ALRMTIME_MIN01_MASK                     0x000F0000
+#define _ALRMTIME_MIN01_LENGTH                   0x00000004
+
+#define _ALRMTIME_MIN10_POSITION                 0x00000014
+#define _ALRMTIME_MIN10_MASK                     0x00F00000
+#define _ALRMTIME_MIN10_LENGTH                   0x00000004
+
+#define _ALRMTIME_HR01_POSITION                  0x00000018
+#define _ALRMTIME_HR01_MASK                      0x0F000000
+#define _ALRMTIME_HR01_LENGTH                    0x00000004
+
+#define _ALRMTIME_HR10_POSITION                  0x0000001C
+#define _ALRMTIME_HR10_MASK                      0xF0000000
+#define _ALRMTIME_HR10_LENGTH                    0x00000004
+
+#define _ALRMTIME_w_POSITION                     0x00000000
+#define _ALRMTIME_w_MASK                         0xFFFFFFFF
+#define _ALRMTIME_w_LENGTH                       0x00000020
+
+#define _ALRMDATE_WDAY01_POSITION                0x00000000
+#define _ALRMDATE_WDAY01_MASK                    0x0000000F
+#define _ALRMDATE_WDAY01_LENGTH                  0x00000004
+
+#define _ALRMDATE_DAY01_POSITION                 0x00000008
+#define _ALRMDATE_DAY01_MASK                     0x00000F00
+#define _ALRMDATE_DAY01_LENGTH                   0x00000004
+
+#define _ALRMDATE_DAY10_POSITION                 0x0000000C
+#define _ALRMDATE_DAY10_MASK                     0x0000F000
+#define _ALRMDATE_DAY10_LENGTH                   0x00000004
+
+#define _ALRMDATE_MONTH01_POSITION               0x00000010
+#define _ALRMDATE_MONTH01_MASK                   0x000F0000
+#define _ALRMDATE_MONTH01_LENGTH                 0x00000004
+
+#define _ALRMDATE_MONTH10_POSITION               0x00000014
+#define _ALRMDATE_MONTH10_MASK                   0x00F00000
+#define _ALRMDATE_MONTH10_LENGTH                 0x00000004
+
+#define _ALRMDATE_w_POSITION                     0x00000000
+#define _ALRMDATE_w_MASK                         0xFFFFFFFF
+#define _ALRMDATE_w_LENGTH                       0x00000020
+
 
 #endif // AP32MX270F256D_H

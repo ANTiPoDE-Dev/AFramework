@@ -82,8 +82,8 @@ namespace AFramework{
             uint32 changeNoticeStatus() const volatile;
             bool hasInterruptOccurred(const uint32 gpio) const volatile;
             void resetInterruptFlag(const uint32 gpio = Quick::All) volatile;
-        private:
-            volatile APORT_w *  m_reg;
+    private:
+            volatile APORT_w *   m_reg;            
     };
 
 #   if  (__HAS__PORTA__)

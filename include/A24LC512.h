@@ -18,7 +18,7 @@ namespace AFramework{
     class A24LC512{
       
         public:
-            A24LC512(volatile AI2CDriver * driver, const uint8 lowAddress);
+            A24LC512(volatile AI2CDriver * driver, const uint8 lowAddress = 0);
             char read(const uint16 address);
             bool read(const uint16 address, AString & str);
             bool write(const uint16 address, const char data);

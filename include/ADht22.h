@@ -1,26 +1,30 @@
 #ifndef ADHT22_H
 #define	ADHT22_H
 
-#include "APorts.h"
-#include "ATimers.h"
+#include "ACore.h"
 
 namespace AFramework{
 
     class ADht22{
         public:
-            typedef struct ATempHum{
-                
-                float   temp;
-                float   hum;
-            }ATempHum;
             
-                        ADht22(volatile AHardwarePort *port, const uint32 pin);
-            ATempHum    read(const uint32 ms = 1000);
+            ADht22(volatile AHardwarePort *port, const uint32 gpio);
+            double temperature();
+            double humidity();
+            bool read();
             
         private:
             
+            void startSignal();
+            bool checkResponse();
+            uint8 readByte();
+            
+            
             volatile AHardwarePort * m_port;
-            uint32          m_pin;
+            uint32          m_gpio;
+            uint32          m_temp;
+            uint32          m_hum;
+            bool            m_flag;
     };  
 }
 #endif	

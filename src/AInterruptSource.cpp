@@ -49,16 +49,24 @@ bool AFramework::AInterruptSource::enableInterrupt(const Priority p, const SubPr
     m_int_reg->IPC[m_ipcvec].SET = ((p << m_ippos) | (s << m_ispos));
     /*  abilito l'interrupt                                                     */
     m_int_reg->IEC[m_iecvec].SET = m_iecmask;
+    /*  ritorno true                                                            */
+    return true;
 }
 
 bool AFramework::AInterruptSource::disableInterrupt() volatile{
     m_int_reg->IEC[m_iecvec].CLR = m_iecmask;
+    /*  ritorno true                                                            */
+    return true;
 }
 
 bool AFramework::AInterruptSource::hasInterruptOccurred() volatile{
     return m_int_reg->IFS[m_ifsvec].isHi(m_ifsmask);
+    /*  ritorno true                                                            */
+    return true;
 }
 
 bool AFramework::AInterruptSource::clearFlag() volatile{
     m_int_reg->IFS[m_ifsvec].CLR = m_ifsmask;
+    /*  ritorno true                                                            */
+    return true;
 }

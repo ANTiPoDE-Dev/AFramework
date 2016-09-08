@@ -455,7 +455,6 @@ bool AFramework::AESP8266::waitForData(AString &str, const uint32 ms) const{
         return true;
     }
     return false;
-
 }
 
 bool AFramework::AESP8266::send(const AString &str, const uint8 numConn) const{

@@ -20,6 +20,10 @@
 #define __ESP_AT_UDP_CONN   "AT+CIPSTART=\"UDP\","
 #define __ESP_AT_CLOSE_CONN "AT+CIPCLOSE"
 #define __ESP_AT_SEND       "AT+CIPSEND="
+#define __ESP_AT_DATA       "+IPD,"
+#define __ESP_AT_MUX        "AT+CIPMUX="
+#define __ESP_AT_SERVER     "AT+CIPSERVER="
+#define __ESP_AT_TIMEOUT    "AT+CIPSTO="
 
 #define __ESP_AT_STATION_IP "AT+CIPSTA_"
 #define __ESP_AT_AP_IP      "AT+CIPAP_"
@@ -70,7 +74,7 @@ bool AFramework::AESP07::initialize(const ESPMode mode) const{
     if(!setEcho(false)){
         return false;
     }
-    if(!setMode()){
+    if(!setMode(mode)){
         return false;   
     }
     return true;
@@ -288,9 +292,10 @@ bool AFramework::AESP07::leaveAP(const uint32 ms) const{
 }
 
 bool AFramework::AESP07::configureAP(const AString & ssid, const AString & pwd, const ESPEncryption enc, const uint8 channel, const bool def, const uint32 ms) const{
-    /*  se la seriale non e' ok oppure la password e' vuota ma e' stata specifi-*/
-    /*  cata una cifratura oppure la password non e' vuota ma la rete è aperta  */
-    if(!m_flg || (pwd.isEmpty() && enc != Open) || (!pwd.isEmpty() && enc == Open)){
+    /*  se la seriale non e' ok oppure la password e' vuota (o troppo corta) ma */
+    /*  e' stata specificata una cifratura oppure la password non e' vuota ma   */
+    /*  la rete è aperta                                                        */
+    if(!m_flg || ((pwd.size() < 0x08) && enc != Open) || (pwd.isEmpty() && enc == Open)){
         /*  ritorno false                                                       */
         return false;
     }
@@ -308,8 +313,6 @@ bool AFramework::AESP07::configureAP(const AString & ssid, const AString & pwd, 
     }
     /*  accodo l'uguale                                                         */
     m_driver->write("=");
-    /*  accodo le virgolette                                                    */
-    m_driver->write(__ESP_AT_QUOTE);
     /*  accodo il ssid                                                          */
     m_driver->write(__ESP_AT_QUOTE);
     m_driver->write(ssid.c_str());
@@ -438,7 +441,29 @@ bool AFramework::AESP07::setIp(const ESPMode mode, const AString &addr, const AS
     /*  accodo l'indirizzo ip                                                   */
     m_driver->write(__ESP_AT_QUOTE);
     m_driver->write(addr.c_str());
-    
+    m_driver->write(__ESP_AT_QUOTE);
+    /*  se gateway non è vuoto                                                  */
+    if(!gateway.isEmpty()){
+        /*  accodo la virgola                                                   */
+        m_driver->write("=");
+        /*  accodo l'indirizzo ip del gateway                                   */
+        m_driver->write(__ESP_AT_QUOTE);
+        m_driver->write(gateway.c_str());
+        m_driver->write(__ESP_AT_QUOTE);
+    }
+    /*  se la netmask non è vuota                                               */
+    if(!netmask.isEmpty()){
+        /*  accodo la virgola                                                   */
+        m_driver->write("=");
+        /*  accodo la netmask                                                   */
+        m_driver->write(__ESP_AT_QUOTE);
+        m_driver->write(netmask.c_str());
+        m_driver->write(__ESP_AT_QUOTE);
+    }
+    /*  inserisco la terminazione                                               */
+    m_driver->write(__ESP_AT_TERM);
+    /*  ritorno il risultato del wdt                                            */
+    return wdttmr(__ESP_AT_OK, ms);
 }
 
 bool AFramework::AESP07::prepareForReceive() const{
@@ -492,21 +517,54 @@ bool AFramework::AESP07::disconnectFromHost(const uint32 ms) const{
 }
 
 bool AFramework::AESP07::waitForData(AString &str, const uint32 ms) const{
-    /*  se va tutto bene                                                        */
-    if(prepareForReceive()){
-        /*  scrivo il comando sulla seriale                                     */
-        m_driver->write(__ESP_AT_CLOSE_CONN);
-        /*  ed inserisco la terminazione                                        */
-        m_driver->write(__ESP_AT_TERM);
-        /*  ritorno il risultato del WDT                                        */
-        return wdttmr(__ESP_AT_OK, ms);
+    
+    bool        flg;
+    uint32      ind = 0;
+    uint32      dim = 0;
+    AString     tm1;
+    AString     tm2;
+    
+    if(!m_flg){
+        /*  se non è così ritorno false                                         */
+        return false;
     }
-    /*  altrimenti ritorno false                                                */
+    /*  aspetto di ricevere qualcosa                                            */
+    if(wdttmr(__ESP_AT_DATA, ms)){
+        /*  aspetto che la dimensione sia arrivata                              */
+        while(!m_driver->bufferContains(":"));
+        /*  prendo l'indice di dove si trovano i due punti di +IPD,xxxx:        */
+        ind = m_driver->read().indexOf(":");
+        /*  prendo tutto quello che sta a sinistra di ":" (compreso)            */
+        tm1 = m_driver->read().left(ind + 1);
+        /*  copio la stringa                                                    */
+        tm2 = tm1;
+        /*  rimuovo i ":"                                                       */
+        tm2.remove(":");
+        /*  se sono rimasti residui di \r\n di una eventuale send               */
+        if(tm2.startsWith(__ESP_AT_TERM)){
+            /*  li rimuovo                                                      */
+            tm2.remove(__ESP_AT_TERM);
+        }
+        /*  rimuovo +IPD,                                                       */
+        tm2.remove(__ESP_AT_DATA);
+        /*  prendo la dimensione del dato in arrivo                             */
+        dim = static_cast<uint32>(tm2.toInt32(flg));
+        /*  aspetto che sia arrivato tutto                                      */
+        while(m_driver->read().size() - tm1.size() < dim);
+        /*  rileggo il buffer                                                   */
+        str = m_driver->read();
+        /*  lo svuoto                                                           */
+        m_driver->bufferClear();
+        /*  elimino la sottostringa ("\r\n")"+IPD,xxx:"                         */
+        str.remove(tm1);
+        /*  ritorno true                                                        */
+        return true;
+    }
+    /*  altrimenti false                                                        */
     return false;
 }
 
 bool AFramework::AESP07::send(const AString &str) const{
-    bool res = false;
     /*  se va tutto bene                                                        */
     if(prepareForReceive()){
         /*  scrivo il comando sulla seriale                                     */
@@ -523,15 +581,74 @@ bool AFramework::AESP07::send(const AString &str) const{
         m_driver->bufferClear();
         /*  scrivo la stringa                                                   */
         m_driver->write(str.c_str());
+        /*  inserisco la terminazione                                           */
+        m_driver->write(__ESP_AT_TERM);
         /*  se non arriva l'ok in tempo utile (1s)                              */
         if(!wdttmr(__ESP_AT_OK, 1000)){
             return false;
         }
+        /*  pulisco il buffer                                                   */
+        m_driver->bufferClear();
         /*  se tutto è filato liscio ritorno true                               */
         return true;
     }
     /*  altrimenti ritorno false                                                */
     return false;
+}
+
+bool AFramework::AESP07::setMultipleConnections(const bool en, const uint32 ms) const{
+    
+    AString str = __ESP_AT_MUX;
+    /*  controllo che la seriale sia ok                                         */
+    if(!m_flg){
+        /*  se non è così ritorno false                                         */
+        return false;
+    }
+    if(en){
+        
+        str += "1";
+    }else{
+        
+        str += "0";
+    }
+    /*  pulisco il buffer                                                       */
+    m_driver->bufferClear();
+    /*  scrivo sulla seriale il comando                                         */
+    m_driver->writeln(str.c_str());
+    /*  ritorno il risultato del WDT                                            */
+    return wdttmr(__ESP_AT_OK, ms);
+}
+
+bool AFramework::AESP07::listen(const uint16 port, const uint32 timeout, const uint32 ms){
+    
+    bool flag = false;
+    AString str = __ESP_AT_SERVER;
+    /*  controllo che la seriale sia ok                                         */
+    if(!m_flg){
+        /*  se non è così ritorno false                                         */
+        return false;
+    }
+    
+    str += "1,";
+    str += AString(static_cast<sint32>(port));
+    /*  pulisco il buffer                                                       */
+    m_driver->bufferClear();
+    /*  scrivo sulla seriale il comando                                         */
+    m_driver->writeln(str.c_str());
+    /*  ritorno il risultato del WDT                                            */
+    flag = wdttmr(__ESP_AT_OK, ms);
+    if(!flag){
+        return false;
+    }
+    str.clear();
+    str = __ESP_AT_TIMEOUT;
+    str += AString(static_cast<sint32>(timeout));
+    /*  pulisco il buffer                                                       */
+    m_driver->bufferClear();
+    /*  scrivo sulla seriale il comando                                         */
+    m_driver->writeln(str.c_str());
+    /*  ritorno il risultato del WDT                                            */
+    return wdttmr(__ESP_AT_OK, ms);
 }
 
 AFramework::AESP07::ESPMode AFramework::AESP07::mode(const bool def, const uint32 ms) const{

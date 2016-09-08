@@ -240,8 +240,10 @@ namespace AFramework{
             volatile ARegTypes::ACSIReg AD1CON1;
             volatile ARegTypes::ACSIReg AD1CON2;
             volatile ARegTypes::ACSIReg AD1CON3;
+            volatile ARegTypes::APad    pad_00;
             volatile ARegTypes::ACSIReg AD1CHS;
             volatile ARegTypes::ACSIReg AD1CSSL;
+            volatile ARegTypes::APad    pad_01;
             volatile ARegTypes::AxxxReg ADCxBUF[__ADCBUF_MAX__];
     };
     
@@ -261,9 +263,13 @@ namespace AFramework{
 //        public:
 //    };
     
-//    class AOSC_w{
-//        public:
-//    };
+    class AOSC_w{
+        public:
+            volatile ARegTypes::ACSIReg OSCCON;
+            volatile ARegTypes::ACSIReg OSCTUN;
+            volatile ARegTypes::ACSIReg REFOCON;
+            volatile ARegTypes::ACSIReg REFOTRIM;
+    };
     
     class ADEVSPEC_w{
         public:

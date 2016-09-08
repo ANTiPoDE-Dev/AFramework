@@ -4,7 +4,7 @@ build/default/production/_ext/1445274692/A24LC512.o:  \
 ../../include/ATime.h  \
  ../../include/ACommons.h  \
 ../../include/ASystemConfig.h  \
- ../../include/Ap32mx270f256d.h  \
+ ../../include/Ap32mx270f256b.h  \
 ../../include/APorts.h  \
  ../../include/ARegisterDefs.h  \
 ../../include/A24LC512.h  \

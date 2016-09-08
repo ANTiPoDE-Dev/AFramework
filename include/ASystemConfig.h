@@ -29,15 +29,14 @@
 #ifndef ASYSTEMCONFIG_H
 #define ASYSTEMCONFIG_H
 
-#define ANTIPODE32MR
+//#define ANTIPODE32MR
 
 #define __UART_BUFFER_SIZE__     0x00001000 
 
 #if   defined (ANTIPODE32MR)
 #   include "Ap32mx270f256d.h"
 #elif defined (__32MX270F256B__)
-#   define __PORTA_BITS__ 0x001F   //0000 0000 0001 1111
-#   define __PORTB_BITS__ 0xEFBF   //1110 1111 1011 1111
+#   include "Ap32mx270f256b.h"
 #elif defined (__32MX270F256D__)
 #   define __PORTA_BITS__ 0x079F   //0000 0111 1001 1111
 #   define __PORTB_BITS__ 0xEFBF   //1110 1111 1011 1111

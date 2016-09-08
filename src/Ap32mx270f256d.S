@@ -60,3 +60,11 @@ RPO_w = 0xBF80FB00
 //  ADC
 ADC_w = 0xBF809000
     .global ADC_w
+    
+//  Oscillator
+OSC_w = 0xBF80F000
+    .global OSC_w
+    
+//  Real-Time Clock Calendar
+RTCC_w = 0xBF800200
+    .global RTCC_w

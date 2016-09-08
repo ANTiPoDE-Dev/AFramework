@@ -49,6 +49,7 @@ namespace AFramework{
             bool setMinutes(const uint8 mm);
             bool setSeconds(const uint8 ss);
             bool setMSeconds(const uint16 ms);
+            uint32 raw() const;
             sint32 days() const;
             sint8 hours() const;
             sint8 minutes() const;

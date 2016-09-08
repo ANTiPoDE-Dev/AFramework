@@ -47,9 +47,10 @@ class AFramework::System::ACoreTimer : public AFramework::AInterruptSource{
                    const uint32 IECMask, 
                    const uint32 IPPos, 
                    const uint32 ISPos);
-        void ctopen(const volatile AFramework::uint32 p);
-        void ctsync(const volatile AFramework::uint32 p);
-        void ctconf(const volatile AFramework::uint32 p);
+        void ctopen(volatile AFramework::uint32 p);
+        void ctsync(volatile AFramework::uint32 p);
+        void ctconf(volatile AFramework::uint32 p);
+        void ctwait(volatile AFramework::uint32 p);
 };
 
 AFramework::System::ACoreTimer::ACoreTimer(const uint8  IFSVec, 
@@ -118,6 +119,22 @@ void AFramework::System::ACoreTimer::ctconf(volatile AFramework::uint32 p){
 #endif
 }
 
+void AFramework::System::ACoreTimer::ctwait(volatile AFramework::uint32 p){
+    volatile uint32 t;
+    volatile uint32 d;
+    /*  leggo il valore del registro count dal coprocessore assegnandolo a t    */
+    asm volatile("mfc0   %0, $9" : "=r"(t));
+    /*  leggo il valore del registro count dal coprocessore assegnandolo a d    */
+    asm volatile("mfc0   %0, $9" : "=r"(d));
+    /*  incremento t del periodo p                                              */
+    t += p;
+    /*  aspetto che sia passato il tempo                                        */
+    while(t > d){
+        /*  aggiornando d ad ogni iterazione                                    */
+        asm volatile("mfc0   %0, $9" : "=r"(d));
+    }
+}
+
 extern "C"{
     
     void __ISR(_CORE_TIMER_VECTOR, IPL7AUTO) CoreTimerHandler(){
@@ -130,6 +147,7 @@ extern "C"{
 extern volatile AFramework::AINT_w     INT_w     __asm__("INT_w")     __attribute__((section("sfrs")));
 extern volatile AFramework::ARPI_w     RPI_w     __asm__("RPI_w")     __attribute__((section("sfrs")));
 extern volatile AFramework::ARPO_w     RPO_w     __asm__("RPO_w")     __attribute__((section("sfrs")));
+extern volatile AFramework::AOSC_w     OSC_w     __asm__("OSC_w")     __attribute__((section("sfrs")));
 extern volatile AFramework::ADEVSPEC_w DEVSPEC_w __asm__("DEVSPEC_w") __attribute__((section("sfrs")));
 
 const AFramework::uint32 AFramework::System::Freq40MHz(0x02625A00U);
@@ -155,6 +173,7 @@ volatile AFramework::AHardwarePort * AFramework::System::m_ledPort(NULL);
 volatile AFramework::AINT_w *        AFramework::System::m_int_reg(&INT_w);
 volatile AFramework::ARPI_w *        AFramework::System::m_rpi(&RPI_w);
 volatile AFramework::ARPO_w *        AFramework::System::m_rpo(&RPO_w);
+volatile AFramework::AOSC_w *        AFramework::System::m_osc(&OSC_w);
 volatile AFramework::ADEVSPEC_w *    AFramework::System::m_dev(&DEVSPEC_w);
 
 /********************************************************************************/
@@ -233,7 +252,7 @@ bool AFramework::System::init(size_t heapSize, volatile AHardwarePort * ledPort,
         return false;
     }
     /*  se il bit passato per il led non è valido                               */
-    if((ledGpio == 0) || (ledGpio & (ledGpio - 1)) || ledGpio > bit15){
+    if((ledGpio == 0 && ledPort != NULL) || (ledGpio & (ledGpio - 1)) || ledGpio > bit15){
         /*  ritorno false                                                       */
         return false;
     }
@@ -295,8 +314,6 @@ bool AFramework::System::init(size_t heapSize, volatile AHardwarePort * ledPort,
     m_coreTimer.ctopen(m_ct_rate);
     /*  abilito gli interrupt                                                   */
     enableInterrupt();
-    /*  disabilito jtag                                                         */
-    m_dev->CFGCON.REG = 0;
     /*  e restituisco true                                                      */
     return true;
 }
@@ -576,6 +593,15 @@ void AFramework::System::delay(const uint32 ms){
     }
 }
 
+void AFramework::System::delay_us(const uint32 us){
+    /*  ritorno il wait del coreTimer (moltiplico in questo modo per non per-   */
+    /*  dere troppo tempo: se si usa io moltiplicatore (bisogna moltiplicare    */
+    /*  per 20) si attiva una circuiteria infinita... mentre in questo modo     */
+    /*  considerando che us * 20 si può scrivere come 4*us + 16*us facendo gli  */
+    /*  shift si guadagna un bel po in performance                              */
+    return m_coreTimer.ctwait((us << 4) + (us << 2));
+}
+
 AFramework::uint32 AFramework::System::currentCentury(){
     /*  temporanea                                                              */
     return 0x14;
@@ -633,6 +659,39 @@ bool AFramework::System::inputMap(const uint32 gpio, const uint32 input){
 AFramework::ATime AFramework::System::aliveTime(){
     /*  ritorno il tempo di vita                                                */
     return m_alive;
+}
+
+void AFramework::System::stopCoreTimer(){
+    m_coreTimer.disableInterrupt();
+}
+
+void AFramework::System::wakeCoreTimer(){
+    m_coreTimer.enableInterrupt(Ip7);
+}
+
+void AFramework::System::unlockOscCon(){
+    
+    disableInterrupt();
+    m_dev->SYSKEY.REG = 0x00000000;
+    m_dev->SYSKEY.REG = 0xAA996655;
+    m_dev->SYSKEY.REG = 0x556699AA;
+}
+
+void AFramework::System::lockOscCon(){
+    
+    m_dev->SYSKEY.REG = 0x00000000;
+    enableInterrupt();
+}
+
+void AFramework::System::sleep(){
+
+    unlockOscCon();
+    
+    m_osc->OSCCON.SET = _OSCCON_SLPEN_MASK;
+    
+    lockOscCon();
+    
+    asm volatile("wait");
 }
 
 void AFramework::System::scsusp(){

@@ -1,80 +1,138 @@
+#include <math.h>
+
 #include"ADht22.h"
 
-AFramework::ADht22::ADht22(volatile AHardwarePort *port, const uint32 pin){
-    
-    m_port = port;
-    m_pin  = pin;
+#define _DHT_NEG_MASK 0x8000
+#define _DHT_TMP_MASK 0x7FFF
+
+AFramework::ADht22::ADht22(volatile AHardwarePort *port, const uint32 gpio) : m_port(port), m_gpio(gpio), m_temp(0), m_hum(0){
+    /*  se la porta è NULL                                                      */
+    if(!m_port){
+        /*  metto il flag di inizializzazione a falso                           */
+        m_flag = false;
+    /*  altrimenti                                                              */
+    }else{
+        /*  dopo aver impostato il pin come digitale                            */
+        m_port->setDigital(m_gpio);
+        /*  e come ingresso                                                     */
+        m_port->setInput(m_gpio);
+        /*  metto il flag a true                                                */
+        m_flag = true;
+    }
 }
 
-AFramework::ADht22::ATempHum AFramework::ADht22::read(const uint32 ms){
-    
-    ADht22::ATempHum res;
-    
-    uint8 bits[40] = {0};
-    float raws[40] = {0};
-    signed char i = 0;
+double AFramework::ADht22::temperature(){
+    /*  ritorno la temperatura                                                  */
+    return (m_temp & _DHT_NEG_MASK ? (static_cast<double>(m_temp & _DHT_TMP_MASK) / -10.0) : (static_cast<double>(m_temp & _DHT_TMP_MASK) / 10.0));
+}
 
-    res.hum = 0;
-    res.temp = 0;
-    
-    m_port->setOutput(m_pin);
-    m_port->write(m_pin, Lo);
+double AFramework::ADht22::humidity(){
+    /*  ritorno l'umidità                                                       */
+    return (static_cast<double>(m_hum) / 10.0);
+}
 
+bool AFramework::ADht22::read(){
+    uint8 humMSB = 0;
+    uint8 humLSB = 0;
+    uint8 tmpMSB = 0;
+    uint8 tmpLSB = 0;
+    uint8 chksum = 0;
+    
+    /*  se la porta non è stata inizializzata correttamente                     */
+    if(!m_flag){
+        /*  ritorno immediatamente false                                        */
+        return false;
+    }
+    
+    /*  aspetto 2 secondi                                                       */
+    System::delay(2000);
+    /*  mando lo start                                                          */
+    startSignal();
+    /*  se non arriva risposta                                                  */
+    if(!checkResponse()){
+        /*  ritorno false                                                       */
+        return false;
+    }
+    /*  leggo i byte                                                            */
+    humMSB = readByte();
+    humLSB = readByte();
+    tmpMSB = readByte();
+    tmpLSB = readByte();
+    chksum = readByte();
+    /*  controllo il checksum                                                   */
+    if(humMSB + humLSB + tmpMSB + tmpLSB != chksum){
+        /**
+         * @todo: controllo errore!
+         */
+    }
+    /*  ricompongo l'umidità                                                    */
+    m_hum  = ((humMSB << 0x08) + humLSB);
+    /*  ricompongo la temperatura                                               */
+    m_temp = ((tmpMSB << 0x08) + tmpLSB);
+    /*  ritorno true                                                            */
+    return true;
+}
+
+void AFramework::ADht22::startSignal(){
+    
+    /*  imposto il gpio come uscita                                             */
+    m_port->setOutput(m_gpio);
+    /*  metto basso                                                             */
+    m_port->write(m_gpio, Lo);
+    /*  aspetto 18 ms                                                           */
     System::delay(18);
-    
-    m_port->write(m_pin, Hi);
-    
-    Timer1.setSynchronousInternal16(0.001);
-    Timer1.clear();
-    Timer1.open();
-    while(Timer1.elapsedTime() < 0.00004);
-    Timer1.close();
-    
-    m_port->write(m_pin, Lo);
-    m_port->setInput(m_pin);
-   
-    while(!m_port->read(m_pin));
-    while(m_port->read(m_pin));
-    
-    for(i = 0; i < 40; i++){
-        
-        Timer1.clear();
-        while(!m_port->read(m_pin));
-        Timer1.open();
-        while(m_port->read(m_pin));
-        Timer1.close();
-        raws[i] = Timer1.elapsedTime();
-    }
-
-    for(i = 0; i < 40; i++){
-        bits[i] = (raws[i] > 0.000050 ? 1 : 0);
-    }
-    for(i = 15; i >= 0; i--){
-        if(bits[i]){
-            res.hum += (bits[i] << (15 - i));
-        }
-    }
-    for(i = 31; i >= 17; i--){
-        if(bits[i]){
-            res.temp += (bits[i] << (31 - i));
-        }
-    }
-    if(bits[16]){
-        res.temp *= -1;
-    }
-    res.hum /= 10;
-    res.temp /= 10;
-    
-#define DHT11
-#ifdef DHT11
-    res.temp = 0;
-    for(i = 23; i >= 16; i--){
-        if(bits[i]){
-            res.temp += (bits[i] << (23 - i));
-        }
-    }
-    
-#endif
-    
-    return res;
+    /*  metto alto                                                              */
+    m_port->write(m_gpio, Hi);
+    /*  aspetto 30 us                                                           */
+    System::delay_us(30);
+    /*  imposto il gpio come ingresso                                           */
+    m_port->setInput(m_gpio);
+    /*  aspetto 2 us                                                           */
+    System::delay_us(2);
 }
+
+bool AFramework::ADht22::checkResponse(){
+    
+    /*  se l'ingresso è basso                                                   */
+    if(m_port->read(m_gpio) == Lo){
+        /*  aspetto che il sensore si porti alto                                */
+        while(m_port->read(m_gpio) == Lo);
+        /*  se arriva il segnale                                                */
+        if(m_port->read(m_gpio) == Hi){
+            /*  aspetto che il sensore completi la sequenza di risposta         */
+            while(m_port->read(m_gpio) == Hi);
+            /*  piccolo delay (non fa male)                                     */
+            System::delay_us(20);
+            /*  ritorno true                                                    */
+            return true;
+        /*  altrimenti qualcosa è andato storto                                 */
+        }else{
+            /*  per cui ritorno false                                           */
+            return false;
+        }
+    }
+    /*  se non è basso vuol dire che qualcosa è andato storto e quindi ritorno  */
+    /*  false                                                                   */
+    return false;
+}
+
+AFramework::uint8 AFramework::ADht22::readByte(){
+    uint8 byte = 0;
+    for(uint8 i = 0; i < 0x08; i++){
+        /*  aspetto che passi il livello basso                                  */
+        while(m_port->read(m_gpio) == Lo);
+        /*  aspetto 40 us                                                       */
+        System::delay_us(40);
+        /*  se dopo 40 us il segnale è ancora alto                              */
+        if(m_port->read(m_gpio) == Hi){
+            /*  vuol dire che si tratta di un 1 per cui lo accodo               */
+            byte |= (1 << (0x07 - i));
+        }
+        /*  aspetto che finisca il bit (nel caso in cui è già finito non è      */
+        /*  un problema)                                                        */
+        while(m_port->read(m_gpio) == Hi);
+    }
+    /*  ritorno il byte                                                         */
+    return byte;
+}
+            

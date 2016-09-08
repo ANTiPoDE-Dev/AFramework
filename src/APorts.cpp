@@ -43,7 +43,7 @@
         volatile AFramework::AHardwarePort AFramework::PortC(&PORTC_w);
 #   endif
     
-#   if  (__HAS__PORTD__)
+#   if  (__HAS__PORTD__)        
         extern volatile AFramework::APORT_w PORTD_w __asm__("PORTD_w") __attribute__((section("sfrs")));
         volatile AFramework::AHardwarePort AFramework::PortD(&PORTD_w);
 #   endif
@@ -112,8 +112,8 @@ bool AFramework::AHardwarePort::setDigital(const uint32 gpio) volatile{
 }
 
 bool AFramework::AHardwarePort::setAnalog(const uint32 gpio) volatile{
+    setInput(gpio);
     return m_reg->ANSELx.set(gpio);
-
 }
 
 AFramework::uint32 AFramework::AHardwarePort::ioStatus() const volatile{

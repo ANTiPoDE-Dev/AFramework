@@ -19,10 +19,10 @@ namespace AFramework{
                 Deep
             };
             enum ESPEncryption{
-                Open,
-                WPA_PSK,
-                WPA2_PSK,
-                WPA_WPA2_PSK
+                Open = 0,
+                WPA_PSK = 2,
+                WPA2_PSK = 3,
+                WPA_WPA2_PSK = 4
             };
             enum Protocol{
                 TCP,
@@ -55,7 +55,10 @@ namespace AFramework{
             bool disconnectFromHost(const uint32 ms = 2000) const;
             
             bool waitForData(AString &str, const uint32 ms = 1000) const;
-            bool send(const AString &str) const;
+            bool send(const AString &str) const;           
+            
+            bool setMultipleConnections(const bool en, const uint32 ms = 1000) const;
+            bool listen(const uint16 port, const uint32 timeout = 60, const uint32 ms = 1000);
             
             ESPMode mode(const bool def = false, const uint32 ms = 500) const;
             

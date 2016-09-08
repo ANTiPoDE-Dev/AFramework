@@ -1,19 +1,26 @@
 build/default/production/_ext/1445274692/main.o:  \
 ../../src/main.cpp  \
  ../../include/ASystemConfig.h  \
-../../include/Ap32mx270f256d.h  \
+../../include/Ap32mx270f256b.h  \
  ../../include/ACore.h  \
 ../../include/ATime.h  \
 ../../include/ACommons.h  \
  ../../include/ASystemConfig.h  \
 ../../include/APorts.h  \
  ../../include/ARegisterDefs.h  \
-../../include/AString.h  \
+../../include/SmartMote.h  \
  ../../include/ACore.h  \
-../../include/AErrorNotifier.h  \
- ../../include/AContainers.h  \
-../../include/AUARTDriver.h  \
- ../../include/AString.h  \
-../../include/AInterruptSource.h  \
+../../include/AADC.h  \
+../../include/AString.h  \
+ ../../include/AErrorNotifier.h  \
+../../include/AContainers.h  \
  ../../include/AESP07.h  \
-../../include/AUARTDriver.h 
+../../include/AUARTDriver.h  \
+ ../../include/AInterruptSource.h  \
+../../include/ARTCC.h  \
+ ../../include/ADateTime.h  \
+../../include/A24LC512.h  \
+ ../../include/AI2CDriver.h  \
+../../include/ADht22.h  \
+ ../../include/ADS18B20.h  \
+../../include/AOneWire.h 

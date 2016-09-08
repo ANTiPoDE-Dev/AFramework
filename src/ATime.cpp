@@ -156,6 +156,11 @@ bool AFramework::ATime::setMSeconds(const uint16 ms){
     return true;
 }
 
+AFramework::uint32 AFramework::ATime::raw() const{
+    
+    return static_cast<uint32>(m_raw);
+}
+
 AFramework::sint32 AFramework::ATime::days() const{
     /*  Nulla da commentare                                                     */
     return (m_raw / __DD_VAL__);

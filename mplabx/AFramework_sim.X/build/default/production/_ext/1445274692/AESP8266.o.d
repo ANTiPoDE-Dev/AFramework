@@ -4,7 +4,7 @@ build/default/production/_ext/1445274692/AESP8266.o:  \
  ../../include/AUARTDriver.h  \
 ../../include/ACommons.h  \
  ../../include/ASystemConfig.h  \
-../../include/Ap32mx270f256d.h  \
+../../include/Ap32mx270f256b.h  \
  ../../include/AString.h  \
 ../../include/ACore.h  \
 ../../include/ATime.h  \

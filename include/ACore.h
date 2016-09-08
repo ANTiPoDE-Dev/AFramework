@@ -64,10 +64,16 @@ namespace AFramework{
             static void disableInterrupt();
             static void updateTime();
             static void delay(const uint32 ms);
+            static void delay_us(const uint32 us);
             static uint32 currentCentury();
             static bool outputMap(const uint32 gpio, const uint32 output);
             static bool inputMap(const uint32 gpio, const uint32 output);
             static ATime aliveTime();
+            static void stopCoreTimer();
+            static void wakeCoreTimer();
+            static void unlockOscCon();
+            static void lockOscCon();
+            static void sleep();
         private:
             static void scsusp();
             static void scwake();
@@ -96,6 +102,7 @@ namespace AFramework{
             static volatile ADEVSPEC_w *    m_dev;
             static volatile ARPI_w *        m_rpi;      
             static volatile ARPO_w *        m_rpo;
+            static volatile AOSC_w *        m_osc;
     };
 
     template <class T> bool System::safeAlloc(T ** ptr, const uint32 & num){
